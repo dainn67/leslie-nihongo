@@ -1,19 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { counterSlice, walletSlice } from "../features/counter/counterSlice";
-import testCounterSlice from "../features/testCounter/testCounterSlice";
+import counterReducer from "../features/counter/counterSlice";
 
-export const store = configureStore({
-  reducer: {
-    counter: counterSlice.reducer,
-    wallet: walletSlice.reducer,
-  },
-});
-
-export const testStore = configureStore({
-  reducer: {
-    testCounter: testCounterSlice,
-  },
-});
+export const store = configureStore({ reducer: { counter: counterReducer } });
 
 export type RootState = ReturnType<typeof store.getState>;
+
 export type AppDispatch = typeof store.dispatch;
