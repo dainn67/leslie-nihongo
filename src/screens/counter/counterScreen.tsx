@@ -1,16 +1,28 @@
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { Button, Text, View } from "react-native";
-import React from "react";
-import { decrement, increment } from "./counterSlice";
+import { decrement, increment } from "../../features/counter/counterSlice";
 import { AppBar } from "../../components/AppBar";
 import { Ionicons } from "@expo/vector-icons";
-import { useTheme } from "../../theme";
+import { useNavigation } from "@react-navigation/native";
+import { DrawerNavigationProp } from "@react-navigation/drawer";
+
+type DrawerParamList = {
+  Chatbot: undefined;
+  Counter: undefined;
+};
+
+type CounterScreenNavigationProp = DrawerNavigationProp<DrawerParamList, 'Counter'>;
 
 export const CounterScreen = () => {
   const count = useSelector((state: RootState) => state.counter.value);
   const dispatch = useDispatch();
-  const { colors } = useTheme();
+  const navigation = useNavigation<CounterScreenNavigationProp>();
+
+  const openDrawer = () => {
+    navigation.openDrawer();
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -18,9 +30,7 @@ export const CounterScreen = () => {
         title="Counter App"
         leftIcon={<Ionicons name="menu" size={24} color="white" />}
         rightIcon={<Ionicons name="settings" size={24} color="white" />}
-        onLeftPress={() => {
-          /* xử lý menu */
-        }}
+        onLeftPress={openDrawer}
         onRightPress={() => {
           /* xử lý settings */
         }}
