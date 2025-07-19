@@ -24,6 +24,7 @@ export const AppBar: React.FC<AppBarProps> = ({
   onRightPress,
 }) => {
   const { colors } = useTheme();
+
   return (
     <SafeAreaView style={{ backgroundColor: colors.primary }}>
       <View style={styles.container}>
