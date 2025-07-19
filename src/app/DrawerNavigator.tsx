@@ -1,24 +1,41 @@
 import React from "react";
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItemList,
+} from "@react-navigation/drawer";
+import { SafeAreaView, View } from "react-native";
 import { ChatbotScreen } from "../screens/chatbot/chatbotScreen";
 import { CounterScreen } from "../screens/counter/counterScreen";
+import { ThemeToggleButton } from "../components/ThemeToggleButton";
+import { useTheme } from "../theme";
 import { Ionicons } from "@expo/vector-icons";
 
 const Drawer = createDrawerNavigator();
 
 export const DrawerNavigator = () => {
+  const { colors } = useTheme();
+
   return (
     <Drawer.Navigator
       initialRouteName="Chatbot"
       screenOptions={{
         headerShown: false,
-        drawerActiveTintColor: "#3498db",
-        drawerInactiveTintColor: "#666",
+        drawerActiveTintColor: colors.primary,
+        drawerInactiveTintColor: colors.textSecondary,
         drawerStyle: {
-          backgroundColor: "#fff",
+          backgroundColor: colors.background,
           width: 280,
         },
       }}
+      drawerContent={(props) => (
+        <View style={{ flex: 1, marginBottom: 30 }}>
+          <DrawerContentScrollView {...props}>
+            <DrawerItemList {...props} />
+          </DrawerContentScrollView>
+          <ThemeToggleButton />
+        </View>
+      )}
     >
       <Drawer.Screen
         name="Chatbot"

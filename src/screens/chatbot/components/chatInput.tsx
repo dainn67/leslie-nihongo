@@ -9,6 +9,7 @@ import {
   SafeAreaView,
 } from "react-native";
 import { TextInput as GestureTextInput } from "react-native-gesture-handler";
+import { useTheme } from "../../../theme";
 
 interface ChatInputProps {
   onSend: (message: string) => void;
@@ -17,8 +18,9 @@ interface ChatInputProps {
 export const ChatInput = ({ onSend }: ChatInputProps) => {
   const [message, setMessage] = useState("");
   const [isFocused, setIsFocused] = useState(false);
+  const { colors } = useTheme();
 
-  const styles = getStyles(isFocused, message);
+  const styles = getStyles(isFocused, message, colors);
 
   const handleSend = () => {
     if (message.trim()) {
@@ -30,28 +32,29 @@ export const ChatInput = ({ onSend }: ChatInputProps) => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={{ backgroundColor: "white" }}
+      style={{ backgroundColor: colors.background }}
       keyboardVerticalOffset={0}
     >
-      <SafeAreaView style={{ backgroundColor: "white" }}>
+      <SafeAreaView style={{ backgroundColor: colors.background }}>
         <View style={styles.inputContainer}>
           <View style={styles.inputBox}>
             <Ionicons
               name="chatbubble-outline"
               size={20}
-              color="#6c757d"
+              color={colors.textSecondary}
               style={{ marginRight: 8 }}
             />
             <GestureTextInput
               style={{
                 flex: 1,
                 fontSize: 16,
-                color: "#212529",
+                color: colors.text,
                 paddingVertical: 4,
               }}
               placeholder="Nhập tin nhắn của bạn..."
-              placeholderTextColor="#6c757d"
+              placeholderTextColor={colors.textSecondary}
               value={message}
+              onSubmitEditing={handleSend}
               onChangeText={setMessage}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
@@ -63,7 +66,7 @@ export const ChatInput = ({ onSend }: ChatInputProps) => {
                 style={{ marginLeft: 8 }}
                 onPress={() => setMessage("")}
               >
-                <Ionicons name="close-circle" size={20} color="#6c757d" />
+                <Ionicons name="close-circle" size={20} color={colors.textSecondary} />
               </TouchableOpacity>
             )}
           </View>
@@ -76,7 +79,7 @@ export const ChatInput = ({ onSend }: ChatInputProps) => {
             <Ionicons
               name="send"
               size={20}
-              color={message.length > 0 ? "white" : "#6c757d"}
+              color={message.length > 0 ? "white" : colors.textSecondary}
             />
           </TouchableOpacity>
         </View>
@@ -85,16 +88,16 @@ export const ChatInput = ({ onSend }: ChatInputProps) => {
   );
 };
 
-const getStyles = (isFocused: boolean, message: string) =>
+const getStyles = (isFocused: boolean, message: string, colors: any) =>
   StyleSheet.create({
     inputContainer: {
       flexDirection: "row",
       alignItems: "center",
       paddingHorizontal: 20,
       paddingVertical: 16,
-      backgroundColor: "white",
+      backgroundColor: colors.background,
       borderTopWidth: 1,
-      borderTopColor: "#e9ecef",
+      borderTopColor: colors.border,
       shadowColor: "#000",
       shadowOffset: {
         width: 0,
@@ -106,12 +109,12 @@ const getStyles = (isFocused: boolean, message: string) =>
       flex: 1,
       flexDirection: "row",
       alignItems: "center",
-      backgroundColor: "#f8f9fa",
+      backgroundColor: colors.background,
       borderRadius: 25,
       paddingHorizontal: 16,
       paddingVertical: 12,
       borderWidth: 1,
-      borderColor: isFocused ? "#007AFF" : "#e9ecef",
+      borderColor: isFocused ? colors.primary : colors.border,
       shadowColor: "#000",
       shadowOffset: {
         width: 0,
@@ -123,13 +126,13 @@ const getStyles = (isFocused: boolean, message: string) =>
     },
     sendButton: {
       marginLeft: 12,
-      backgroundColor: message.length > 0 ? "#007AFF" : "#e9ecef",
+      backgroundColor: message.length > 0 ? colors.primary : colors.border,
       width: 44,
       height: 44,
       borderRadius: 22,
       justifyContent: "center",
       alignItems: "center",
-      shadowColor: "#007AFF",
+      shadowColor: colors.primary,
       shadowOffset: {
         width: 0,
         height: 2,

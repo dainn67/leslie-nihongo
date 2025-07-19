@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { View } from "react-native";
 import { AppBar } from "../../components/AppBar";
 import { ChatInput } from "./components/chatInput";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { ChatMessageList } from "./components/chatMessageList";
+import {
+  ChatMessageList,
+  ChatMessageListRef,
+} from "./components/chatMessageList";
 import { useNavigation } from "@react-navigation/native";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { useAppDispatch } from "../../hooks/hooks";
@@ -31,8 +34,8 @@ export const ChatbotScreen = () => {
 
   const handleSend = (message: string) => {
     const userMessage: ChatMessage = {
-      id: "test_id",
-      text: message,
+      id: "user_message_" + Date.now(),
+      text: message.trim(),
       sender: Sender.USER,
       createdAt: new Date().toISOString(),
     };
@@ -50,7 +53,7 @@ export const ChatbotScreen = () => {
       <SafeAreaProvider>
         <View style={{ flex: 1 }}>
           <AppBar
-            title="Compari"
+            title="Leslie AI"
             leftIcon={<Ionicons name="menu" size={24} color="white" />}
             rightIcon={<Ionicons name="trash" size={24} color="white" />}
             onLeftPress={openDrawer}

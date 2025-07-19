@@ -1,7 +1,7 @@
-import { useTheme } from "@react-navigation/native";
 import React from "react";
 import { View, Text } from "react-native";
 import { Sender } from "../../../features/chatbot/types";
+import { useTheme } from "../../../theme";
 
 interface ChatBubbleProps {
   id: string;
@@ -16,7 +16,7 @@ export const ChatBubble = ({ id, text, sender }: ChatBubbleProps) => {
     <View
       id={id}
       style={{
-        backgroundColor: isUser ? colors.primary : colors.background,
+        backgroundColor: isUser ? colors.primary : colors.backgroundSecondary,
         borderTopLeftRadius: isUser ? 16 : 4,
         borderTopRightRadius: isUser ? 4 : 16,
         borderBottomLeftRadius: 16,
@@ -28,7 +28,7 @@ export const ChatBubble = ({ id, text, sender }: ChatBubbleProps) => {
         alignSelf: isUser ? "flex-end" : "flex-start",
       }}
     >
-      <Text style={{ color: isUser ? "white" : "black" }}>{text}</Text>
+      <Text style={{ color: isUser ? "white" : colors.text }}>{text}</Text>
     </View>
   );
 };

@@ -25,15 +25,15 @@ export const sendMessageThunk = createAsyncThunk(
 
     const data = await res.json();
 
+    const usage = data.metadata.usage;
+
     console.log(
-      "price:",
-      data.metadata.usage.total_price,
-      data.metadata.usage.currency
+      `Tokens: ${usage.prompt_tokens} prompt, ${usage.completion_tokens} completions => ${usage.total_price} ${usage.currency}`
     );
 
     return {
       id: data.message_id,
-      text: data.answer,
+      text: data.answer.trim(),
       sender: Sender.BOT,
       createdAt: new Date().toISOString(),
     };
