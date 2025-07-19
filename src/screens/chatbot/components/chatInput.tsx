@@ -10,11 +10,22 @@ import {
 } from "react-native";
 import { TextInput as GestureTextInput } from "react-native-gesture-handler";
 
-export const ChatInput = () => {
+interface ChatInputProps {
+  onSend: (message: string) => void;
+}
+
+export const ChatInput = ({ onSend }: ChatInputProps) => {
   const [message, setMessage] = useState("");
   const [isFocused, setIsFocused] = useState(false);
 
   const styles = getStyles(isFocused, message);
+
+  const handleSend = () => {
+    if (message.trim()) {
+      onSend(message);
+      setMessage("");
+    }
+  };
 
   return (
     <KeyboardAvoidingView
@@ -60,6 +71,7 @@ export const ChatInput = () => {
           <TouchableOpacity
             style={styles.sendButton}
             disabled={message.length === 0}
+            onPress={handleSend}
           >
             <Ionicons
               name="send"

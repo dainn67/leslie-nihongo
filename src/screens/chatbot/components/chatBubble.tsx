@@ -1,35 +1,34 @@
+import { useTheme } from "@react-navigation/native";
 import React from "react";
 import { View, Text } from "react-native";
-
-export enum Sender {
-  USER = "user",
-  BOT = "bot",
-}
+import { Sender } from "../../../features/chatbot/types";
 
 interface ChatBubbleProps {
-  message: {
-    id: number;
-    text: string;
-    sender: Sender;
-  };
+  id: string;
+  text: string;
+  sender: Sender;
 }
 
-export const ChatBubble = ({ message }: ChatBubbleProps) => {
+export const ChatBubble = ({ id, text, sender }: ChatBubbleProps) => {
+  const { colors } = useTheme();
+  const isUser = sender === Sender.USER;
   return (
     <View
+      id={id}
       style={{
-        backgroundColor: message.sender === Sender.USER ? "#007AFF" : "#E5E5E5",
-        borderRadius: 16,
+        backgroundColor: isUser ? colors.primary : colors.background,
+        borderTopLeftRadius: isUser ? 16 : 4,
+        borderTopRightRadius: isUser ? 4 : 16,
+        borderBottomLeftRadius: 16,
+        borderBottomRightRadius: 16,
         padding: 16,
+        marginLeft: isUser ? 48 : 0,
+        marginRight: isUser ? 0 : 48,
         marginVertical: 8,
-        alignSelf: message.sender === Sender.USER ? "flex-end" : "flex-start",
+        alignSelf: isUser ? "flex-end" : "flex-start",
       }}
     >
-      <Text
-        style={{ color: message.sender === Sender.USER ? "white" : "black" }}
-      >
-        {message.text}
-      </Text>
+      <Text style={{ color: isUser ? "white" : "black" }}>{text}</Text>
     </View>
   );
 };
