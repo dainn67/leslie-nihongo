@@ -5,9 +5,14 @@ import { RenderHTML } from "react-native-render-html";
 interface WordComponentProps {
   word: string;
   fontSize?: number;
+  color?: string;
 }
 
-export const WordComponent = ({ word, fontSize }: WordComponentProps) => {
+export const WordComponent = ({
+  word,
+  fontSize,
+  color,
+}: WordComponentProps) => {
   // Kiểm tra xem có phải là HTML không
   const isHTML = (text: string) => {
     const htmlPattern = /<[^>]*>/g;
@@ -41,6 +46,7 @@ export const WordComponent = ({ word, fontSize }: WordComponentProps) => {
               padding: 2,
               borderRadius: 3,
               fontSize: fontSize || 14,
+              color: color || "black",
             },
             pre: {
               fontFamily: "monospace",
@@ -49,21 +55,36 @@ export const WordComponent = ({ word, fontSize }: WordComponentProps) => {
               borderRadius: 5,
               marginVertical: 4,
               fontSize: fontSize || 14,
+              color: color || "black",
             },
-            p: { margin: 0, fontSize: fontSize || 14 },
-            div: { margin: 0, fontSize: fontSize || 14 },
+            p: { margin: 0, fontSize: fontSize || 14, color: color || "black" },
+            div: {
+              margin: 0,
+              fontSize: fontSize || 14,
+              color: color || "black",
+            },
           }}
         />
       );
     } else if (word.startsWith("**") && word.endsWith("**")) {
       return (
-        <Text style={{ fontWeight: "bold", fontSize: fontSize || 14 }}>
+        <Text
+          style={{
+            fontWeight: "bold",
+            fontSize: fontSize || 14,
+            color: color || "black",
+          }}
+        >
           {word.slice(2, -2)}
         </Text>
       );
     } else {
       // Văn bản thường
-      return <Text style={{ fontSize: fontSize || 14 }}>{word}</Text>;
+      return (
+        <Text style={{ fontSize: fontSize || 14, color: color || "black" }}>
+          {word}
+        </Text>
+      );
     }
   };
 
