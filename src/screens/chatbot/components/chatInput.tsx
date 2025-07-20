@@ -38,21 +38,17 @@ export const ChatInput = ({ onSend }: ChatInputProps) => {
       <SafeAreaView style={{ backgroundColor: colors.background }}>
         <View style={styles.inputContainer}>
           <View style={styles.inputBox}>
-            <Ionicons
-              name="chatbubble-outline"
-              size={20}
-              color={colors.textSecondary}
-              style={{ marginRight: 8 }}
-            />
+            <View style={styles.iconContainer}>
+              <Ionicons
+                name="chatbubble-outline"
+                size={18}
+                color={colors.textSecondary}
+              />
+            </View>
             <GestureTextInput
-              style={{
-                flex: 1,
-                fontSize: 16,
-                color: colors.text,
-                paddingVertical: 4,
-              }}
-              placeholder="Nhập tin nhắn của bạn..."
-              placeholderTextColor={colors.textSecondary}
+              style={styles.textInput}
+              placeholder="Ask anything..."
+              placeholderTextColor={colors.textTertiary}
               value={message}
               onSubmitEditing={handleSend}
               onChangeText={setMessage}
@@ -63,8 +59,9 @@ export const ChatInput = ({ onSend }: ChatInputProps) => {
             />
             {message.length > 0 && (
               <TouchableOpacity
-                style={{ marginLeft: 8 }}
+                style={styles.clearButton}
                 onPress={() => setMessage("")}
+                activeOpacity={0.7}
               >
                 <Ionicons name="close-circle" size={20} color={colors.textSecondary} />
               </TouchableOpacity>
@@ -75,11 +72,12 @@ export const ChatInput = ({ onSend }: ChatInputProps) => {
             style={styles.sendButton}
             disabled={message.length === 0}
             onPress={handleSend}
+            activeOpacity={0.8}
           >
             <Ionicons
               name="send"
-              size={20}
-              color={message.length > 0 ? "white" : colors.textSecondary}
+              size={18}
+              color={message.length > 0 ? "white" : colors.textTertiary}
             />
           </TouchableOpacity>
         </View>
@@ -97,48 +95,75 @@ const getStyles = (isFocused: boolean, message: string, colors: any) =>
       paddingVertical: 16,
       backgroundColor: colors.background,
       borderTopWidth: 1,
-      borderTopColor: colors.border,
-      shadowColor: "#000",
+      borderTopColor: colors.borderLight,
+      shadowColor: colors.cardShadow,
       shadowOffset: {
         width: 0,
-        height: -2,
+        height: -4,
       },
+      shadowOpacity: 0.1,
+      shadowRadius: 8,
       elevation: 8,
     },
     inputBox: {
       flex: 1,
       flexDirection: "row",
       alignItems: "center",
-      backgroundColor: colors.background,
-      borderRadius: 25,
-      paddingHorizontal: 16,
-      paddingVertical: 12,
-      borderWidth: 1,
-      borderColor: isFocused ? colors.primary : colors.border,
-      shadowColor: "#000",
+      backgroundColor: colors.backgroundSecondary,
+      borderRadius: 28,
+      paddingHorizontal: 4,
+      paddingVertical: 4,
+      borderWidth: 2,
+      borderColor: isFocused ? colors.primary : colors.borderLight,
+      shadowColor: colors.cardShadow,
       shadowOffset: {
         width: 0,
         height: 2,
       },
       shadowOpacity: 0.1,
-      shadowRadius: 4,
+      shadowRadius: 6,
       elevation: 3,
+    },
+    iconContainer: {
+      width: 36,
+      height: 36,
+      borderRadius: 18,
+      backgroundColor: colors.backgroundTertiary,
+      justifyContent: "center",
+      alignItems: "center",
+      marginLeft: 4,
+    },
+    textInput: {
+      flex: 1,
+      fontSize: 16,
+      color: colors.text,
+      paddingHorizontal: 12,
+      paddingVertical: 8,
+      maxHeight: 100,
+    },
+    clearButton: {
+      width: 32,
+      height: 32,
+      borderRadius: 16,
+      justifyContent: "center",
+      alignItems: "center",
+      marginRight: 4,
     },
     sendButton: {
       marginLeft: 12,
-      backgroundColor: message.length > 0 ? colors.primary : colors.border,
-      width: 44,
-      height: 44,
-      borderRadius: 22,
+      backgroundColor: message.length > 0 ? colors.primary : colors.backgroundTertiary,
+      width: 48,
+      height: 48,
+      borderRadius: 24,
       justifyContent: "center",
       alignItems: "center",
       shadowColor: colors.primary,
       shadowOffset: {
         width: 0,
-        height: 2,
+        height: 3,
       },
       shadowOpacity: message.length > 0 ? 0.3 : 0,
-      shadowRadius: 4,
+      shadowRadius: 6,
       elevation: message.length > 0 ? 4 : 0,
     },
   });
