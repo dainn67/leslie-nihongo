@@ -14,15 +14,10 @@ import {
   addMessage,
   clearChat,
 } from "../../features/chatbot/chatMessageList/chatbotSlice";
-import {
-  ChatMessage,
-  createChatMessage,
-  Sender,
-} from "../../features/chatbot/types";
+import { ChatMessage, createChatMessage } from "../../features/chatbot/types";
 import { AppConfig } from "../../config/appConfig";
 import ClearChatDialog from "./components/clearChatDialog";
 import { sendStreamMessageThunk } from "../../features/chatbot/chatMessageStream/chatMessageThunk";
-import { splitCustomWords } from "../../utils/utils";
 
 type DrawerParamList = {
   Chatbot: undefined;

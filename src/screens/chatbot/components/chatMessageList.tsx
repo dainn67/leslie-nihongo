@@ -18,8 +18,6 @@ export const ChatMessageList = () => {
     scrollViewRef.current?.scrollToEnd({ animated: true });
   };
 
-  console.log(messages.length);
-
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <ScrollView

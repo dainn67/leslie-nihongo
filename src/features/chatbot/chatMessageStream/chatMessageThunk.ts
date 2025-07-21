@@ -1,22 +1,23 @@
 import { ApiConfig } from "../../../config/apiConfig";
 import { connectSSE } from "../../../api/sseClient";
-import { setIsStreaming, updateMessage } from "./chatMessageSlice";
+import { setIsStreaming } from "./chatMessageSlice";
 import { AppDispatch } from "../../../app/store";
 import { splitCustomWords } from "../../../utils/utils";
+import Constants from "expo-constants";
+
+const { DIFY_API_KEY } = Constants.expoConfig?.extra ?? {};
 
 export const sendStreamMessageThunk = (
   message: string,
   dispatch: AppDispatch
 ) => {
-  const tmpToken = "app-2ZcpMxM7MQsCZiyt2lCI8dTb";
-
   let fullText = "";
   let wordIndex = 0;
   let wordLength = 0;
 
   connectSSE(
     ApiConfig.difyServerUrl,
-    tmpToken,
+    DIFY_API_KEY,
     {
       query: message,
       inputs: {},
@@ -33,18 +34,14 @@ export const sendStreamMessageThunk = (
       const text = data["answer"];
 
       if (type === "message") fullText += text;
-      console.log("fullText:", fullText);
     },
     () => {
       wordLength = splitCustomWords(fullText).length;
-      console.log("wordLength:", wordLength);
     },
     (error) => {
       console.log("SSE error", error);
     }
   );
-
-  //   console.log("Looping...");
 
   const interval = setInterval(() => {
     const words = splitCustomWords(fullText);
