@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { AppBar } from "../../components/AppBar";
@@ -9,11 +9,15 @@ import { ChatMessageList } from "./components/chatMessageList";
 import { useNavigation } from "@react-navigation/native";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { useAppDispatch } from "../../hooks/hooks";
-import { sendMessageThunk } from "../../features/chatbot/chatbotThunk";
-import { addMessage, clearChat } from "../../features/chatbot/chatbotSlice";
+import {
+  addInitialMessage,
+  addMessage,
+  clearChat,
+} from "../../features/chatbot/chatMessageList/chatbotSlice";
 import { ChatMessage, Sender } from "../../features/chatbot/types";
 import { AppConfig } from "../../config/appConfig";
 import ClearChatDialog from "./components/clearChatDialog";
+import { sendStreamMessageThunk } from "../../features/chatbot/chatMessageStream/chatMessageThunk";
 
 type DrawerParamList = {
   Chatbot: undefined;
@@ -35,6 +39,10 @@ export const ChatbotScreen = () => {
 
   const dispatch = useAppDispatch();
 
+  useEffect(() => {
+    dispatch(addInitialMessage());
+  }, []);
+
   const handleSend = (message: string) => {
     const userMessage: ChatMessage = {
       id: "user_message_" + Date.now(),
@@ -44,7 +52,8 @@ export const ChatbotScreen = () => {
     };
 
     dispatch(addMessage(userMessage));
-    dispatch(sendMessageThunk(userMessage));
+    // dispatch(sendMessageThunk(userMessage));
+    dispatch(sendStreamMessageThunk(message.trim()));
   };
 
   const openClearChatDialog = () => {

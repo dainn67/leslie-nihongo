@@ -3,8 +3,8 @@ import { View, StyleSheet } from "react-native";
 import { Sender } from "../../../features/chatbot/types";
 import { useTheme } from "../../../theme";
 import { WordComponent } from "../../../components/streamingText/WordComponent";
-import { splitCustomWords } from "../../../utils/utils";
 import { MainButton } from "../../../components/buttons";
+import { useAppSelector } from "../../../hooks/hooks";
 
 interface ChatBubbleProps {
   id: string;
@@ -31,7 +31,10 @@ export const ChatBubble = ({
     },
   ];
 
-  const words = splitCustomWords(text);
+  // const words = splitCustomWords(text);
+  const words = isUser
+    ? text.split(" ")
+    : useAppSelector((state) => state.chatMessage.words);
 
   return (
     <View
