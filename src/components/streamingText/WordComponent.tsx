@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import { RenderHTML } from "react-native-render-html";
 import { AppConfig } from "../../config/appConfig";
 import { CustomText } from "../text/customText";

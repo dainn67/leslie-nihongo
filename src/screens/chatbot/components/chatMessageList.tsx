@@ -11,14 +11,14 @@ export const ChatMessageList = () => {
 
   // Auto scroll to bottom when new messages are added
   useEffect(() => {
-    if (messages.length > 0) {
-      scrollToBottom();
-    }
+    if (messages.length > 0) scrollToBottom();
   }, [messages.length]);
 
   const scrollToBottom = () => {
     scrollViewRef.current?.scrollToEnd({ animated: true });
   };
+
+  console.log(messages.length);
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -30,12 +30,7 @@ export const ChatMessageList = () => {
         scrollEventThrottle={16}
       >
         {messages.map((message) => (
-          <ChatBubble
-            key={message.id}
-            id={message.id}
-            text={message.text}
-            sender={message.sender}
-          />
+          <ChatBubble key={message.id} message={message} />
         ))}
       </ScrollView>
     </View>

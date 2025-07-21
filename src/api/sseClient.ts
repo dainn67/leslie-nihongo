@@ -6,6 +6,7 @@ export const connectSSE = (
   body?: any,
   onOpen?: () => void,
   onMessage?: (data: any) => void,
+  onClose?: () => void,
   onError?: (error: any) => void
 ) => {
   const es = new EventSource(url, {
@@ -18,14 +19,13 @@ export const connectSSE = (
     pollingInterval: 0,
   });
 
-  console.log("siuuuuuuuuuuu");
-
   es.addEventListener("open", () => onOpen?.());
 
   es.addEventListener("message", (event) => {
     let parsed;
     try {
       parsed = JSON.parse(event.data ?? "");
+      if (parsed.event === "message_end") onClose?.();
     } catch (e) {
       parsed = event.data;
     }
@@ -33,6 +33,8 @@ export const connectSSE = (
   });
 
   es.addEventListener("error", (err) => onError?.(err));
+
+  es.addEventListener("close", () => onClose?.());
 
   return {
     close: () => {

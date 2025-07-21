@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ChatMessage, Sender } from "../types";
+import { ChatMessage, createChatMessage, Sender } from "../types";
 import { sendMessageThunk } from "./chatbotThunk";
 
 type ChatState = {
@@ -20,35 +20,15 @@ const chatbotSlice = createSlice({
       state.messages.push(action.payload);
     },
     addInitialMessage: (state) => {
-      state.messages = [];
-      state.messages.push({
-        id: "initial_message",
-        text: "Hello, how can I help you today?",
-        sender: Sender.BOT,
-        createdAt: new Date().toISOString(),
-      });
+      state.messages = [
+        createChatMessage({
+          fullText: "Hello, how can I help you today?",
+          sender: Sender.BOT,
+        }),
+      ];
     },
     setIsLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
-    },
-    updateMessage: (state, action: PayloadAction<ChatMessage>) => {
-      const index = state.messages.findIndex(
-        (message) => message.id === action.payload.id
-      );
-      if (index !== -1) {
-        state.messages[index].text = action.payload.text;
-      }
-    },
-    streamAppendToMessage: (
-      state,
-      action: PayloadAction<{ id: string; delta: string }>
-    ) => {
-      const index = state.messages.findIndex(
-        (msg) => msg.id === action.payload.id
-      );
-      if (index !== -1) {
-        state.messages[index].text += action.payload.delta;
-      }
     },
     clearChat: () => initialState,
   },
@@ -67,13 +47,7 @@ const chatbotSlice = createSlice({
   },
 });
 
-export const {
-  clearChat,
-  addMessage,
-  setIsLoading,
-  addInitialMessage,
-  updateMessage,
-  streamAppendToMessage,
-} = chatbotSlice.actions;
+export const { clearChat, addMessage, setIsLoading, addInitialMessage } =
+  chatbotSlice.actions;
 
 export default chatbotSlice.reducer;

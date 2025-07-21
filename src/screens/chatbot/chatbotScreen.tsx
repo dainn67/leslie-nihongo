@@ -14,10 +14,15 @@ import {
   addMessage,
   clearChat,
 } from "../../features/chatbot/chatMessageList/chatbotSlice";
-import { ChatMessage, Sender } from "../../features/chatbot/types";
+import {
+  ChatMessage,
+  createChatMessage,
+  Sender,
+} from "../../features/chatbot/types";
 import { AppConfig } from "../../config/appConfig";
 import ClearChatDialog from "./components/clearChatDialog";
 import { sendStreamMessageThunk } from "../../features/chatbot/chatMessageStream/chatMessageThunk";
+import { splitCustomWords } from "../../utils/utils";
 
 type DrawerParamList = {
   Chatbot: undefined;
@@ -44,16 +49,12 @@ export const ChatbotScreen = () => {
   }, []);
 
   const handleSend = (message: string) => {
-    const userMessage: ChatMessage = {
-      id: "user_message_" + Date.now(),
-      text: message.trim(),
-      sender: Sender.USER,
-      createdAt: new Date().toISOString(),
-    };
+    const data = message.trim();
+    const userMessage: ChatMessage = createChatMessage({ fullText: data });
 
     dispatch(addMessage(userMessage));
     // dispatch(sendMessageThunk(userMessage));
-    dispatch(sendStreamMessageThunk(message.trim()));
+    sendStreamMessageThunk(data, dispatch);
   };
 
   const openClearChatDialog = () => {

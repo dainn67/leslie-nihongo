@@ -4,23 +4,16 @@ import { Sender } from "../../../features/chatbot/types";
 import { useTheme } from "../../../theme";
 import { WordComponent } from "../../../components/streamingText/WordComponent";
 import { MainButton } from "../../../components/buttons";
-import { useAppSelector } from "../../../hooks/hooks";
+import { ChatMessage } from "../../../features/chatbot/types";
 
 interface ChatBubbleProps {
-  id: string;
-  text: string;
-  sender: Sender;
+  message: ChatMessage;
   showButtons?: boolean;
 }
 
-export const ChatBubble = ({
-  id,
-  text,
-  sender,
-  showButtons,
-}: ChatBubbleProps) => {
+export const ChatBubble = ({ message, showButtons }: ChatBubbleProps) => {
   const { colors } = useTheme();
-  const isUser = sender === Sender.USER;
+  const isUser = message.sender === Sender.USER;
 
   const bubbleStyle = [
     styles.bubble,
@@ -31,14 +24,9 @@ export const ChatBubble = ({
     },
   ];
 
-  // const words = splitCustomWords(text);
-  const words = isUser
-    ? text.split(" ")
-    : useAppSelector((state) => state.chatMessage.words);
-
   return (
     <View
-      id={id}
+      id={message.id}
       style={[
         styles.container,
         isUser ? styles.userContainer : styles.botContainer,
@@ -46,7 +34,7 @@ export const ChatBubble = ({
     >
       <View style={bubbleStyle}>
         <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-          {words.map((word, index) => (
+          {message.words.map((word, index) => (
             <WordComponent
               key={index}
               fontSize={16}
