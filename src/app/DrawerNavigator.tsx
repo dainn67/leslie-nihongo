@@ -4,12 +4,13 @@ import {
   DrawerContentScrollView,
   DrawerItemList,
 } from "@react-navigation/drawer";
-import { SafeAreaView, View } from "react-native";
+import { View } from "react-native";
 import { ChatbotScreen } from "../screens/chatbot/chatbotScreen";
 import { CounterScreen } from "../screens/counter/counterScreen";
 import { ThemeToggleButton } from "../components/ThemeToggleButton";
 import { useTheme } from "../theme";
 import { Ionicons } from "@expo/vector-icons";
+import { CustomText } from "../components/text/customText";
 
 const Drawer = createDrawerNavigator();
 
@@ -41,7 +42,11 @@ export const DrawerNavigator = () => {
         name="Chatbot"
         component={ChatbotScreen}
         options={{
-          drawerLabel: "Chatbot",
+          drawerLabel: ({ color }) => (
+            <CustomText weight="Regular" style={{ color }}>
+              Chatbot
+            </CustomText>
+          ),
           drawerIcon: ({ color, size }) => (
             <Ionicons name="chatbubbles" size={size} color={color} />
           ),
@@ -51,7 +56,11 @@ export const DrawerNavigator = () => {
         name="Counter"
         component={CounterScreen}
         options={{
-          drawerLabel: "Counter",
+          drawerLabel: ({ color }) => (
+            <CustomText weight="Regular" style={{ color }}>
+              Counter
+            </CustomText>
+          ),
           drawerIcon: ({ color, size }) => (
             <Ionicons name="calculator" size={size} color={color} />
           ),

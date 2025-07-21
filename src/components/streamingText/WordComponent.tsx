@@ -1,6 +1,8 @@
 import React from "react";
 import { View, Text } from "react-native";
 import { RenderHTML } from "react-native-render-html";
+import { AppConfig } from "../../config/appConfig";
+import { CustomText } from "../text/customText";
 
 interface WordComponentProps {
   word: string;
@@ -35,68 +37,66 @@ export const WordComponent = ({
           contentWidth={300}
           source={{ html: word }}
           tagsStyles={{
-            b: { fontWeight: "bold" },
-            i: { fontStyle: "italic" },
+            b: { fontWeight: "bold", fontFamily: AppConfig.fontFamily },
+            i: { fontStyle: "italic", fontFamily: AppConfig.fontFamily },
             u: { textDecorationLine: "underline" },
-            strong: { fontWeight: "bold" },
-            em: { fontStyle: "italic" },
+            strong: { fontWeight: "bold", fontFamily: AppConfig.fontFamily },
+            em: { fontStyle: "italic", fontFamily: AppConfig.fontFamily },
             code: {
-              fontFamily: "monospace",
               backgroundColor: "#f0f0f0",
               padding: 2,
               borderRadius: 3,
               fontSize: fontSize || 14,
               color: color || "black",
+              fontFamily: AppConfig.fontFamily,
             },
             pre: {
-              fontFamily: "monospace",
               backgroundColor: "#f0f0f0",
               padding: 8,
               borderRadius: 5,
               marginVertical: 4,
               fontSize: fontSize || 14,
               color: color || "black",
+              fontFamily: AppConfig.fontFamily,
             },
-            p: { margin: 0, fontSize: fontSize || 14, color: color || "black" },
+            p: {
+              margin: 0,
+              fontSize: fontSize || 14,
+              color: color || "black",
+              fontFamily: AppConfig.fontFamily,
+            },
             div: {
               margin: 0,
               fontSize: fontSize || 14,
               color: color || "black",
+              fontFamily: AppConfig.fontFamily,
             },
           }}
         />
       );
     } else if (word.startsWith("**") && word.endsWith("**")) {
       return (
-        <Text
+        <CustomText
+          weight="Bold"
           style={{
-            fontWeight: "bold",
             fontSize: fontSize || 14,
             color: color || "black",
           }}
         >
           {word.slice(2, -2)}
-        </Text>
+        </CustomText>
       );
     } else {
-      // Văn bản thường
       return (
-        <Text style={{ fontSize: fontSize || 14, color: color || "black" }}>
+        <CustomText
+          weight="Regular"
+          style={{ fontSize: fontSize, color: color }}
+        >
           {word}
-        </Text>
+        </CustomText>
       );
     }
   };
 
-  return (
-    <View
-      style={{
-        // flexDirection: "row",
-        // alignItems: "center",
-        marginRight: 3,
-      }}
-    >
-      {renderContent()}
-    </View>
-  );
+  return <View style={{ marginRight: 3 }}>{renderContent()}</View>;
 };

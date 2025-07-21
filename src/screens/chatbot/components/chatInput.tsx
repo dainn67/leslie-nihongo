@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { TextInput as GestureTextInput } from "react-native-gesture-handler";
 import { useTheme } from "../../../theme";
+import { AppConfig } from "../../../config/appConfig";
 
 interface ChatInputProps {
   onSend: (message: string) => void;
@@ -140,6 +141,7 @@ const getStyles = (isFocused: boolean, message: string, colors: any) =>
       paddingHorizontal: 12,
       paddingVertical: 8,
       maxHeight: 100,
+      fontFamily: AppConfig.fontFamily,
     },
     clearButton: {
       width: 32,

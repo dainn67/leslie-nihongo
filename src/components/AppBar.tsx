@@ -1,13 +1,8 @@
 import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  SafeAreaView,
-} from "react-native";
+import { View, StyleSheet, TouchableOpacity, SafeAreaView } from "react-native";
 import { useTheme } from "../theme";
 import { Ionicons } from "@expo/vector-icons";
+import { CustomText } from "./text/customText";
 
 interface AppBarProps {
   title: string;
@@ -41,7 +36,9 @@ export const AppBar: React.FC<AppBarProps> = ({
           <View style={styles.iconWrapper}>
             <Ionicons name="chatbubble" size={20} color="white" />
           </View>
-          <Text style={styles.title}>{title}</Text>
+          <CustomText weight="Bold" style={styles.title}>
+            {title}
+          </CustomText>
         </View>
 
         <TouchableOpacity
@@ -102,7 +99,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     color: "#FFFFFF",
-    fontWeight: "700",
+    fontWeight: "bold",
     textAlign: "center",
     letterSpacing: 0.5,
   },

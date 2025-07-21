@@ -27,7 +27,6 @@ export const ChatBubble = ({
     isUser ? styles.userBubble : styles.botBubble,
     {
       backgroundColor: isUser ? colors.primary : colors.card,
-      shadowColor: colors.cardShadow,
       paddingHorizontal: isUser ? 16 : 0,
     },
   ];
@@ -47,6 +46,7 @@ export const ChatBubble = ({
           {words.map((word, index) => (
             <WordComponent
               key={index}
+              fontSize={16}
               word={word}
               color={isUser ? "white" : "black"}
             />
@@ -92,13 +92,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderRadius: 16,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
   },
   userBubble: {
     borderTopRightRadius: 6,

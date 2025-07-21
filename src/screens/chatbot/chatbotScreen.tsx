@@ -12,6 +12,7 @@ import { useAppDispatch } from "../../hooks/hooks";
 import { sendMessageThunk } from "../../features/chatbot/chatbotThunk";
 import { addMessage, clearChat } from "../../features/chatbot/chatbotSlice";
 import { ChatMessage, Sender } from "../../features/chatbot/types";
+import { AppConfig } from "../../config/appConfig";
 import ClearChatDialog from "./components/clearChatDialog";
 
 type DrawerParamList = {
@@ -59,7 +60,7 @@ export const ChatbotScreen = () => {
       <SafeAreaProvider>
         <View style={{ flex: 1 }}>
           <AppBar
-            title="Leslie AI"
+            title={AppConfig.name}
             leftIcon={<Ionicons name="menu" size={24} color="white" />}
             rightIcon={<Ionicons name="trash" size={24} color="white" />}
             onLeftPress={openDrawer}

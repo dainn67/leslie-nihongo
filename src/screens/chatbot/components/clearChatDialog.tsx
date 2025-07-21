@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { useTheme } from "../../../theme";
 import { Ionicons } from "@expo/vector-icons";
+import { CustomText } from "../../../components/text/customText";
 
 interface ClearChatDialogProps {
   title: string;
@@ -44,29 +45,62 @@ export const ClearChatDialog = ({
       onRequestClose={() => setVisible(false)}
     >
       <View style={[styles.overlay, { backgroundColor: colors.overlay }]}>
-        <View style={[styles.dialog, { backgroundColor: colors.card, shadowColor: colors.cardShadow }]}>
+        <View
+          style={[
+            styles.dialog,
+            { backgroundColor: colors.card, shadowColor: colors.cardShadow },
+          ]}
+        >
           <View style={styles.iconContainer}>
             <Ionicons name="trash" size={32} color={colors.error} />
           </View>
-          
-          <Text style={[styles.title, { color: colors.text }]}>{title}</Text>
-          <Text style={[styles.message, { color: colors.textSecondary }]}>{message}</Text>
+
+          <CustomText
+            weight="Bold"
+            style={[styles.title, { color: colors.text }]}
+          >
+            {title}
+          </CustomText>
+          <CustomText
+            weight="Regular"
+            style={[styles.message, { color: colors.textSecondary }]}
+          >
+            {message}
+          </CustomText>
 
           <View style={styles.buttonRow}>
             <TouchableOpacity
-              style={[styles.button, styles.cancelButton, { backgroundColor: colors.backgroundSecondary }]}
+              style={[
+                styles.button,
+                styles.cancelButton,
+                { backgroundColor: colors.backgroundSecondary },
+              ]}
               onPress={() => setVisible(false)}
               activeOpacity={0.8}
             >
-              <Text style={[styles.cancelText, { color: colors.textSecondary }]}>{cancelText}</Text>
+              <CustomText
+                weight="Regular"
+                style={[styles.cancelText, { color: colors.textSecondary }]}
+              >
+                {cancelText}
+              </CustomText>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[styles.button, styles.confirmButton, { backgroundColor: colors.error }]}
+              style={[
+                styles.button,
+                styles.confirmButton,
+                { backgroundColor: colors.error },
+              ]}
               onPress={handleConfirm}
               activeOpacity={0.8}
             >
-              <Text style={styles.confirmText}>{confirmText}</Text>
+              <CustomText
+                weight="Regular"
+                style={[styles.confirmText, { color: "white" }]}
+              >
+                {confirmText}
+              </CustomText>
             </TouchableOpacity>
           </View>
         </View>
@@ -109,7 +143,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: "700",
+    fontWeight: "bold",
     marginBottom: 12,
     textAlign: "center",
     letterSpacing: 0.5,
