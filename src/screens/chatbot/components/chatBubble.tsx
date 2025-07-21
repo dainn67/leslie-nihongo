@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import { Sender } from "../../../features/chatbot/types";
 import { useTheme } from "../../../theme";
 import { WordComponent } from "../../../components/streamingText/WordComponent";
@@ -34,14 +34,16 @@ export const ChatBubble = ({ message, showButtons }: ChatBubbleProps) => {
     >
       <View style={bubbleStyle}>
         <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-          {message.words.map((word, index) => (
-            <WordComponent
-              key={index}
-              fontSize={16}
-              word={word}
-              color={isUser ? "white" : "black"}
-            />
-          ))}
+          {message.loading && <Text>Loading...</Text>}
+          {!message.loading &&
+            message.words.map((word, index) => (
+              <WordComponent
+                key={index}
+                fontSize={16}
+                word={word}
+                color={isUser ? "white" : "black"}
+              />
+            ))}
         </View>
         {showButtons && (
           <View style={{ flexDirection: "row" }}>

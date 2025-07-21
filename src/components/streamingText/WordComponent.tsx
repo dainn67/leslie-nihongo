@@ -1,5 +1,5 @@
-import React from "react";
-import { View } from "react-native";
+import React, { useEffect, useRef } from "react";
+import { Animated, View } from "react-native";
 import { RenderHTML } from "react-native-render-html";
 import { AppConfig } from "../../config/appConfig";
 import { CustomText } from "../text/customText";
@@ -15,21 +15,16 @@ export const WordComponent = ({
   fontSize,
   color,
 }: WordComponentProps) => {
-  // Kiểm tra xem có phải là HTML không
   const isHTML = (text: string) => {
     const htmlPattern = /<[^>]*>/g;
     return htmlPattern.test(text);
   };
 
-  // Xử lý hiển thị nội dung
   const renderContent = () => {
-    if (word == "\n") {
-      return <View style={{ width: 1000, height: 5 }} />;
-    }
+    if (word == "\n") return <View style={{ width: 1000, height: 5 }} />;
 
-    if (!word || word.trim() === "") {
+    if (!word || word.trim() === "")
       return <View style={{ width: 0, height: 0 }} />;
-    }
 
     if (isHTML(word)) {
       return (
@@ -98,5 +93,19 @@ export const WordComponent = ({
     }
   };
 
-  return <View style={{ marginRight: 3 }}>{renderContent()}</View>;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+  }, []);
+
+  return (
+    <Animated.View style={{ marginRight: 3, opacity: fadeAnim }}>
+      {renderContent()}
+    </Animated.View>
+  );
 };

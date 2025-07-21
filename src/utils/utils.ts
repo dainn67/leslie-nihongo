@@ -140,7 +140,7 @@ const splitCustomWords = (input: string) => {
         splittedText.push(`**${word.replaceAll("**", "")}**`);
       } else {
         if (isBold) {
-          splittedText.push("**$word**");
+          splittedText.push(`**${word}**`);
         } else {
           splittedText.push(word);
         }

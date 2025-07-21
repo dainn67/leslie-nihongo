@@ -27,27 +27,41 @@ const chatbotSlice = createSlice({
         }),
       ];
     },
-    setIsLoading: (state, action: PayloadAction<boolean>) => {
-      state.isLoading = action.payload;
+    addLoading: (state) => {
+      state.messages.push(
+        createChatMessage({ loading: true, sender: Sender.BOT })
+      );
+    },
+    updateLatestStream: (state, action: PayloadAction<{ word: string }>) => {
+      const index = state.messages.length - 1;
+      if (index !== -1) {
+        const message = state.messages[index];
+        message.loading = false;
+        message.words.push(action.payload.word);
+      }
+    },
+    updateLatestMessageIndex: (
+      state,
+      action: PayloadAction<{ messageId: string }>
+    ) => {
+      const index = state.messages.length - 1;
+      if (index !== -1) {
+        const message = state.messages[index];
+        message.loading = false;
+        message.id = action.payload.messageId;
+      }
     },
     clearChat: () => initialState,
   },
-  extraReducers: (builder) => {
-    builder
-      .addCase(sendMessageThunk.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(sendMessageThunk.fulfilled, (state, action) => {
-        state.messages.push(action.payload);
-        state.isLoading = false;
-      })
-      .addCase(sendMessageThunk.rejected, (state) => {
-        state.isLoading = false;
-      });
-  },
 });
 
-export const { clearChat, addMessage, setIsLoading, addInitialMessage } =
-  chatbotSlice.actions;
+export const {
+  clearChat,
+  addMessage,
+  addLoading,
+  addInitialMessage,
+  updateLatestStream,
+  updateLatestMessageIndex,
+} = chatbotSlice.actions;
 
 export default chatbotSlice.reducer;

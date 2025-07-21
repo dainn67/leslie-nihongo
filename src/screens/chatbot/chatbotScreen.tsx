@@ -11,13 +11,14 @@ import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { useAppDispatch } from "../../hooks/hooks";
 import {
   addInitialMessage,
+  addLoading,
   addMessage,
   clearChat,
 } from "../../features/chatbot/chatMessageList/chatbotSlice";
 import { ChatMessage, createChatMessage } from "../../features/chatbot/types";
 import { AppConfig } from "../../config/appConfig";
 import ClearChatDialog from "./components/clearChatDialog";
-import { sendStreamMessageThunk } from "../../features/chatbot/chatMessageStream/chatMessageThunk";
+import { sendStreamMessageThunk as sendStreamMessage } from "../../features/chatbot/chatMessageStream/chatMessageThunk";
 
 type DrawerParamList = {
   Chatbot: undefined;
@@ -47,9 +48,12 @@ export const ChatbotScreen = () => {
     const data = message.trim();
     const userMessage: ChatMessage = createChatMessage({ fullText: data });
 
+    // Add user message & loading messages
     dispatch(addMessage(userMessage));
-    // dispatch(sendMessageThunk(userMessage));
-    sendStreamMessageThunk(data, dispatch);
+    dispatch(addLoading());
+
+    // Send stream message to server
+    sendStreamMessage(data, dispatch);
   };
 
   const openClearChatDialog = () => {

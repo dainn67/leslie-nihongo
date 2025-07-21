@@ -12,6 +12,7 @@ export type ChatMessage = {
   currentIndex: number;
   wordsLength: number;
   sender: Sender;
+  loading: boolean;
   createdAt: string;
 };
 
@@ -28,6 +29,7 @@ export const createChatMessage = (
     currentIndex: partial?.currentIndex ?? 0,
     wordsLength: partial?.wordsLength ?? words.length,
     sender: partial?.sender ?? Sender.USER,
+    loading: partial?.loading ?? false,
     createdAt: partial?.createdAt ?? timestamp,
   };
 };
