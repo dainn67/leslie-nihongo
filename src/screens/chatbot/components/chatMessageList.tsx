@@ -28,7 +28,11 @@ export const ChatMessageList = () => {
         scrollEventThrottle={16}
       >
         {messages.map((message, index) => (
-          <ChatBubble key={index} message={message} />
+          <ChatBubble
+            key={index}
+            isInitialMessage={index === 0}
+            message={message}
+          />
         ))}
       </ScrollView>
     </View>

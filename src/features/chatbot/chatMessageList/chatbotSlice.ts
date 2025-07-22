@@ -19,14 +19,6 @@ const chatbotSlice = createSlice({
     addMessage: (state, action: PayloadAction<ChatMessage>) => {
       state.messages.push(action.payload);
     },
-    addInitialMessage: (state) => {
-      state.messages = [
-        createChatMessage({
-          fullText: "Hello, how can I help you today?",
-          sender: Sender.BOT,
-        }),
-      ];
-    },
     addLoading: (state) => {
       state.messages.push(
         createChatMessage({ loading: true, sender: Sender.BOT })
@@ -59,7 +51,6 @@ export const {
   clearChat,
   addMessage,
   addLoading,
-  addInitialMessage,
   updateLatestStream,
   updateLatestMessageIndex,
 } = chatbotSlice.actions;

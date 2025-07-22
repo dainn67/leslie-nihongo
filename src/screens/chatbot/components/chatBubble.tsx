@@ -1,13 +1,15 @@
 import React from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { Sender } from "../../../features/chatbot/types";
 import { useTheme } from "../../../theme";
 import { WordComponent } from "../../../components/streamingText/WordComponent";
 import { MainButton } from "../../../components/buttons";
 import { ChatMessage } from "../../../features/chatbot/types";
+import { LoadingText } from "./loadingText";
 
 interface ChatBubbleProps {
   message: ChatMessage;
+  isInitialMessage?: boolean;
   showButtons?: boolean;
 }
 
@@ -34,7 +36,7 @@ export const ChatBubble = ({ message, showButtons }: ChatBubbleProps) => {
     >
       <View style={bubbleStyle}>
         <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-          {message.loading && <Text>Loading...</Text>}
+          {message.loading && <LoadingText text="Analyzing" />}
           {!message.loading &&
             message.words.map((word, index) => (
               <WordComponent
@@ -77,6 +79,7 @@ const styles = StyleSheet.create({
   },
   userContainer: {
     alignItems: "flex-end",
+    marginLeft: 32,
   },
   botContainer: {
     alignItems: "flex-start",

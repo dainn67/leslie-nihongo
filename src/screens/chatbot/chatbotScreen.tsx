@@ -8,9 +8,8 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ChatMessageList } from "./components/chatMessageList";
 import { useNavigation } from "@react-navigation/native";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
-import { useAppDispatch } from "../../hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import {
-  addInitialMessage,
   addLoading,
   addMessage,
   clearChat,
@@ -39,10 +38,14 @@ export const ChatbotScreen = () => {
   const [visible, setVisible] = useState(false);
 
   const dispatch = useAppDispatch();
+  const messages = useAppSelector((state) => state.chatbot.messages);
 
   useEffect(() => {
-    dispatch(addInitialMessage());
-  }, []);
+    if (messages.length === 0) {
+      dispatch(addLoading());
+      sendStreamMessage("Hello", dispatch);
+    }
+  }, [messages.length]);
 
   const handleSend = (message: string) => {
     const data = message.trim();
