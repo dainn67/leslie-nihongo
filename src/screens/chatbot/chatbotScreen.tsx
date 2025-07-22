@@ -42,8 +42,8 @@ export const ChatbotScreen = () => {
 
   useEffect(() => {
     if (messages.length === 0) {
-      dispatch(addLoading());
-      sendStreamMessage("Hello", dispatch);
+      dispatch(addLoading({ loadingText: "Analyzing" }));
+      sendStreamMessage("Hello", dispatch, true);
     }
   }, [messages.length]);
 
@@ -53,7 +53,7 @@ export const ChatbotScreen = () => {
 
     // Add user message & loading messages
     dispatch(addMessage(userMessage));
-    dispatch(addLoading());
+    dispatch(addLoading({ loadingText: "Thinking" }));
 
     // Send stream message to server
     sendStreamMessage(data, dispatch);

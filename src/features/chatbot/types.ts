@@ -11,7 +11,9 @@ export type ChatMessage = {
   fullText: string;
   currentIndex: number;
   wordsLength: number;
+  suggestedActions: SuggestedAction[];
   sender: Sender;
+  loadingText: string;
   loading: boolean;
   createdAt: string;
 };
@@ -28,8 +30,17 @@ export const createChatMessage = (
     words,
     currentIndex: partial?.currentIndex ?? 0,
     wordsLength: partial?.wordsLength ?? words.length,
+    suggestedActions: partial?.suggestedActions ?? [],
     sender: partial?.sender ?? Sender.USER,
     loading: partial?.loading ?? false,
+    loadingText: partial?.loadingText ?? "Thinking",
     createdAt: partial?.createdAt ?? timestamp,
   };
 };
+
+export type SuggestedAction = {
+  id: number;
+  title: string;
+};
+
+export const Delimiter = "--//--";

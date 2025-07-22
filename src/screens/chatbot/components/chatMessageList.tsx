@@ -18,6 +18,10 @@ export const ChatMessageList = () => {
     scrollViewRef.current?.scrollToEnd({ animated: true });
   };
 
+  const handleClickAction = (actionId: number) => {
+    console.log("actionId:", actionId);
+  };
+
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <ScrollView
@@ -32,6 +36,7 @@ export const ChatMessageList = () => {
             key={index}
             isInitialMessage={index === 0}
             message={message}
+            onClickAction={handleClickAction}
           />
         ))}
       </ScrollView>

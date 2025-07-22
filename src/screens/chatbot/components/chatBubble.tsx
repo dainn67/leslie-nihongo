@@ -10,10 +10,10 @@ import { LoadingText } from "./loadingText";
 interface ChatBubbleProps {
   message: ChatMessage;
   isInitialMessage?: boolean;
-  showButtons?: boolean;
+  onClickAction: (actionId: number) => void;
 }
 
-export const ChatBubble = ({ message, showButtons }: ChatBubbleProps) => {
+export const ChatBubble = ({ message, onClickAction }: ChatBubbleProps) => {
   const { colors } = useTheme();
   const isUser = message.sender === Sender.USER;
 
@@ -26,6 +26,10 @@ export const ChatBubble = ({ message, showButtons }: ChatBubbleProps) => {
     },
   ];
 
+  const handleClickAction = (actionId: number) => {
+    if (onClickAction) onClickAction(actionId);
+  };
+
   return (
     <View
       id={message.id}
@@ -36,7 +40,7 @@ export const ChatBubble = ({ message, showButtons }: ChatBubbleProps) => {
     >
       <View style={bubbleStyle}>
         <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-          {message.loading && <LoadingText text="Analyzing" />}
+          {message.loading && <LoadingText text={message.loadingText} />}
           {!message.loading &&
             message.words.map((word, index) => (
               <WordComponent
@@ -47,26 +51,24 @@ export const ChatBubble = ({ message, showButtons }: ChatBubbleProps) => {
               />
             ))}
         </View>
-        {showButtons && (
-          <View style={{ flexDirection: "row" }}>
-            {[1, 2, 3].map((e, i) => {
-              return (
-                <MainButton
-                  key={i}
-                  title={`Button ${e.toString()}`}
-                  radius={16}
-                  width={100}
-                  paddingVertical={12}
-                  marginHorizontal={4}
-                  marginVertical={4}
-                  backgroundColor={colors.primary}
-                  textColor="white"
-                  onPress={() => {}}
-                />
-              );
-            })}
-          </View>
-        )}
+        <View style={{ flexDirection: "column", flexWrap: "wrap" }}>
+          {message.suggestedActions.map((e, i) => {
+            return (
+              <MainButton
+                key={i}
+                title={e.title}
+                radius={16}
+                paddingVertical={12}
+                paddingHorizontal={4}
+                marginHorizontal={4}
+                marginVertical={4}
+                backgroundColor={colors.primary}
+                textColor="white"
+                onPress={() => handleClickAction(e.id)}
+              />
+            );
+          })}
+        </View>
       </View>
     </View>
   );

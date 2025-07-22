@@ -1,5 +1,6 @@
 import React from "react";
-import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
+import { TouchableOpacity, StyleSheet } from "react-native";
+import { CustomText } from "../text/customText";
 
 interface MainButtonProps {
   title: string;
@@ -47,8 +48,10 @@ const MainButton = ({
   );
 
   return (
-    <TouchableOpacity style={style.button} onPress={onPress}>
-      <Text style={style.text}>{title}</Text>
+    <TouchableOpacity style={[style.button, styles.shadow]} onPress={onPress}>
+      <CustomText style={[style.text, { textAlign: "center" }]}>
+        {title}
+      </CustomText>
     </TouchableOpacity>
   );
 };
@@ -85,5 +88,15 @@ const getStyles = (
       fontWeight: fontWeight,
     },
   });
+
+const styles = StyleSheet.create({
+  shadow: {
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+});
 
 export default MainButton;

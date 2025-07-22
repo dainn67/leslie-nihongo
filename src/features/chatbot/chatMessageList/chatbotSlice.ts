@@ -1,6 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ChatMessage, createChatMessage, Sender } from "../types";
-import { sendMessageThunk } from "./chatbotThunk";
+import {
+  ChatMessage,
+  createChatMessage,
+  Sender,
+  SuggestedAction,
+} from "../types";
 
 type ChatState = {
   messages: ChatMessage[];
@@ -19,9 +23,13 @@ const chatbotSlice = createSlice({
     addMessage: (state, action: PayloadAction<ChatMessage>) => {
       state.messages.push(action.payload);
     },
-    addLoading: (state) => {
+    addLoading: (state, action: PayloadAction<{ loadingText: string }>) => {
       state.messages.push(
-        createChatMessage({ loading: true, sender: Sender.BOT })
+        createChatMessage({
+          loading: true,
+          sender: Sender.BOT,
+          loadingText: action.payload.loadingText,
+        })
       );
     },
     updateLatestStream: (state, action: PayloadAction<{ word: string }>) => {
@@ -32,7 +40,7 @@ const chatbotSlice = createSlice({
         message.words.push(action.payload.word);
       }
     },
-    updateLatestMessageIndex: (
+    updateLatestMessageId: (
       state,
       action: PayloadAction<{ messageId: string }>
     ) => {
@@ -41,6 +49,23 @@ const chatbotSlice = createSlice({
         const message = state.messages[index];
         message.loading = false;
         message.id = action.payload.messageId;
+      }
+    },
+    updateLatestSuggestedActions: (
+      state,
+      action: PayloadAction<{ suggestedActions: SuggestedAction[] }>
+    ) => {
+      const index = state.messages.length - 1;
+      if (index !== -1) {
+        const message = state.messages[index];
+        message.suggestedActions = action.payload.suggestedActions.map(
+          (action) => ({
+            id: action["id"],
+            title: action["title"],
+          })
+        );
+
+        console.log(message.suggestedActions.length);
       }
     },
     clearChat: () => initialState,
@@ -52,7 +77,8 @@ export const {
   addMessage,
   addLoading,
   updateLatestStream,
-  updateLatestMessageIndex,
+  updateLatestMessageId,
+  updateLatestSuggestedActions,
 } = chatbotSlice.actions;
 
 export default chatbotSlice.reducer;

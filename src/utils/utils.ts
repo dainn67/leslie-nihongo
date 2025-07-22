@@ -1,3 +1,5 @@
+import { Delimiter } from "../features/chatbot/types";
+
 const splitCustomWords = (input: string) => {
   let splittedText: string[] = [];
 
@@ -159,6 +161,12 @@ const splitCustomWords = (input: string) => {
   }
 
   splittedText = splittedText.filter((e) => e != "**");
+
+  const suggestionIndex = splittedText.findIndex((element) =>
+    element.includes(Delimiter)
+  );
+  if (suggestionIndex !== -1)
+    splittedText.splice(suggestionIndex, splittedText.length - suggestionIndex);
 
   return splittedText;
 };

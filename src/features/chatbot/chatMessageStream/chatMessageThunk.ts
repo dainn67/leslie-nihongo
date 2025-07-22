@@ -6,14 +6,17 @@ import { splitCustomWords } from "../../../utils/utils";
 import Constants from "expo-constants";
 import {
   updateLatestStream,
-  updateLatestMessageIndex,
+  updateLatestMessageId,
+  updateLatestSuggestedActions,
 } from "../chatMessageList/chatbotSlice";
+import { Delimiter } from "../types";
 
 const { DIFY_API_KEY } = Constants.expoConfig?.extra ?? {};
 
 export const sendStreamMessageThunk = (
   message: string,
-  dispatch: AppDispatch
+  dispatch: AppDispatch,
+  isInitial?: boolean
 ) => {
   let fullText = "";
   let wordIndex = 0;
@@ -25,7 +28,9 @@ export const sendStreamMessageThunk = (
     DIFY_API_KEY,
     {
       query: message,
-      inputs: {},
+      inputs: {
+        is_initial: isInitial ? 1 : 0,
+      },
       response_mode: "streaming",
       user: "dainn",
       auto_generate_name: false,
@@ -40,7 +45,7 @@ export const sendStreamMessageThunk = (
 
       if (type === "message") fullText += text;
       else if (type === "workflow_started") {
-        dispatch(updateLatestMessageIndex({ messageId }));
+        dispatch(updateLatestMessageId({ messageId }));
       }
     },
     () => {
@@ -66,6 +71,16 @@ export const sendStreamMessageThunk = (
     // Stop interval at lastword, after original stream is done
     if (wordLength > 0 && wordIndex == words.length - 1) {
       dispatch(updateLatestStream({ word: words[wordIndex] }));
+
+      const splittedText = fullText.split(Delimiter);
+      if (splittedText.length > 3) {
+        const suggestedActions = splittedText.slice(1).map((text) => {
+          const [id, title] = text.split("-");
+          return { id: parseInt(id), title };
+        });
+        dispatch(updateLatestSuggestedActions({ suggestedActions }));
+      }
+
       clearInterval(interval);
     }
   }, 20);
