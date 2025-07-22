@@ -14,6 +14,7 @@ export type ChatMessage = {
   suggestedActions: SuggestedAction[];
   sender: Sender;
   loadingText: string;
+  actionId: number;
   loading: boolean;
   createdAt: string;
 };
@@ -32,6 +33,7 @@ export const createChatMessage = (
     wordsLength: partial?.wordsLength ?? words.length,
     suggestedActions: partial?.suggestedActions ?? [],
     sender: partial?.sender ?? Sender.USER,
+    actionId: partial?.actionId ?? 0,
     loading: partial?.loading ?? false,
     loadingText: partial?.loadingText ?? "Thinking",
     createdAt: partial?.createdAt ?? timestamp,

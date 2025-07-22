@@ -1,7 +1,6 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { useTheme } from "../../../theme";
-import { opacity } from "react-native-reanimated/lib/typescript/Colors";
 
 interface ChatbotIconProps {
   shape?: "circle" | "square" | "rounded";

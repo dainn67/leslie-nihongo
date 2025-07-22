@@ -1,13 +1,20 @@
 import React, { useRef, useEffect } from "react";
-import { ChatBubble } from "./chatBubble";
+import { ChatBubble } from "./ChatBubble";
 import { ScrollView, View, StyleSheet } from "react-native";
-import { useAppSelector } from "../../../hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import { useTheme } from "../../../theme";
+import {
+  addLoading,
+  addMessage,
+} from "../../../features/chatbot/chatMessageList/chatbotSlice";
+import { createChatMessage } from "../../../features/chatbot/types";
 
 export const ChatMessageList = () => {
   const messages = useAppSelector((state) => state.chatbot.messages);
   const scrollViewRef = useRef<ScrollView>(null);
   const { colors } = useTheme();
+
+  const dispatch = useAppDispatch();
 
   // Auto scroll to bottom when new messages are added
   useEffect(() => {
@@ -18,8 +25,14 @@ export const ChatMessageList = () => {
     scrollViewRef.current?.scrollToEnd({ animated: true });
   };
 
-  const handleClickAction = (actionId: number) => {
-    console.log("actionId:", actionId);
+  const handleClickAction = (actionId: number, title: string) => {
+    const userMessage = createChatMessage({ fullText: title });
+
+    dispatch(addMessage(userMessage));
+    setTimeout(() => {
+      // TODO: Implement
+      dispatch(addLoading({ loadingText: "Thinking" }));
+    }, 200);
   };
 
   return (

@@ -64,8 +64,6 @@ const chatbotSlice = createSlice({
             title: action["title"],
           })
         );
-
-        console.log(message.suggestedActions.length);
       }
     },
     clearChat: () => initialState,

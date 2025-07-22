@@ -7,11 +7,10 @@ interface LoadingTextProps {
 }
 
 export const LoadingText = ({ text }: LoadingTextProps) => {
-  const dots = [
-    useRef(new Animated.Value(0)).current,
-    useRef(new Animated.Value(0)).current,
-    useRef(new Animated.Value(0)).current,
-  ];
+  const dots = Array.from(
+    { length: 3 },
+    () => useRef(new Animated.Value(0)).current
+  );
 
   useEffect(() => {
     startDotAnimation(0);

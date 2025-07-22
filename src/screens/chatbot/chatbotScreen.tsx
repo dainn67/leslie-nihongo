@@ -2,22 +2,22 @@ import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { AppBar } from "../../components/AppBar";
-import { ChatInput } from "./components/chatInput";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { ChatMessageList } from "./components/chatMessageList";
+import { ChatMessageList } from "./components/ChatMessageList";
 import { useNavigation } from "@react-navigation/native";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
+import { createChatMessage } from "../../features/chatbot/types";
+import { AppConfig } from "../../config/appConfig";
+import { sendStreamMessageThunk as sendStreamMessage } from "../../features/chatbot/chatMessageStream/chatMessageThunk";
+import ClearChatDialog from "./components/ClearChatDialog";
 import {
   addLoading,
   addMessage,
   clearChat,
 } from "../../features/chatbot/chatMessageList/chatbotSlice";
-import { ChatMessage, createChatMessage } from "../../features/chatbot/types";
-import { AppConfig } from "../../config/appConfig";
-import ClearChatDialog from "./components/clearChatDialog";
-import { sendStreamMessageThunk as sendStreamMessage } from "../../features/chatbot/chatMessageStream/chatMessageThunk";
+import { ChatInput } from "./components/ChatInput";
 
 type DrawerParamList = {
   Chatbot: undefined;
@@ -49,7 +49,7 @@ export const ChatbotScreen = () => {
 
   const handleSend = (message: string) => {
     const data = message.trim();
-    const userMessage: ChatMessage = createChatMessage({ fullText: data });
+    const userMessage = createChatMessage({ fullText: data });
 
     // Add user message & loading messages
     dispatch(addMessage(userMessage));

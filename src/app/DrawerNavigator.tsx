@@ -5,8 +5,7 @@ import {
   DrawerItemList,
 } from "@react-navigation/drawer";
 import { View } from "react-native";
-import { ChatbotScreen } from "../screens/chatbot/chatbotScreen";
-import { CounterScreen } from "../screens/counter/counterScreen";
+import { ChatbotScreen } from "../screens/chatbot/ChatbotScreen";
 import { ThemeToggleButton } from "../components/ThemeToggleButton";
 import { useTheme } from "../theme";
 import { Ionicons } from "@expo/vector-icons";
@@ -49,20 +48,6 @@ export const DrawerNavigator = () => {
           ),
           drawerIcon: ({ color, size }) => (
             <Ionicons name="chatbubbles" size={size} color={color} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="Counter"
-        component={CounterScreen}
-        options={{
-          drawerLabel: ({ color }) => (
-            <CustomText weight="Regular" style={{ color }}>
-              Counter
-            </CustomText>
-          ),
-          drawerIcon: ({ color, size }) => (
-            <Ionicons name="calculator" size={size} color={color} />
           ),
         }}
       />

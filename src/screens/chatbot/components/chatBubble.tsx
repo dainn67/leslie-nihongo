@@ -3,14 +3,14 @@ import { View, StyleSheet } from "react-native";
 import { Sender } from "../../../features/chatbot/types";
 import { useTheme } from "../../../theme";
 import { WordComponent } from "../../../components/streamingText/WordComponent";
-import { MainButton } from "../../../components/buttons";
 import { ChatMessage } from "../../../features/chatbot/types";
-import { LoadingText } from "./loadingText";
+import { LoadingText } from "./LoadingText";
+import { ChatActionButtons } from "./ChatActionButtons";
 
 interface ChatBubbleProps {
   message: ChatMessage;
   isInitialMessage?: boolean;
-  onClickAction: (actionId: number) => void;
+  onClickAction: (actionId: number, title: string) => void;
 }
 
 export const ChatBubble = ({ message, onClickAction }: ChatBubbleProps) => {
@@ -26,8 +26,8 @@ export const ChatBubble = ({ message, onClickAction }: ChatBubbleProps) => {
     },
   ];
 
-  const handleClickAction = (actionId: number) => {
-    if (onClickAction) onClickAction(actionId);
+  const handleClickAction = (actionId: number, title: string) => {
+    if (onClickAction) onClickAction(actionId, title);
   };
 
   return (
@@ -51,24 +51,12 @@ export const ChatBubble = ({ message, onClickAction }: ChatBubbleProps) => {
               />
             ))}
         </View>
-        <View style={{ flexDirection: "column", flexWrap: "wrap" }}>
-          {message.suggestedActions.map((e, i) => {
-            return (
-              <MainButton
-                key={i}
-                title={e.title}
-                radius={16}
-                paddingVertical={12}
-                paddingHorizontal={4}
-                marginHorizontal={4}
-                marginVertical={4}
-                backgroundColor={colors.primary}
-                textColor="white"
-                onPress={() => handleClickAction(e.id)}
-              />
-            );
-          })}
-        </View>
+        {message.suggestedActions.length > 0 && (
+          <ChatActionButtons
+            suggestedActions={message.suggestedActions}
+            onClickAction={handleClickAction}
+          />
+        )}
       </View>
     </View>
   );
