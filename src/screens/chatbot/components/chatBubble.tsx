@@ -6,6 +6,7 @@ import { WordComponent } from "../../../components/streamingText/WordComponent";
 import { ChatMessage } from "../../../features/chatbot/types";
 import { LoadingText } from "./LoadingText";
 import { ChatActionButtons } from "./ChatActionButtons";
+import { CustomText } from "../../../components/text/customText";
 
 interface ChatBubbleProps {
   message: ChatMessage;
@@ -41,7 +42,10 @@ export const ChatBubble = ({ message, onClickAction }: ChatBubbleProps) => {
       <View style={bubbleStyle}>
         <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
           {message.loading && <LoadingText text={message.loadingText} />}
+
+          {/* Streaming text */}
           {!message.loading &&
+            !message.isQuestionJson &&
             message.words.map((word, index) => (
               <WordComponent
                 key={index}
@@ -50,8 +54,14 @@ export const ChatBubble = ({ message, onClickAction }: ChatBubbleProps) => {
                 color={isUser ? "white" : "black"}
               />
             ))}
+
+          {message.isQuestionJson && (
+            <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+              <CustomText>{message.fullText}</CustomText>
+            </View>
+          )}
         </View>
-        {message.suggestedActions.length > 0 && (
+        {message.suggestedActions.length > 0 && !message.isQuestionJson && (
           <ChatActionButtons
             suggestedActions={message.suggestedActions}
             onClickAction={handleClickAction}

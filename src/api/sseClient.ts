@@ -1,14 +1,22 @@
 import EventSource from "react-native-sse";
 
-export const connectSSE = (
-  url: string,
-  token?: string,
-  body?: any,
-  onOpen?: () => void,
-  onMessage?: (data: any) => void,
-  onClose?: () => void,
-  onError?: (error: any) => void
-) => {
+export const connectSSE = ({
+  url,
+  token,
+  body,
+  onOpen,
+  onMessage,
+  onClose,
+  onError,
+}: {
+  url: string;
+  token?: string;
+  body?: any;
+  onOpen?: () => void;
+  onMessage?: (data: any) => void;
+  onClose?: () => void;
+  onError?: (error: any) => void;
+}) => {
   const es = new EventSource(url, {
     method: "POST",
     headers: {

@@ -5,9 +5,12 @@ import { AppDispatch } from "../../../app/store";
 import { splitCustomWords } from "../../../utils/utils";
 import Constants from "expo-constants";
 import {
-  updateLatestStream,
-  updateLatestMessageId,
-  updateLatestSuggestedActions,
+  updateLastStream,
+  updateLastMessageId,
+  updateLastSuggestedActions,
+  updateLastMessageType,
+  updateLastLoading,
+  updateLastFullText,
 } from "../chatMessageList/chatbotSlice";
 import { Delimiter } from "../types";
 
@@ -21,12 +24,13 @@ export const sendStreamMessageThunk = (
   let fullText = "";
   let wordIndex = 0;
   let wordLength = 0;
+  let isQuestionJson = false;
 
   // Original stream
-  connectSSE(
-    ApiConfig.difyServerUrl,
-    DIFY_API_KEY,
-    {
+  connectSSE({
+    url: ApiConfig.difyServerUrl,
+    token: DIFY_API_KEY,
+    body: {
       query: message,
       inputs: {
         is_initial: isInitial ? 1 : 0,
@@ -35,26 +39,33 @@ export const sendStreamMessageThunk = (
       user: "dainn",
       auto_generate_name: false,
     },
-    () => {
-      dispatch(setIsStreaming(true));
-    },
-    (data) => {
+    onOpen: () => dispatch(setIsStreaming(true)),
+    onMessage: (data) => {
       const type = data["event"];
       const messageId = data["message_id"];
       const text = data["answer"];
 
-      if (type === "message") fullText += text;
-      else if (type === "workflow_started") {
-        dispatch(updateLatestMessageId({ messageId }));
+      if (type === "message") {
+        const jsonPattern = "``";
+
+        if (!isQuestionJson && text.includes(jsonPattern)) {
+          dispatch(updateLastMessageType());
+          isQuestionJson = true;
+        }
+
+        fullText += text;
+      } else if (type === "workflow_started") {
+        dispatch(updateLastMessageId({ messageId }));
       }
     },
-    () => {
+    onClose: () => {
       wordLength = splitCustomWords(fullText).length;
+      dispatch(updateLastFullText({ fullText }));
     },
-    (error) => {
-      console.log("SSE error", error);
-    }
-  );
+    onError: (error) => console.log("SSE error", error),
+  });
+
+  let start = false;
 
   const interval = setInterval(() => {
     // Split word every time update to find latest words
@@ -62,26 +73,33 @@ export const sendStreamMessageThunk = (
 
     // Skip if new text haven't arrived yet
     if (words.length > wordIndex + 1) {
-      const nextWord = words[wordIndex];
-      dispatch(updateLatestStream({ word: nextWord }));
-
-      wordIndex++;
-    }
-
-    // Stop interval at lastword, after original stream is done
-    if (wordLength > 0 && wordIndex == words.length - 1) {
-      dispatch(updateLatestStream({ word: words[wordIndex] }));
-
-      const splittedText = fullText.split(Delimiter);
-      if (splittedText.length > 3) {
-        const suggestedActions = splittedText.slice(1).map((text) => {
-          const [id, title] = text.split("-");
-          return { id: parseInt(id), title };
-        });
-        dispatch(updateLatestSuggestedActions({ suggestedActions }));
+      // Start streaming
+      if (!start) {
+        dispatch(updateLastLoading({ loading: false }));
+        start = true;
       }
 
-      clearInterval(interval);
+      const nextWord = words[wordIndex];
+      dispatch(updateLastStream({ word: nextWord }));
+
+      wordIndex++;
+
+      // Stop interval at lastword, after original stream is done
+      if (wordLength > 0 && wordIndex == words.length - 1) {
+        dispatch(updateLastStream({ word: words[wordIndex] }));
+
+        const splittedText = fullText.split(Delimiter);
+        if (splittedText.length > 3) {
+          const suggestedActions = splittedText.slice(1).map((text) => {
+            const [id, title] = text.split("-");
+            return { id: parseInt(id), title };
+          });
+
+          dispatch(updateLastSuggestedActions({ suggestedActions }));
+        }
+
+        clearInterval(interval);
+      }
     }
   }, 20);
 };

@@ -7,15 +7,28 @@ export enum Sender {
 
 export type ChatMessage = {
   id: string;
+
+  // Streaming text
   words: string[];
-  fullText: string;
   currentIndex: number;
+  fullText: string;
   wordsLength: number;
-  suggestedActions: SuggestedAction[];
-  sender: Sender;
-  loadingText: string;
-  actionId: number;
+
+  // Loading status
   loading: boolean;
+  loadingText: string;
+
+  // Suggested actions
+  suggestedActions: SuggestedAction[];
+
+  // Type and sender
+  isQuestionJson: boolean;
+  sender: Sender;
+
+  // Id when click suggested action
+  actionId: number;
+
+  // Timestamp
   createdAt: string;
 };
 
@@ -36,6 +49,7 @@ export const createChatMessage = (
     actionId: partial?.actionId ?? 0,
     loading: partial?.loading ?? false,
     loadingText: partial?.loadingText ?? "Thinking",
+    isQuestionJson: partial?.isQuestionJson ?? false,
     createdAt: partial?.createdAt ?? timestamp,
   };
 };

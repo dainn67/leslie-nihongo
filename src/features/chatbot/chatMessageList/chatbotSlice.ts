@@ -32,26 +32,24 @@ const chatbotSlice = createSlice({
         })
       );
     },
-    updateLatestStream: (state, action: PayloadAction<{ word: string }>) => {
+    updateLastStream: (state, action: PayloadAction<{ word: string }>) => {
       const index = state.messages.length - 1;
       if (index !== -1) {
         const message = state.messages[index];
-        message.loading = false;
         message.words.push(action.payload.word);
       }
     },
-    updateLatestMessageId: (
+    updateLastMessageId: (
       state,
       action: PayloadAction<{ messageId: string }>
     ) => {
       const index = state.messages.length - 1;
       if (index !== -1) {
         const message = state.messages[index];
-        message.loading = false;
         message.id = action.payload.messageId;
       }
     },
-    updateLatestSuggestedActions: (
+    updateLastSuggestedActions: (
       state,
       action: PayloadAction<{ suggestedActions: SuggestedAction[] }>
     ) => {
@@ -66,6 +64,32 @@ const chatbotSlice = createSlice({
         );
       }
     },
+    updateLastMessageType: (state) => {
+      const index = state.messages.length - 1;
+      if (index !== -1) {
+        const message = state.messages[index];
+
+        // Only update if not already a question json
+        if (!message.isQuestionJson) message.isQuestionJson = true;
+      }
+    },
+    updateLastLoading: (state, action: PayloadAction<{ loading: boolean }>) => {
+      const index = state.messages.length - 1;
+      if (index !== -1) {
+        const message = state.messages[index];
+        message.loading = action.payload.loading;
+      }
+    },
+    updateLastFullText: (
+      state,
+      action: PayloadAction<{ fullText: string }>
+    ) => {
+      const index = state.messages.length - 1;
+      if (index !== -1) {
+        const message = state.messages[index];
+        message.fullText = action.payload.fullText;
+      }
+    },
     clearChat: () => initialState,
   },
 });
@@ -74,9 +98,12 @@ export const {
   clearChat,
   addMessage,
   addLoading,
-  updateLatestStream,
-  updateLatestMessageId,
-  updateLatestSuggestedActions,
+  updateLastStream,
+  updateLastMessageId,
+  updateLastSuggestedActions,
+  updateLastMessageType,
+  updateLastLoading,
+  updateLastFullText,
 } = chatbotSlice.actions;
 
 export default chatbotSlice.reducer;
