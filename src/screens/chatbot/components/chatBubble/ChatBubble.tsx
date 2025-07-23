@@ -6,7 +6,7 @@ import { WordComponent } from "../../../../components/streamingText/WordComponen
 import { ChatMessage } from "../../../../features/chatbot/types";
 import { LoadingText } from "../LoadingText";
 import { ChatActionButtons } from "../ChatActionButtons";
-import { CustomText } from "../../../../components/text/customText";
+import { QuestionBubble } from "./QuestionBubble";
 
 interface ChatBubbleProps {
   message: ChatMessage;
@@ -31,6 +31,12 @@ export const ChatBubble = ({ message, onClickAction }: ChatBubbleProps) => {
     if (onClickAction) onClickAction(actionId, title);
   };
 
+  const isLoading = message.loading;
+  const isStreaming = !message.loading && !message.isQuestionJson;
+  const isQuestions = message.isQuestionJson && message.fullText.length > 0;
+  const showButtons =
+    message.suggestedActions.length > 0 && !message.isQuestionJson;
+
   return (
     <View
       id={message.id}
@@ -41,11 +47,10 @@ export const ChatBubble = ({ message, onClickAction }: ChatBubbleProps) => {
     >
       <View style={bubbleStyle}>
         <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-          {message.loading && <LoadingText text={message.loadingText} />}
+          {isLoading && <LoadingText text={message.loadingText} />}
 
           {/* Streaming text */}
-          {!message.loading &&
-            !message.isQuestionJson &&
+          {isStreaming &&
             message.words.map((word, index) => (
               <WordComponent
                 key={index}
@@ -55,13 +60,16 @@ export const ChatBubble = ({ message, onClickAction }: ChatBubbleProps) => {
               />
             ))}
 
-          {message.isQuestionJson && (
+          {/* Generated questions */}
+          {isQuestions && (
             <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-              <CustomText>{message.fullText}</CustomText>
+              <QuestionBubble questionJson={message.fullText} />
             </View>
           )}
         </View>
-        {message.suggestedActions.length > 0 && !message.isQuestionJson && (
+
+        {/* Action buttons */}
+        {showButtons && (
           <ChatActionButtons
             suggestedActions={message.suggestedActions}
             onClickAction={handleClickAction}
