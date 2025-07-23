@@ -17,7 +17,7 @@ import {
   addMessage,
   clearChat,
 } from "../../features/chatbot/chatMessageList/chatbotSlice";
-import { ChatInput } from "./components/ChatInput";
+import ChatInput from "./components/ChatInput";
 
 type DrawerParamList = {
   Chatbot: undefined;

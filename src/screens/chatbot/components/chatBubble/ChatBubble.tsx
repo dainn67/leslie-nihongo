@@ -1,12 +1,12 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import { Sender } from "../../../features/chatbot/types";
-import { useTheme } from "../../../theme";
-import { WordComponent } from "../../../components/streamingText/WordComponent";
-import { ChatMessage } from "../../../features/chatbot/types";
-import { LoadingText } from "./LoadingText";
-import { ChatActionButtons } from "./ChatActionButtons";
-import { CustomText } from "../../../components/text/customText";
+import { Sender } from "../../../../features/chatbot/types";
+import { useTheme } from "../../../../theme";
+import { WordComponent } from "../../../../components/streamingText/WordComponent";
+import { ChatMessage } from "../../../../features/chatbot/types";
+import { LoadingText } from "../LoadingText";
+import { ChatActionButtons } from "../ChatActionButtons";
+import { CustomText } from "../../../../components/text/customText";
 
 interface ChatBubbleProps {
   message: ChatMessage;

@@ -16,7 +16,7 @@ interface ChatInputProps {
   onSend: (message: string) => void;
 }
 
-export const ChatInput = ({ onSend }: ChatInputProps) => {
+const ChatInput = ({ onSend }: ChatInputProps) => {
   const [message, setMessage] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const { colors } = useTheme();
@@ -174,3 +174,5 @@ const getStyles = (isFocused: boolean, message: string, colors: any) =>
       elevation: message.length > 0 ? 4 : 0,
     },
   });
+
+export default ChatInput;

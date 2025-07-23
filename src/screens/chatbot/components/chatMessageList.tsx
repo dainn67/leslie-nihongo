@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import { ChatBubble } from "./ChatBubble";
+import { ChatBubble } from "./chatBubble/ChatBubble";
 import { ScrollView, View, StyleSheet } from "react-native";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import { useTheme } from "../../../theme";
