@@ -51,7 +51,7 @@ export const ChatbotScreen = () => {
     if (messages.length === 0) {
       dispatch(addLoading({ loadingText: "Analyzing" }));
       sendStreamMessage({
-        message: "Hello",
+        message: "Hi there",
         dispatch,
         level: userProgress.level,
         target: userProgress.target,
