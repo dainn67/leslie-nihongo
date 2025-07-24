@@ -9,6 +9,7 @@ interface QuestionsMessageProps {
 
 export const QuestionsMessage = ({ questionJson }: QuestionsMessageProps) => {
   const data = questionJson.replaceAll("```json", "").replaceAll("```", "");
+
   const questions: Question[] = JSON.parse(data);
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -65,7 +66,7 @@ export const QuestionsMessage = ({ questionJson }: QuestionsMessageProps) => {
       <CustomText style={styles.questionText}>
         Question: {question.question}
       </CustomText>
-      {question.answer.map((a: any, index: number) => (
+      {question.answers.map((a: any, index: number) => (
         <TouchableOpacity
           key={index}
           onPress={() => handleAnswerSelect(index)}
