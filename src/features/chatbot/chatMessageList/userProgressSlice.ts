@@ -33,11 +33,6 @@ const userProgressSlice = createSlice({
   },
 });
 
-export const {
-  setUserLevel,
-  setUserTarget,
-  setUserStartDate,
-  setUserExamDate,
-  clearUserProgress,
-} = userProgressSlice.actions;
+export const { setUserLevel, setUserTarget, setUserStartDate, setUserExamDate, clearUserProgress } =
+  userProgressSlice.actions;
 export default userProgressSlice.reducer;

@@ -9,10 +9,7 @@ interface ChatActionButtonsProps {
   onClickAction: (actionId: string, title: string) => void;
 }
 
-export const ChatActionButtons = ({
-  suggestedActions,
-  onClickAction,
-}: ChatActionButtonsProps) => {
+export const ChatActionButtons = ({ suggestedActions, onClickAction }: ChatActionButtonsProps) => {
   const { colors } = useTheme();
 
   const handleClickAction = (actionId: string, title: string) => {

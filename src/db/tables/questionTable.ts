@@ -41,10 +41,7 @@ export const createQuestionTable = () => {
 export const insertQuestions = (questions: Question[]) => {
   db.withTransactionSync(() => {
     const questionValues = questions
-      .map(
-        (question) =>
-          `('${question.id}', '${question.question}', '${question.explanation}')`
-      )
+      .map((question) => `('${question.id}', '${question.question}', '${question.explanation}')`)
       .join(", ");
     db.execSync(
       `INSERT INTO ${QuestionTable.tableName} (${QuestionTable.columnId}, ${QuestionTable.columnQuestion}, ${QuestionTable.columnExplanation}) VALUES ${questionValues}`
@@ -53,10 +50,7 @@ export const insertQuestions = (questions: Question[]) => {
     const answerValues = questions
       .flatMap((question) =>
         question.answers.map(
-          (answer) =>
-            `('${question.id}', '${answer.text}', '${
-              answer.isCorrect ? 1 : 0
-            }')`
+          (answer) => `('${question.id}', '${answer.text}', '${answer.isCorrect ? 1 : 0}')`
         )
       )
       .join(", ");
@@ -67,9 +61,7 @@ export const insertQuestions = (questions: Question[]) => {
 };
 
 export const getAllQuestions = () => {
-  const questionRows = db.getAllSync(
-    `SELECT * FROM ${QuestionTable.tableName}`
-  );
+  const questionRows = db.getAllSync(`SELECT * FROM ${QuestionTable.tableName}`);
 
   const questions: Question[] = questionRows.map((row: any) => ({
     id: row.id,
@@ -81,9 +73,7 @@ export const getAllQuestions = () => {
   const answerRows = db.getAllSync(`SELECT * FROM ${AnswerTable.tableName}`);
 
   answerRows.forEach((row: any) => {
-    const question = questions.find(
-      (question) => question.id === row.questionId
-    );
+    const question = questions.find((question) => question.id === row.questionId);
     if (question) {
       question.answers.push({
         text: row.answer,

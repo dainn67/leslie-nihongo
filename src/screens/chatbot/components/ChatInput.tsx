@@ -40,11 +40,7 @@ const ChatInput = ({ onSend }: ChatInputProps) => {
         <View style={styles.inputContainer}>
           <View style={styles.inputBox}>
             <View style={styles.iconContainer}>
-              <Ionicons
-                name="chatbubble-outline"
-                size={18}
-                color={colors.textSecondary}
-              />
+              <Ionicons name="chatbubble-outline" size={18} color={colors.textSecondary} />
             </View>
             <GestureTextInput
               style={styles.textInput}
@@ -64,11 +60,7 @@ const ChatInput = ({ onSend }: ChatInputProps) => {
                 onPress={() => setMessage("")}
                 activeOpacity={0.7}
               >
-                <Ionicons
-                  name="close-circle"
-                  size={20}
-                  color={colors.textSecondary}
-                />
+                <Ionicons name="close-circle" size={20} color={colors.textSecondary} />
               </TouchableOpacity>
             )}
           </View>
@@ -157,8 +149,7 @@ const getStyles = (isFocused: boolean, message: string, colors: any) =>
     },
     sendButton: {
       marginLeft: 12,
-      backgroundColor:
-        message.length > 0 ? colors.primary : colors.backgroundTertiary,
+      backgroundColor: message.length > 0 ? colors.primary : colors.backgroundTertiary,
       width: 48,
       height: 48,
       borderRadius: 24,

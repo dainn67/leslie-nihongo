@@ -140,9 +140,7 @@ const splitCustomWords = (input: string) => {
 
   splittedText = splittedText.filter((e) => e != "**");
 
-  const suggestionIndex = splittedText.findIndex((element) =>
-    element.includes(Delimiter)
-  );
+  const suggestionIndex = splittedText.findIndex((element) => element.includes(Delimiter));
 
   if (suggestionIndex !== -1) {
     const delimiterWord = splittedText[suggestionIndex];

@@ -10,11 +10,7 @@ interface WordComponentProps {
   color?: string;
 }
 
-export const WordComponent = ({
-  word,
-  fontSize,
-  color,
-}: WordComponentProps) => {
+export const WordComponent = ({ word, fontSize, color }: WordComponentProps) => {
   const isHTML = (text: string) => {
     const htmlPattern = /<[^>]*>/g;
     return htmlPattern.test(text);
@@ -23,8 +19,7 @@ export const WordComponent = ({
   const renderContent = () => {
     if (word == "\n") return <View style={{ width: 1000, height: 5 }} />;
 
-    if (!word || word.trim() === "")
-      return <View style={{ width: 0, height: 0 }} />;
+    if (!word || word.trim() === "") return <View style={{ width: 0, height: 0 }} />;
 
     if (isHTML(word)) {
       return (
@@ -83,10 +78,7 @@ export const WordComponent = ({
       );
     } else {
       return (
-        <CustomText
-          weight="Regular"
-          style={{ fontSize: fontSize, color: color }}
-        >
+        <CustomText weight="Regular" style={{ fontSize: fontSize, color: color }}>
           {word}
         </CustomText>
       );
@@ -104,8 +96,6 @@ export const WordComponent = ({
   }, []);
 
   return (
-    <Animated.View style={{ marginRight: 3, opacity: fadeAnim }}>
-      {renderContent()}
-    </Animated.View>
+    <Animated.View style={{ marginRight: 3, opacity: fadeAnim }}>{renderContent()}</Animated.View>
   );
 };

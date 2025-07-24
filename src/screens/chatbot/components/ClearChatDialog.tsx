@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  Modal,
-  Text,
-  TouchableOpacity,
-  View,
-  StyleSheet,
-  Dimensions,
-} from "react-native";
+import { Modal, TouchableOpacity, View, StyleSheet, Dimensions } from "react-native";
 import { useTheme } from "../../../theme";
 import { Ionicons } from "@expo/vector-icons";
 import { CustomText } from "../../../components/text/customText";
@@ -46,25 +39,16 @@ export const ClearChatDialog = ({
     >
       <View style={[styles.overlay, { backgroundColor: colors.overlay }]}>
         <View
-          style={[
-            styles.dialog,
-            { backgroundColor: colors.card, shadowColor: colors.cardShadow },
-          ]}
+          style={[styles.dialog, { backgroundColor: colors.card, shadowColor: colors.cardShadow }]}
         >
           <View style={styles.iconContainer}>
             <Ionicons name="trash" size={32} color={colors.error} />
           </View>
 
-          <CustomText
-            weight="Bold"
-            style={[styles.title, { color: colors.text }]}
-          >
+          <CustomText weight="Bold" style={[styles.title, { color: colors.text }]}>
             {title}
           </CustomText>
-          <CustomText
-            weight="Regular"
-            style={[styles.message, { color: colors.textSecondary }]}
-          >
+          <CustomText weight="Regular" style={[styles.message, { color: colors.textSecondary }]}>
             {message}
           </CustomText>
 
@@ -87,18 +71,11 @@ export const ClearChatDialog = ({
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[
-                styles.button,
-                styles.confirmButton,
-                { backgroundColor: colors.error },
-              ]}
+              style={[styles.button, styles.confirmButton, { backgroundColor: colors.error }]}
               onPress={handleConfirm}
               activeOpacity={0.8}
             >
-              <CustomText
-                weight="Regular"
-                style={[styles.confirmText, { color: "white" }]}
-              >
+              <CustomText weight="Regular" style={[styles.confirmText, { color: "white" }]}>
                 {confirmText}
               </CustomText>
             </TouchableOpacity>

@@ -34,15 +34,8 @@ export const ThemeToggleButton = () => {
       style={[styles.button, { backgroundColor: colors.background, borderColor: colors.border }]}
       onPress={handleToggle}
     >
-      <Ionicons
-        name={getIconName()}
-        size={24}
-        color={colors.primary}
-        style={styles.icon}
-      />
-      <Text style={[styles.label, { color: colors.text }]}>
-        {getLabel()}
-      </Text>
+      <Ionicons name={getIconName()} size={24} color={colors.primary} style={styles.icon} />
+      <Text style={[styles.label, { color: colors.text }]}>{getLabel()}</Text>
     </TouchableOpacity>
   );
 };
@@ -66,4 +59,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "500",
   },
-}); 
+});

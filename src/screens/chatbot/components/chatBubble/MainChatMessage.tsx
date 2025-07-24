@@ -14,10 +14,7 @@ interface MainChatMessageProps {
   onClickAction: (actionId: string, title: string) => void;
 }
 
-export const MainChatMessage = ({
-  message,
-  onClickAction,
-}: MainChatMessageProps) => {
+export const MainChatMessage = ({ message, onClickAction }: MainChatMessageProps) => {
   const { colors } = useTheme();
   const isUser = message.sender === Sender.USER;
 
@@ -35,22 +32,16 @@ export const MainChatMessage = ({
   };
 
   const isLoading = message.loading;
-  const isStreaming =
-    !message.loading && message.messageType === MessageType.STREAM_TEXT;
+  const isStreaming = !message.loading && message.messageType === MessageType.STREAM_TEXT;
   const isQuestions =
-    message.messageType === MessageType.QUESTION_JSON &&
-    message.fullText.length > 0;
+    message.messageType === MessageType.QUESTION_JSON && message.fullText.length > 0;
   const showButtons =
-    message.suggestedActions.length > 0 &&
-    message.messageType === MessageType.STREAM_TEXT;
+    message.suggestedActions.length > 0 && message.messageType === MessageType.STREAM_TEXT;
 
   return (
     <View
       id={message.id}
-      style={[
-        styles.container,
-        isUser ? styles.userContainer : styles.botContainer,
-      ]}
+      style={[styles.container, isUser ? styles.userContainer : styles.botContainer]}
     >
       <View style={bubbleStyle}>
         <View style={{ flexDirection: "row", flexWrap: "wrap" }}>

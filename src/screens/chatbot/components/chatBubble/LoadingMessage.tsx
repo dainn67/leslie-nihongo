@@ -2,10 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { Animated, View, StyleSheet } from "react-native";
 
 export const LoadingMessage = () => {
-  const dots = Array.from(
-    { length: 3 },
-    () => useRef(new Animated.Value(0)).current
-  );
+  const dots = Array.from({ length: 3 }, () => useRef(new Animated.Value(0)).current);
 
   useEffect(() => {
     startDotAnimation(0);

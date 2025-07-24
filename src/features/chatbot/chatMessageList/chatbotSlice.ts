@@ -1,11 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import {
-  ChatMessage,
-  createChatMessage,
-  MessageType,
-  Sender,
-  SuggestedAction,
-} from "../types";
+import { ChatMessage, createChatMessage, MessageType, Sender, SuggestedAction } from "../types";
 
 type ChatState = {
   messages: ChatMessage[];
@@ -40,10 +34,7 @@ const chatbotSlice = createSlice({
         message.words.push(action.payload.word);
       }
     },
-    updateLastMessageId: (
-      state,
-      action: PayloadAction<{ messageId: string }>
-    ) => {
+    updateLastMessageId: (state, action: PayloadAction<{ messageId: string }>) => {
       const index = state.messages.length - 1;
       if (index !== -1) {
         const message = state.messages[index];
@@ -57,12 +48,10 @@ const chatbotSlice = createSlice({
       const index = state.messages.length - 1;
       if (index !== -1) {
         const message = state.messages[index];
-        message.suggestedActions = action.payload.suggestedActions.map(
-          (action) => ({
-            id: action["id"],
-            title: action["title"],
-          })
-        );
+        message.suggestedActions = action.payload.suggestedActions.map((action) => ({
+          id: action["id"],
+          title: action["title"],
+        }));
       }
     },
     updateLastMessageType: (state) => {
@@ -82,10 +71,7 @@ const chatbotSlice = createSlice({
         message.loading = action.payload.loading;
       }
     },
-    updateLastFullText: (
-      state,
-      action: PayloadAction<{ fullText: string }>
-    ) => {
+    updateLastFullText: (state, action: PayloadAction<{ fullText: string }>) => {
       const index = state.messages.length - 1;
       if (index !== -1) {
         const message = state.messages[index];

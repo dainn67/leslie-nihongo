@@ -16,11 +16,7 @@ import Constants from "expo-constants";
 
 const { DIFY_API_KEY } = Constants.expoConfig?.extra ?? {};
 
-export const sendStreamMessage = (
-  message: string,
-  dispatch: AppDispatch,
-  isInitial?: boolean
-) => {
+export const sendStreamMessage = (message: string, dispatch: AppDispatch, isInitial?: boolean) => {
   let fullText = "";
   let wordIndex = 0;
   let wordLength = 0;

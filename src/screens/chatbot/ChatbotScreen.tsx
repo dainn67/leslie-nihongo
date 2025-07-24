@@ -34,10 +34,7 @@ type DrawerParamList = {
   Counter: undefined;
 };
 
-type ChatbotScreenNavigationProp = DrawerNavigationProp<
-  DrawerParamList,
-  "Chatbot"
->;
+type ChatbotScreenNavigationProp = DrawerNavigationProp<DrawerParamList, "Chatbot">;
 
 export const ChatbotScreen = () => {
   // Drawer
@@ -49,9 +46,7 @@ export const ChatbotScreen = () => {
 
   const dispatch = useAppDispatch();
   const messages = useAppSelector((state) => state.chatbot.messages);
-  const userProgress = useAppSelector(
-    (state) => state.userProgress.userProgress
-  );
+  const userProgress = useAppSelector((state) => state.userProgress.userProgress);
 
   useEffect(() => {
     if (messages.length === 0) {

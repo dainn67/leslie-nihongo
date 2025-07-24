@@ -60,14 +60,7 @@ const MainButton = ({
     <TouchableOpacity style={[style.button, style.shadow]} onPress={onPress}>
       <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
         {words.map((word, index) => {
-          return (
-            <WordComponent
-              key={index}
-              fontSize={fontSize}
-              word={word}
-              color={textColor}
-            />
-          );
+          return <WordComponent key={index} fontSize={fontSize} word={word} color={textColor} />;
         })}
       </View>
     </TouchableOpacity>

@@ -36,7 +36,6 @@ const chatMessageSlice = createSlice({
   },
 });
 
-export const { setIsStreaming, updateMessage, clearMessage } =
-  chatMessageSlice.actions;
+export const { setIsStreaming, updateMessage, clearMessage } = chatMessageSlice.actions;
 
 export default chatMessageSlice.reducer;

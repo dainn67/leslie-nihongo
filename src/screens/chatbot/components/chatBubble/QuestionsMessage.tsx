@@ -63,21 +63,15 @@ export const QuestionsMessage = ({ questionJson }: QuestionsMessageProps) => {
 
   return (
     <View style={styles.questionContainer}>
-      <CustomText style={styles.questionText}>
-        Question: {question.question}
-      </CustomText>
+      <CustomText style={styles.questionText}>Question: {question.question}</CustomText>
       {question.answers.map((a: any, index: number) => (
         <TouchableOpacity
           key={index}
           onPress={() => handleAnswerSelect(index)}
           style={[
             styles.answerContainer,
-            selectedAnswers[currentQuestionIndex] === index &&
-              a.isCorrect &&
-              styles.correctAnswer,
-            selectedAnswers[currentQuestionIndex] === index &&
-              !a.isCorrect &&
-              styles.wrongAnswer,
+            selectedAnswers[currentQuestionIndex] === index && a.isCorrect && styles.correctAnswer,
+            selectedAnswers[currentQuestionIndex] === index && !a.isCorrect && styles.wrongAnswer,
           ]}
           disabled={selectedAnswers[currentQuestionIndex] !== null}
         >
@@ -87,9 +81,7 @@ export const QuestionsMessage = ({ questionJson }: QuestionsMessageProps) => {
         </TouchableOpacity>
       ))}
       {showExplanations[currentQuestionIndex] && (
-        <CustomText style={styles.explanationText}>
-          Explanation: {question.explanation}
-        </CustomText>
+        <CustomText style={styles.explanationText}>Explanation: {question.explanation}</CustomText>
       )}
       <View style={styles.navigationButtons}>
         <Button

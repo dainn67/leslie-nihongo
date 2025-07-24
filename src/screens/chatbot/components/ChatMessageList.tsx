@@ -3,19 +3,12 @@ import { MainChatMessage } from "./chatBubble/MainChatMessage";
 import { ScrollView, View, StyleSheet } from "react-native";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import { useTheme } from "../../../theme";
-import {
-  addLoading,
-  addMessage,
-} from "../../../features/chatbot/chatMessageList/chatbotSlice";
-import { createChatMessage } from "../../../features/chatbot/types";
 
 interface ChatMessageListProps {
   handleClickAction: (actionId: string, title: string) => void;
 }
 
-export const ChatMessageList = ({
-  handleClickAction,
-}: ChatMessageListProps) => {
+export const ChatMessageList = ({ handleClickAction }: ChatMessageListProps) => {
   const messages = useAppSelector((state) => state.chatbot.messages);
   const scrollViewRef = useRef<ScrollView>(null);
   const { colors } = useTheme();
