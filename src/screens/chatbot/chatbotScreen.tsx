@@ -18,6 +18,10 @@ import {
   clearChat,
 } from "../../features/chatbot/chatMessageList/chatbotSlice";
 import ChatInput from "./components/ChatInput";
+import {
+  setUserLevel,
+  setUserTarget,
+} from "../../features/chatbot/chatMessageList/userProgressSlice";
 
 type DrawerParamList = {
   Chatbot: undefined;
@@ -39,11 +43,14 @@ export const ChatbotScreen = () => {
 
   const dispatch = useAppDispatch();
   const messages = useAppSelector((state) => state.chatbot.messages);
+  const userProgress = useAppSelector(
+    (state) => state.userProgress.userProgress
+  );
 
   useEffect(() => {
     if (messages.length === 0) {
       dispatch(addLoading({ loadingText: "Analyzing" }));
-      sendStreamMessage("Hello", dispatch, true);
+      sendStreamMessage({ message: "Hello", dispatch, isInitial: true });
     }
   }, [messages.length]);
 
@@ -51,12 +58,48 @@ export const ChatbotScreen = () => {
     const data = message.trim();
     const userMessage = createChatMessage({ fullText: data });
 
-    // Add user message & loading messages
     dispatch(addMessage(userMessage));
     dispatch(addLoading({ loadingText: "Thinking" }));
 
-    // Send stream message to server
-    sendStreamMessage(data, dispatch);
+    sendStreamMessage({
+      message: data,
+      dispatch,
+      level: userProgress.level,
+      target: userProgress.target,
+    });
+  };
+
+  const handleClickAction = async (actionId: string, title: string) => {
+    console.log(actionId, title);
+
+    let userLevel = userProgress.level;
+    let userTarget = userProgress.target;
+
+    // Set level if found
+    if (actionId) {
+      switch (actionId[0]) {
+        case "l":
+          userLevel = `N${actionId[1]}`;
+          dispatch(setUserLevel(userLevel));
+          break;
+        case "t":
+          userTarget = `N${actionId[1]}`;
+          dispatch(setUserTarget(userTarget));
+          break;
+      }
+    }
+
+    const userMessage = createChatMessage({ fullText: title });
+
+    dispatch(addMessage(userMessage));
+    dispatch(addLoading({ loadingText: "Thinking" }));
+
+    sendStreamMessage({
+      message: title,
+      dispatch,
+      level: userLevel.length > 0 ? userLevel : userProgress.level,
+      target: userTarget.length > 0 ? userTarget : userProgress.target,
+    });
   };
 
   const openClearChatDialog = () => {
@@ -78,7 +121,7 @@ export const ChatbotScreen = () => {
             onLeftPress={openDrawer}
             onRightPress={openClearChatDialog}
           />
-          <ChatMessageList />
+          <ChatMessageList handleClickAction={handleClickAction} />
           <ChatInput onSend={handleSend} />
 
           <ClearChatDialog

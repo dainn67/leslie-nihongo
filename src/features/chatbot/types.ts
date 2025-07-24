@@ -5,6 +5,11 @@ export enum Sender {
   BOT = "bot",
 }
 
+export enum MessageType {
+  STREAM_TEXT = "stream_text",
+  QUESTION_JSON = "question_json",
+}
+
 export type ChatMessage = {
   id: string;
 
@@ -22,7 +27,7 @@ export type ChatMessage = {
   suggestedActions: SuggestedAction[];
 
   // Type and sender
-  isQuestionJson: boolean;
+  messageType: MessageType;
   sender: Sender;
 
   // Id when click suggested action
@@ -49,13 +54,13 @@ export const createChatMessage = (
     actionId: partial?.actionId ?? 0,
     loading: partial?.loading ?? false,
     loadingText: partial?.loadingText ?? "Thinking",
-    isQuestionJson: partial?.isQuestionJson ?? false,
+    messageType: partial?.messageType ?? MessageType.STREAM_TEXT,
     createdAt: partial?.createdAt ?? timestamp,
   };
 };
 
 export type SuggestedAction = {
-  id: number;
+  id: string;
   title: string;
 };
 

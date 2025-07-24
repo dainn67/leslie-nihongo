@@ -8,6 +8,8 @@ interface MainButtonProps {
   height?: number;
   radius?: number;
   backgroundColor?: string;
+  borderColor?: string;
+  borderWidth?: number;
   paddingHorizontal?: number;
   paddingVertical?: number;
   marginHorizontal?: number;
@@ -31,6 +33,8 @@ const MainButton = ({
   fontSize,
   fontWeight,
   backgroundColor,
+  borderColor,
+  borderWidth,
   onPress,
 }: MainButtonProps) => {
   const style = getStyles(
@@ -44,7 +48,9 @@ const MainButton = ({
     paddingHorizontal,
     paddingVertical,
     marginHorizontal,
-    marginVertical
+    marginVertical,
+    borderColor,
+    borderWidth
   );
 
   return (
@@ -67,11 +73,13 @@ const getStyles = (
   paddingHorizontal?: number,
   paddingVertical?: number,
   marginHorizontal?: number,
-  marginVertical?: number
+  marginVertical?: number,
+  borderColor?: string,
+  borderWidth?: number
 ) =>
   StyleSheet.create({
     button: {
-      backgroundColor: backgroundColor,
+      backgroundColor: backgroundColor ?? "transparent",
       width: width,
       height: height,
       borderRadius: radius,
@@ -81,6 +89,8 @@ const getStyles = (
       paddingVertical: paddingVertical,
       marginHorizontal: marginHorizontal,
       marginVertical: marginVertical,
+      borderColor: borderColor,
+      borderWidth: borderWidth,
     },
     text: {
       color: textColor,

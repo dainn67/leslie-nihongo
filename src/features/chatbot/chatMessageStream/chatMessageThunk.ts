@@ -16,11 +16,19 @@ import { Delimiter } from "../types";
 
 const { DIFY_API_KEY } = Constants.expoConfig?.extra ?? {};
 
-export const sendStreamMessageThunk = (
-  message: string,
-  dispatch: AppDispatch,
-  isInitial?: boolean
-) => {
+export const sendStreamMessageThunk = ({
+  message,
+  dispatch,
+  isInitial,
+  level,
+  target,
+}: {
+  message: string;
+  dispatch: AppDispatch;
+  isInitial?: boolean;
+  level?: string;
+  target?: string;
+}) => {
   let fullText = "";
   let wordIndex = 0;
   let wordLength = 0;
@@ -34,6 +42,8 @@ export const sendStreamMessageThunk = (
       query: message,
       inputs: {
         is_initial: isInitial ? 1 : 0,
+        level: level,
+        target: target,
       },
       response_mode: "streaming",
       user: "dainn",
@@ -92,7 +102,7 @@ export const sendStreamMessageThunk = (
         if (splittedText.length > 3) {
           const suggestedActions = splittedText.slice(1).map((text) => {
             const [id, title] = text.split("-");
-            return { id: parseInt(id), title };
+            return { id, title };
           });
 
           dispatch(updateLastSuggestedActions({ suggestedActions }));
