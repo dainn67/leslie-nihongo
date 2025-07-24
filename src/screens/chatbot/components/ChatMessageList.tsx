@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import { ChatBubble } from "./chatBubble/ChatBubble";
+import { MainChatMessage } from "./chatBubble/MainChatMessage";
 import { ScrollView, View, StyleSheet } from "react-native";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import { useTheme } from "../../../theme";
@@ -9,7 +9,13 @@ import {
 } from "../../../features/chatbot/chatMessageList/chatbotSlice";
 import { createChatMessage } from "../../../features/chatbot/types";
 
-export const ChatMessageList = () => {
+interface ChatMessageListProps {
+  handleClickAction: (actionId: string, title: string) => void;
+}
+
+export const ChatMessageList = ({
+  handleClickAction,
+}: ChatMessageListProps) => {
   const messages = useAppSelector((state) => state.chatbot.messages);
   const scrollViewRef = useRef<ScrollView>(null);
   const { colors } = useTheme();
@@ -25,16 +31,6 @@ export const ChatMessageList = () => {
     scrollViewRef.current?.scrollToEnd({ animated: true });
   };
 
-  const handleClickAction = (actionId: number, title: string) => {
-    const userMessage = createChatMessage({ fullText: title });
-
-    dispatch(addMessage(userMessage));
-    setTimeout(() => {
-      // TODO: Implement
-      dispatch(addLoading({ loadingText: "Thinking" }));
-    }, 200);
-  };
-
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <ScrollView
@@ -45,7 +41,7 @@ export const ChatMessageList = () => {
         scrollEventThrottle={16}
       >
         {messages.map((message, index) => (
-          <ChatBubble
+          <MainChatMessage
             key={index}
             isInitialMessage={index === 0}
             message={message}

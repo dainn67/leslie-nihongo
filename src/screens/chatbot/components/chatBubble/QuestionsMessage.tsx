@@ -3,11 +3,11 @@ import { View, TouchableOpacity, StyleSheet, Button } from "react-native";
 import { CustomText } from "../../../../components/text/customText";
 import { Question } from "../../../../models/question";
 
-interface QuestionBubbleProps {
+interface QuestionsMessageProps {
   questionJson: string;
 }
 
-export const QuestionBubble = ({ questionJson }: QuestionBubbleProps) => {
+export const QuestionsMessage = ({ questionJson }: QuestionsMessageProps) => {
   const data = questionJson.replaceAll("```json", "").replaceAll("```", "");
   const questions: Question[] = JSON.parse(data);
 
@@ -71,8 +71,12 @@ export const QuestionBubble = ({ questionJson }: QuestionBubbleProps) => {
           onPress={() => handleAnswerSelect(index)}
           style={[
             styles.answerContainer,
-            selectedAnswers[currentQuestionIndex] === index && a.isCorrect && styles.correctAnswer,
-            selectedAnswers[currentQuestionIndex] === index && !a.isCorrect && styles.wrongAnswer,
+            selectedAnswers[currentQuestionIndex] === index &&
+              a.isCorrect &&
+              styles.correctAnswer,
+            selectedAnswers[currentQuestionIndex] === index &&
+              !a.isCorrect &&
+              styles.wrongAnswer,
           ]}
           disabled={selectedAnswers[currentQuestionIndex] !== null}
         >
@@ -87,8 +91,16 @@ export const QuestionBubble = ({ questionJson }: QuestionBubbleProps) => {
         </CustomText>
       )}
       <View style={styles.navigationButtons}>
-        <Button title="Previous" onPress={handlePrevQuestion} disabled={currentQuestionIndex === 0} />
-        <Button title="Next" onPress={handleNextQuestion} disabled={currentQuestionIndex === questions.length - 1} />
+        <Button
+          title="Previous"
+          onPress={handlePrevQuestion}
+          disabled={currentQuestionIndex === 0}
+        />
+        <Button
+          title="Next"
+          onPress={handleNextQuestion}
+          disabled={currentQuestionIndex === questions.length - 1}
+        />
       </View>
     </View>
   );

@@ -1,20 +1,23 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import { Sender } from "../../../../features/chatbot/types";
+import { MessageType, Sender } from "../../../../features/chatbot/types";
 import { useTheme } from "../../../../theme";
 import { WordComponent } from "../../../../components/streamingText/WordComponent";
 import { ChatMessage } from "../../../../features/chatbot/types";
-import { LoadingText } from "../LoadingText";
+import { LoadingMessage } from "./LoadingMessage";
 import { ChatActionButtons } from "../ChatActionButtons";
-import { QuestionBubble } from "./QuestionBubble";
+import { QuestionsMessage } from "./QuestionsMessage";
 
-interface ChatBubbleProps {
+interface MainChatMessageProps {
   message: ChatMessage;
   isInitialMessage?: boolean;
-  onClickAction: (actionId: number, title: string) => void;
+  onClickAction: (actionId: string, title: string) => void;
 }
 
-export const ChatBubble = ({ message, onClickAction }: ChatBubbleProps) => {
+export const MainChatMessage = ({
+  message,
+  onClickAction,
+}: MainChatMessageProps) => {
   const { colors } = useTheme();
   const isUser = message.sender === Sender.USER;
 
@@ -27,15 +30,19 @@ export const ChatBubble = ({ message, onClickAction }: ChatBubbleProps) => {
     },
   ];
 
-  const handleClickAction = (actionId: number, title: string) => {
+  const handleClickAction = (actionId: string, title: string) => {
     if (onClickAction) onClickAction(actionId, title);
   };
 
   const isLoading = message.loading;
-  const isStreaming = !message.loading && !message.isQuestionJson;
-  const isQuestions = message.isQuestionJson && message.fullText.length > 0;
+  const isStreaming =
+    !message.loading && message.messageType === MessageType.STREAM_TEXT;
+  const isQuestions =
+    message.messageType === MessageType.QUESTION_JSON &&
+    message.fullText.length > 0;
   const showButtons =
-    message.suggestedActions.length > 0 && !message.isQuestionJson;
+    message.suggestedActions.length > 0 &&
+    message.messageType === MessageType.STREAM_TEXT;
 
   return (
     <View
@@ -47,7 +54,7 @@ export const ChatBubble = ({ message, onClickAction }: ChatBubbleProps) => {
     >
       <View style={bubbleStyle}>
         <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-          {isLoading && <LoadingText text={message.loadingText} />}
+          {isLoading && <LoadingMessage />}
 
           {/* Streaming text */}
           {isStreaming &&
@@ -63,7 +70,7 @@ export const ChatBubble = ({ message, onClickAction }: ChatBubbleProps) => {
           {/* Generated questions */}
           {isQuestions && (
             <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-              <QuestionBubble questionJson={message.fullText} />
+              <QuestionsMessage questionJson={message.fullText} />
             </View>
           )}
         </View>

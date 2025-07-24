@@ -6,7 +6,7 @@ import { SuggestedAction } from "../../../features/chatbot/types";
 
 interface ChatActionButtonsProps {
   suggestedActions: SuggestedAction[];
-  onClickAction: (actionId: number, title: string) => void;
+  onClickAction: (actionId: string, title: string) => void;
 }
 
 export const ChatActionButtons = ({
@@ -15,23 +15,22 @@ export const ChatActionButtons = ({
 }: ChatActionButtonsProps) => {
   const { colors } = useTheme();
 
-  const handleClickAction = (actionId: number, title: string) => {
+  const handleClickAction = (actionId: string, title: string) => {
     if (onClickAction) onClickAction(actionId, title);
   };
 
   const fadeInAnim = Array.from(
-    { length: 3 },
+    { length: suggestedActions.length },
     () => useRef(new Animated.Value(0)).current
   );
 
   useEffect(() => {
     startAnimation(0);
-    setTimeout(() => {
-      startAnimation(1);
-    }, 100);
-    setTimeout(() => {
-      startAnimation(2);
-    }, 200);
+    for (let i = 1; i < suggestedActions.length; i++) {
+      setTimeout(() => {
+        startAnimation(i);
+      }, i * 150);
+    }
   }, []);
 
   const startAnimation = (index: number) => {
@@ -61,8 +60,8 @@ export const ChatActionButtons = ({
               paddingHorizontal={4}
               marginHorizontal={4}
               marginVertical={4}
-              backgroundColor={colors.primary}
-              textColor="white"
+              borderColor={colors.primary}
+              borderWidth={1}
               onPress={() => handleClickAction(e.id, e.title)}
             />
           </Animated.View>
