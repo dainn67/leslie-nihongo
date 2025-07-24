@@ -92,7 +92,7 @@ export const sendStreamMessage = (
         if (splittedText.length > 3) {
           const suggestedActions = splittedText.slice(1).map((text) => {
             const [id, title] = text.split("-");
-            return { id: parseInt(id), title };
+            return { id, title };
           });
 
           dispatch(updateLastSuggestedActions({ suggestedActions }));

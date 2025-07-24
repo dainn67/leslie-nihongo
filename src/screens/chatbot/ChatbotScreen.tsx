@@ -50,7 +50,12 @@ export const ChatbotScreen = () => {
   useEffect(() => {
     if (messages.length === 0) {
       dispatch(addLoading({ loadingText: "Analyzing" }));
-      sendStreamMessage({ message: "Hello", dispatch, isInitial: true });
+      sendStreamMessage({
+        message: "Hello",
+        dispatch,
+        level: userProgress.level,
+        target: userProgress.target,
+      });
     }
   }, [messages.length]);
 

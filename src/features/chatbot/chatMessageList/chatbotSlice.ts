@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   ChatMessage,
   createChatMessage,
+  MessageType,
   Sender,
   SuggestedAction,
 } from "../types";
@@ -70,7 +71,8 @@ const chatbotSlice = createSlice({
         const message = state.messages[index];
 
         // Only update if not already a question json
-        if (!message.isQuestionJson) message.isQuestionJson = true;
+        if (message.messageType === MessageType.STREAM_TEXT)
+          message.messageType = MessageType.QUESTION_JSON;
       }
     },
     updateLastLoading: (state, action: PayloadAction<{ loading: boolean }>) => {

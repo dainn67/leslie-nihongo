@@ -14,22 +14,18 @@ const userProgressSlice = createSlice({
   initialState,
   reducers: {
     setUserLevel: (state, action: PayloadAction<string>) => {
-      console.log("setUserLevel", action.payload);
       state.userProgress.level = action.payload;
       state.userProgress.lastUpdated = Date.now();
     },
     setUserTarget: (state, action: PayloadAction<string>) => {
-      console.log("setUserTarget", action.payload);
       state.userProgress.target = action.payload;
       state.userProgress.lastUpdated = Date.now();
     },
     setUserStartDate: (state, action: PayloadAction<number>) => {
-      console.log("setUserStartDate", action.payload);
       state.userProgress.startDate = action.payload;
       state.userProgress.lastUpdated = Date.now();
     },
     setUserExamDate: (state, action: PayloadAction<number>) => {
-      console.log("setUserExamDate", action.payload);
       state.userProgress.examDate = action.payload;
       state.userProgress.lastUpdated = Date.now();
     },

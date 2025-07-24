@@ -19,13 +19,11 @@ const { DIFY_API_KEY } = Constants.expoConfig?.extra ?? {};
 export const sendStreamMessageThunk = ({
   message,
   dispatch,
-  isInitial,
   level,
   target,
 }: {
   message: string;
   dispatch: AppDispatch;
-  isInitial?: boolean;
   level?: string;
   target?: string;
 }) => {
@@ -41,7 +39,6 @@ export const sendStreamMessageThunk = ({
     body: {
       query: message,
       inputs: {
-        is_initial: isInitial ? 1 : 0,
         level: level,
         target: target,
       },
