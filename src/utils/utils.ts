@@ -9,16 +9,6 @@ const splitCustomWords = (input: string) => {
     if (chunk.length === 0) continue;
     let text = chunk;
 
-    // Remove all equation delimiters [ and ]
-    text = text.replaceAll("\\[", "\\(").replaceAll("\\]", "\\)");
-
-    // Remove linebreak at the start of math expressions
-    text = text.replaceAll("\\(\n", "\\(");
-    text = text.replaceAll("\n\\)", "\\)");
-
-    text = text.replaceAll("\\[\n", "\\(");
-    text = text.replaceAll("\n\\]", "\\)");
-
     // Remove incomplete special characters while streaming
     if (text[text.length - 1] == "\\") {
       text = text.substring(0, text.length - 1);
@@ -28,6 +18,7 @@ const splitCustomWords = (input: string) => {
     const openBracketCount = (chunk.match(/\(/g) || []).length;
     const closeBracketCount = (chunk.match(/\)/g) || []).length;
 
+    // Cut from incomplete special characters
     if (openBracketCount != closeBracketCount) {
       const lastIndex = chunk.lastIndexOf("\\(");
       if (lastIndex != -1) {
@@ -35,7 +26,7 @@ const splitCustomWords = (input: string) => {
       }
     }
 
-    // Check and remove embedded actions
+    // Check and remove incomplete embedded actions
     const leftActionBracketCount = (chunk.match(/⟦⟦/g) || []).length;
     const rightActionBracketCount = (chunk.match(/⟧⟧/g) || []).length;
 
@@ -46,7 +37,7 @@ const splitCustomWords = (input: string) => {
       }
     }
 
-    // Process text character by character to handle both bold and expressions
+    // Process text character by character
     const words: string[] = [];
     let currentWord: string = "";
     let isBold = false;
@@ -125,18 +116,9 @@ const splitCustomWords = (input: string) => {
     // Process bold formatting
     isBold = false;
     for (const word of words) {
-      // Expressions are already handled correctly
-      if (word.startsWith("\\(") && word.endsWith("\\)")) {
-        splittedText.push(word);
-        continue;
-      }
-
       if (word.includes("**")) {
         const numberOfBold = (word.match(/\*\*/g) || []).length;
-        if (numberOfBold % 2 == 1) {
-          isBold = !isBold;
-        }
-
+        if (numberOfBold % 2 == 1) isBold = !isBold;
         if (word == "**") continue;
 
         splittedText.push(`**${word.replaceAll("**", "")}**`);
@@ -152,21 +134,32 @@ const splitCustomWords = (input: string) => {
     splittedText.push("\n");
   }
 
-  while (splittedText[splittedText.length - 1] == "\n") {
-    splittedText.pop();
-  }
-
-  while (splittedText[0] == "\n") {
-    splittedText.shift();
-  }
+  // Trim text
+  while (splittedText[splittedText.length - 1] == "\n") splittedText.pop();
+  while (splittedText[0] == "\n") splittedText.shift();
 
   splittedText = splittedText.filter((e) => e != "**");
 
   const suggestionIndex = splittedText.findIndex((element) =>
     element.includes(Delimiter)
   );
-  if (suggestionIndex !== -1)
+
+  if (suggestionIndex !== -1) {
+    const delimiterWord = splittedText[suggestionIndex];
+
+    // Get index of word chunk that contains the delimiter
+    const indexOfDelimiter = delimiterWord.indexOf(Delimiter);
+
+    // Cut off the rest
     splittedText.splice(suggestionIndex, splittedText.length - suggestionIndex);
+
+    // Check if the delimiter word chunk contains previous words of the response
+    if (indexOfDelimiter > 0) {
+      const previousWords = delimiterWord.slice(0, indexOfDelimiter).split(" ");
+
+      splittedText.push(...previousWords);
+    }
+  }
 
   return splittedText;
 };

@@ -22,6 +22,12 @@ import {
   setUserLevel,
   setUserTarget,
 } from "../../features/chatbot/chatMessageList/userProgressSlice";
+import {
+  createQuestionTable,
+  getAllQuestions,
+  insertQuestions,
+} from "../../db/tables/questionTable";
+import * as FileSystem from "expo-file-system";
 
 type DrawerParamList = {
   Chatbot: undefined;
@@ -39,7 +45,7 @@ export const ChatbotScreen = () => {
   const openDrawer = () => navigation.openDrawer();
 
   // Clear chat dialog
-  const [visible, setVisible] = useState(false);
+  const [clearDialogVisible, setClearDialogVisible] = useState(false);
 
   const dispatch = useAppDispatch();
   const messages = useAppSelector((state) => state.chatbot.messages);
@@ -51,7 +57,7 @@ export const ChatbotScreen = () => {
     if (messages.length === 0) {
       dispatch(addLoading({ loadingText: "Analyzing" }));
       sendStreamMessage({
-        message: "Hi there",
+        message: "<init>",
         dispatch,
         level: userProgress.level,
         target: userProgress.target,
@@ -108,11 +114,58 @@ export const ChatbotScreen = () => {
   };
 
   const openClearChatDialog = () => {
-    setVisible(true);
+    setClearDialogVisible(true);
   };
 
   const clearConversation = () => {
     dispatch(clearChat());
+  };
+
+  const handleDevClick = () => {
+    createQuestionTable();
+
+    const dbPath = `${FileSystem.documentDirectory}/SQLite/`;
+
+    console.log(dbPath);
+
+    // insertQuestions([
+    //   {
+    //     id: "1",
+    //     question: "What is the capital of France?",
+    //     explanation: "Paris is the capital of France",
+    //     answers: [
+    //       { text: "Paris", isCorrect: true },
+    //       { text: "London", isCorrect: false },
+    //       { text: "Berlin", isCorrect: false },
+    //       { text: "Madrid", isCorrect: false },
+    //     ],
+    //   },
+    //   {
+    //     id: "2",
+    //     question: "What is the capital of Germany?",
+    //     explanation: "Berlin is the capital of Germany",
+    //     answers: [
+    //       { text: "Berlin", isCorrect: true },
+    //       { text: "Paris", isCorrect: false },
+    //       { text: "London", isCorrect: false },
+    //       { text: "Madrid", isCorrect: false },
+    //     ],
+    //   },
+    //   {
+    //     id: "3",
+    //     question: "What is the capital of Italy?",
+    //     explanation: "Rome is the capital of Italy",
+    //     answers: [
+    //       { text: "Rome", isCorrect: true },
+    //       { text: "Paris", isCorrect: false },
+    //       { text: "London", isCorrect: false },
+    //       { text: "Madrid", isCorrect: false },
+    //     ],
+    //   },
+    // ]);
+
+    const questions = getAllQuestions();
+    console.log(questions);
   };
 
   return (
@@ -125,6 +178,7 @@ export const ChatbotScreen = () => {
             rightIcon={<Ionicons name="trash" size={24} color="white" />}
             onLeftPress={openDrawer}
             onRightPress={openClearChatDialog}
+            onDevClick={handleDevClick}
           />
           <ChatMessageList handleClickAction={handleClickAction} />
           <ChatInput onSend={handleSend} />
@@ -134,8 +188,8 @@ export const ChatbotScreen = () => {
             message="Are you sure you want to delete all messages?"
             cancelText="Cancel"
             confirmText="Confirm"
-            visible={visible}
-            setVisible={setVisible}
+            visible={clearDialogVisible}
+            setVisible={setClearDialogVisible}
             clearConversation={clearConversation}
           />
         </View>

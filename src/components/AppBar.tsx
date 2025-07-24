@@ -10,6 +10,7 @@ interface AppBarProps {
   rightIcon?: React.ReactNode;
   onLeftPress?: () => void;
   onRightPress?: () => void;
+  onDevClick?: () => void;
 }
 
 export const AppBar: React.FC<AppBarProps> = ({
@@ -18,6 +19,7 @@ export const AppBar: React.FC<AppBarProps> = ({
   rightIcon,
   onLeftPress,
   onRightPress,
+  onDevClick,
 }) => {
   const { colors } = useTheme();
 
@@ -48,6 +50,18 @@ export const AppBar: React.FC<AppBarProps> = ({
         >
           {rightIcon}
         </TouchableOpacity>
+
+        {__DEV__ && (
+          <TouchableOpacity
+            style={{
+              marginLeft: 20,
+            }}
+            onPress={onDevClick}
+            activeOpacity={0.7}
+          >
+            <Ionicons name="wine" size={20} color="white" />
+          </TouchableOpacity>
+        )}
       </View>
     </SafeAreaView>
   );

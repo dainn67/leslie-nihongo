@@ -1,6 +1,7 @@
 import React from "react";
-import { TouchableOpacity, StyleSheet } from "react-native";
-import { CustomText } from "../text/customText";
+import { TouchableOpacity, StyleSheet, View } from "react-native";
+import { WordComponent } from "../streamingText/WordComponent";
+import { splitCustomWords } from "../../utils/utils";
 
 interface MainButtonProps {
   title: string;
@@ -53,11 +54,22 @@ const MainButton = ({
     borderWidth
   );
 
+  const words = splitCustomWords(title);
+
   return (
-    <TouchableOpacity style={[style.button, styles.shadow]} onPress={onPress}>
-      <CustomText style={[style.text, { textAlign: "center" }]}>
-        {title}
-      </CustomText>
+    <TouchableOpacity style={[style.button, style.shadow]} onPress={onPress}>
+      <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+        {words.map((word, index) => {
+          return (
+            <WordComponent
+              key={index}
+              fontSize={fontSize}
+              word={word}
+              color={textColor}
+            />
+          );
+        })}
+      </View>
     </TouchableOpacity>
   );
 };
@@ -97,16 +109,13 @@ const getStyles = (
       fontSize: fontSize,
       fontWeight: fontWeight,
     },
+    shadow: {
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 5,
+    },
   });
-
-const styles = StyleSheet.create({
-  shadow: {
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-});
 
 export default MainButton;

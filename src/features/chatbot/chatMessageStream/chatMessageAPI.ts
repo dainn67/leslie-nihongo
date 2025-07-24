@@ -90,10 +90,19 @@ export const sendStreamMessage = (
 
         const splittedText = fullText.split(Delimiter);
         if (splittedText.length > 3) {
-          const suggestedActions = splittedText.slice(1).map((text) => {
-            const [id, title] = text.split("-");
-            return { id, title };
-          });
+          const suggestedActions = splittedText
+            .slice(1)
+            .map((text) => {
+              const [id, title] = text.split("-");
+              return { id, title };
+            })
+            .filter(
+              (action) =>
+                action.id !== undefined &&
+                action.id !== null &&
+                action.title !== undefined &&
+                action.title !== null
+            );
 
           dispatch(updateLastSuggestedActions({ suggestedActions }));
         }
