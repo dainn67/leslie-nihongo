@@ -10,13 +10,23 @@ import {
   updateLastStream,
   updateLastSuggestedActions,
 } from "../chatMessageList/chatbotSlice";
-import { Delimiter } from "../types";
+import { Delimiter } from "../../../models/chatMessage";
 import { setIsStreaming } from "./chatMessageSlice";
 import Constants from "expo-constants";
 
 const { DIFY_API_KEY } = Constants.expoConfig?.extra ?? {};
 
-export const sendStreamMessage = (message: string, dispatch: AppDispatch, isInitial?: boolean) => {
+export const sendStreamMessage = ({
+  message,
+  dispatch,
+  level,
+  target,
+}: {
+  message: string;
+  dispatch: AppDispatch;
+  level?: string;
+  target?: string;
+}) => {
   let fullText = "";
   let wordIndex = 0;
   let wordLength = 0;
@@ -29,7 +39,8 @@ export const sendStreamMessage = (message: string, dispatch: AppDispatch, isInit
     body: {
       query: message,
       inputs: {
-        is_initial: isInitial ? 1 : 0,
+        level: level,
+        target: target,
       },
       response_mode: "streaming",
       user: "dainn",
@@ -92,13 +103,7 @@ export const sendStreamMessage = (message: string, dispatch: AppDispatch, isInit
               const [id, title] = text.split("-");
               return { id, title };
             })
-            .filter(
-              (action) =>
-                action.id !== undefined &&
-                action.id !== null &&
-                action.title !== undefined &&
-                action.title !== null
-            );
+            .filter((action) => action.id !== undefined && action.id !== null && action.title !== undefined && action.title !== null);
 
           dispatch(updateLastSuggestedActions({ suggestedActions }));
         }

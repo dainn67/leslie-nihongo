@@ -1,4 +1,4 @@
-import { Delimiter } from "../features/chatbot/types";
+import { Delimiter } from "../models/chatMessage";
 
 const splitCustomWords = (input: string) => {
   let splittedText: string[] = [];

@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { Animated, View } from "react-native";
 import { MainButton } from "../../../components/buttons";
 import { useTheme } from "../../../theme";
-import { SuggestedAction } from "../../../features/chatbot/types";
+import { SuggestedAction } from "../../../models/chatMessage";
 
 interface ChatActionButtonsProps {
   suggestedActions: SuggestedAction[];

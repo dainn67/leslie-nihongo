@@ -1,4 +1,4 @@
-import { Question } from "../../models/question";
+import { Question } from "../../../models/question";
 import { db } from "../database";
 
 export const QuestionTable = {

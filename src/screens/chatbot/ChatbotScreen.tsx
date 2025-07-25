@@ -8,26 +8,15 @@ import { ChatMessageList } from "./components/ChatMessageList";
 import { useNavigation } from "@react-navigation/native";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
-import { createChatMessage } from "../../features/chatbot/types";
 import { AppConfig } from "../../config/appConfig";
-import { sendStreamMessageThunk as sendStreamMessage } from "../../features/chatbot/chatMessageStream/chatMessageThunk";
 import ClearChatDialog from "./components/ClearChatDialog";
-import {
-  addLoading,
-  addMessage,
-  clearChat,
-} from "../../features/chatbot/chatMessageList/chatbotSlice";
+import { addLoading, addMessage, clearChat } from "../../features/chatbot/chatMessageList/chatbotSlice";
 import ChatInput from "./components/ChatInput";
-import {
-  setUserLevel,
-  setUserTarget,
-} from "../../features/chatbot/chatMessageList/userProgressSlice";
-import {
-  createQuestionTable,
-  getAllQuestions,
-  insertQuestions,
-} from "../../db/tables/questionTable";
+import { setUserLevel, setUserTarget } from "../../features/chatbot/chatMessageList/userProgressSlice";
+import { createQuestionTable, getAllQuestions } from "../../storage/db/tables/questionTable";
 import * as FileSystem from "expo-file-system";
+import { createChatMessage } from "../../models/chatMessage";
+import { sendStreamMessage } from "../../features/chatbot/chatMessageStream/chatMessageAPI";
 
 type DrawerParamList = {
   Chatbot: undefined;

@@ -1,12 +1,11 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import { MessageType, Sender } from "../../../../features/chatbot/types";
 import { useTheme } from "../../../../theme";
 import { WordComponent } from "../../../../components/streamingText/WordComponent";
-import { ChatMessage } from "../../../../features/chatbot/types";
 import { LoadingMessage } from "./LoadingMessage";
 import { ChatActionButtons } from "../ChatActionButtons";
 import { QuestionsMessage } from "./QuestionsMessage";
+import { ChatMessage, Sender, MessageType } from "../../../../models/chatMessage";
 
 interface MainChatMessageProps {
   message: ChatMessage;
@@ -33,16 +32,16 @@ export const MainChatMessage = ({ message, onClickAction }: MainChatMessageProps
 
   const isLoading = message.loading;
   const isStreaming = !message.loading && message.messageType === MessageType.STREAM_TEXT;
-  const isQuestions =
-    message.messageType === MessageType.QUESTION_JSON && message.fullText.length > 0;
-  const showButtons =
-    message.suggestedActions.length > 0 && message.messageType === MessageType.STREAM_TEXT;
+  const isQuestions = message.messageType === MessageType.QUESTION_JSON && message.fullText.length > 0;
+  const showButtons = message.suggestedActions.length > 0 && message.messageType === MessageType.STREAM_TEXT;
+
+  console.log("================");
+  console.log(message.words);
+  console.log(message.fullText);
+  console.log(message.suggestedActions);
 
   return (
-    <View
-      id={message.id}
-      style={[styles.container, isUser ? styles.userContainer : styles.botContainer]}
-    >
+    <View id={message.id} style={[styles.container, isUser ? styles.userContainer : styles.botContainer]}>
       <View style={bubbleStyle}>
         <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
           {isLoading && <LoadingMessage />}
@@ -50,12 +49,7 @@ export const MainChatMessage = ({ message, onClickAction }: MainChatMessageProps
           {/* Streaming text */}
           {isStreaming &&
             message.words.map((word, index) => (
-              <WordComponent
-                key={index}
-                fontSize={16}
-                word={word}
-                color={isUser ? "white" : "black"}
-              />
+              <WordComponent key={index} fontSize={16} word={word} color={isUser ? "white" : "black"} />
             ))}
 
           {/* Generated questions */}
@@ -68,10 +62,7 @@ export const MainChatMessage = ({ message, onClickAction }: MainChatMessageProps
 
         {/* Action buttons */}
         {showButtons && (
-          <ChatActionButtons
-            suggestedActions={message.suggestedActions}
-            onClickAction={handleClickAction}
-          />
+          <ChatActionButtons suggestedActions={message.suggestedActions} onClickAction={handleClickAction} />
         )}
       </View>
     </View>

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ChatMessage, createChatMessage, MessageType, Sender, SuggestedAction } from "../types";
+import { ChatMessage, createChatMessage, MessageType, Sender, SuggestedAction } from "../../../models/chatMessage";
 
 type ChatState = {
   messages: ChatMessage[];
