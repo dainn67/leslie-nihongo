@@ -30,12 +30,6 @@
           <string>com.leslieai.app</string>
         </array>
       </dict>
-      <dict>
-        <key>CFBundleURLSchemes</key>
-        <array>
-          <string>exp+leslieai</string>
-        </array>
-      </dict>
     </array>
     <key>CFBundleVersion</key>
     <string>1</string>
@@ -64,6 +58,8 @@
     <array>
       <string>UIInterfaceOrientationPortrait</string>
       <string>UIInterfaceOrientationPortraitUpsideDown</string>
+      <string>UIInterfaceOrientationLandscapeLeft</string>
+      <string>UIInterfaceOrientationLandscapeRight</string>
     </array>
     <key>UIUserInterfaceStyle</key>
     <string>Light</string>

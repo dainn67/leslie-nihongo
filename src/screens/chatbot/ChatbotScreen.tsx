@@ -12,11 +12,12 @@ import { AppConfig } from "../../config/appConfig";
 import ClearChatDialog from "./components/ClearChatDialog";
 import { addLoading, addMessage, clearChat } from "../../features/chatbot/chatMessageList/chatbotSlice";
 import ChatInput from "./components/ChatInput";
-import { setUserLevel, setUserTarget } from "../../features/chatbot/chatMessageList/userProgressSlice";
-import { createQuestionTable, getAllQuestions } from "../../storage/db/tables/questionTable";
+import { setUserLevel, setUserProgress, setUserTarget } from "../../features/userProgress/userProgressSlice";
+import { createQuestionTable, getAllQuestions } from "../../storage/database/tables/questionTable";
 import * as FileSystem from "expo-file-system";
 import { createChatMessage } from "../../models/chatMessage";
 import { sendStreamMessage } from "../../features/chatbot/chatMessageStream/chatMessageAPI";
+import { getUserProgressFromStorage } from "../../service/userProgressSerivice";
 
 type DrawerParamList = {
   Chatbot: undefined;
@@ -37,24 +38,35 @@ export const ChatbotScreen = () => {
   const messages = useAppSelector((state) => state.chatbot.messages);
   const userProgress = useAppSelector((state) => state.userProgress.userProgress);
 
+  const [initialized, setInitialized] = useState(false);
+
+  // Load user progress and add initial message when first open or clear
   useEffect(() => {
-    if (messages.length === 0) {
-      dispatch(addLoading({ loadingText: "Analyzing" }));
-      sendStreamMessage({
-        message: "<init>",
-        dispatch,
-        level: userProgress.level,
-        target: userProgress.target,
+    if (!initialized) {
+      getUserProgressFromStorage().then((userProgress) => {
+        // Set user progress
+        dispatch(setUserProgress(userProgress));
+        setInitialized(true);
+
+        // Add loading message
+        dispatch(addLoading());
+        sendStreamMessage({ message: "<init>", dispatch, level: userProgress.level, target: userProgress.target });
       });
+    } else {
+      if (messages.length === 0) {
+        // Add loading message when clear
+        dispatch(addLoading());
+        sendStreamMessage({ message: "<init>", dispatch, level: userProgress.level, target: userProgress.target });
+      }
     }
-  }, [messages.length]);
+  }, [initialized, messages.length]);
 
   const handleSend = (message: string) => {
     const data = message.trim();
     const userMessage = createChatMessage({ fullText: data });
 
     dispatch(addMessage(userMessage));
-    dispatch(addLoading({ loadingText: "Thinking" }));
+    dispatch(addLoading());
 
     sendStreamMessage({
       message: data,
@@ -65,8 +77,6 @@ export const ChatbotScreen = () => {
   };
 
   const handleClickAction = async (actionId: string, title: string) => {
-    console.log(actionId, title);
-
     let userLevel = userProgress.level;
     let userTarget = userProgress.target;
 
@@ -87,7 +97,7 @@ export const ChatbotScreen = () => {
     const userMessage = createChatMessage({ fullText: title });
 
     dispatch(addMessage(userMessage));
-    dispatch(addLoading({ loadingText: "Thinking" }));
+    dispatch(addLoading());
 
     sendStreamMessage({
       message: title,

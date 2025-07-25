@@ -21,7 +21,6 @@ export type ChatMessage = {
 
   // Loading status
   loading: boolean;
-  loadingText: string;
 
   // Suggested actions
   suggestedActions: SuggestedAction[];
@@ -51,7 +50,6 @@ export const createChatMessage = (partial?: Partial<ChatMessage>): ChatMessage =
     sender: partial?.sender ?? Sender.USER,
     actionId: partial?.actionId ?? 0,
     loading: partial?.loading ?? false,
-    loadingText: partial?.loadingText ?? "Thinking",
     messageType: partial?.messageType ?? MessageType.STREAM_TEXT,
     createdAt: partial?.createdAt ?? timestamp,
   };

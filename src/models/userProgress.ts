@@ -1,25 +1,20 @@
-export class UserProgress {
-  constructor(
-    public id: string = "",
-    public level: string = "",
-    public target: string = "",
-    public startDate: number = Date.now(),
-    public examDate: number = Date.now(),
-    public lastUpdated: number = Date.now()
-  ) {}
+export type UserProgress = {
+  id: string;
+  level: string;
+  target: string;
+  startDate: number;
+  examDate: number;
+  lastUpdated: number;
+};
 
-  toString(): string {
-    return `UserProgress(level: ${this.level}, target: ${this.target}, startDate: ${this.startDate}, examDate: ${this.examDate}, lastUpdated: ${this.lastUpdated})`;
-  }
-
-  toJSON() {
-    return {
-      id: this.id,
-      level: this.level,
-      target: this.target,
-      startDate: this.startDate,
-      examDate: this.examDate,
-      lastUpdated: this.lastUpdated,
-    };
-  }
-}
+export const createUserProgress = (partial?: Partial<UserProgress>): UserProgress => {
+  const now = Date.now();
+  return {
+    id: partial?.id ?? `user_progress_${Date.now()}`,
+    level: partial?.level ?? "",
+    target: partial?.target ?? "",
+    startDate: partial?.startDate ?? now,
+    examDate: partial?.examDate ?? now,
+    lastUpdated: partial?.lastUpdated ?? now,
+  };
+};

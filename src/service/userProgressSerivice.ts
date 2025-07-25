@@ -1,11 +1,12 @@
-import { storage } from "../storage/mmkv/mmkv";
-import { MmkvConstants } from "../storage/mmkv/mmkvConstants";
+import { createUserProgress, UserProgress } from "../models/userProgress";
+import { loadConfig, saveConfig } from "../storage/asyncStorage/asyncStorage";
+import { AsyncStorageConstants } from "../storage/asyncStorage/asyncStorateConstant";
 
-export const getUserProgress = () => {
-  const userProgress = storage.getString(MmkvConstants.USER_PROGRESS);
-  return userProgress ? JSON.parse(userProgress) : null;
+export const getUserProgressFromStorage = async (): Promise<UserProgress> => {
+  const userProgress = await loadConfig(AsyncStorageConstants.USER_PROGRESS);
+  return createUserProgress(userProgress);
 };
 
-export const setUserProgress = (userProgress: any) => {
-  storage.set(MmkvConstants.USER_PROGRESS, JSON.stringify(userProgress));
+export const setUserProgressToStorage = async (userProgress: any) => {
+  await saveConfig(AsyncStorageConstants.USER_PROGRESS, userProgress);
 };

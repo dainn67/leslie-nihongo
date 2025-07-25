@@ -18,12 +18,11 @@ const chatbotSlice = createSlice({
     addMessage: (state, action: PayloadAction<ChatMessage>) => {
       state.messages.push(action.payload);
     },
-    addLoading: (state, action: PayloadAction<{ loadingText: string }>) => {
+    addLoading: (state) => {
       state.messages.push(
         createChatMessage({
           loading: true,
           sender: Sender.BOT,
-          loadingText: action.payload.loadingText,
         })
       );
     },
@@ -41,10 +40,7 @@ const chatbotSlice = createSlice({
         message.id = action.payload.messageId;
       }
     },
-    updateLastSuggestedActions: (
-      state,
-      action: PayloadAction<{ suggestedActions: SuggestedAction[] }>
-    ) => {
+    updateLastSuggestedActions: (state, action: PayloadAction<{ suggestedActions: SuggestedAction[] }>) => {
       const index = state.messages.length - 1;
       if (index !== -1) {
         const message = state.messages[index];
@@ -60,8 +56,7 @@ const chatbotSlice = createSlice({
         const message = state.messages[index];
 
         // Only update if not already a question json
-        if (message.messageType === MessageType.STREAM_TEXT)
-          message.messageType = MessageType.QUESTION_JSON;
+        if (message.messageType === MessageType.STREAM_TEXT) message.messageType = MessageType.QUESTION_JSON;
       }
     },
     updateLastLoading: (state, action: PayloadAction<{ loading: boolean }>) => {

@@ -5,6 +5,9 @@ export default {
     android: {
       package: "com.leslieai.app",
     },
+    ios: {
+      bundleIdentifier: "com.leslieai.app",
+    },
     plugins: ["expo-sqlite"],
     extra: {
       DIFY_API_KEY: process.env.DIFY_API_KEY,

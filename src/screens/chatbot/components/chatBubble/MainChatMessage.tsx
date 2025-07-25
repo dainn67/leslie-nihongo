@@ -35,11 +35,6 @@ export const MainChatMessage = ({ message, onClickAction }: MainChatMessageProps
   const isQuestions = message.messageType === MessageType.QUESTION_JSON && message.fullText.length > 0;
   const showButtons = message.suggestedActions.length > 0 && message.messageType === MessageType.STREAM_TEXT;
 
-  console.log("================");
-  console.log(message.words);
-  console.log(message.fullText);
-  console.log(message.suggestedActions);
-
   return (
     <View id={message.id} style={[styles.container, isUser ? styles.userContainer : styles.botContainer]}>
       <View style={bubbleStyle}>
@@ -48,9 +43,7 @@ export const MainChatMessage = ({ message, onClickAction }: MainChatMessageProps
 
           {/* Streaming text */}
           {isStreaming &&
-            message.words.map((word, index) => (
-              <WordComponent key={index} fontSize={16} word={word} color={isUser ? "white" : "black"} />
-            ))}
+            message.words.map((word, index) => <WordComponent key={index} fontSize={16} word={word} color={isUser ? "white" : "black"} />)}
 
           {/* Generated questions */}
           {isQuestions && (
@@ -61,9 +54,7 @@ export const MainChatMessage = ({ message, onClickAction }: MainChatMessageProps
         </View>
 
         {/* Action buttons */}
-        {showButtons && (
-          <ChatActionButtons suggestedActions={message.suggestedActions} onClickAction={handleClickAction} />
-        )}
+        {showButtons && <ChatActionButtons suggestedActions={message.suggestedActions} onClickAction={handleClickAction} />}
       </View>
     </View>
   );
