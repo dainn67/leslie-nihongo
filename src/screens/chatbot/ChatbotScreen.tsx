@@ -119,44 +119,7 @@ export const ChatbotScreen = () => {
     createQuestionTable();
 
     const dbPath = `${FileSystem.documentDirectory}/SQLite/`;
-
     console.log(dbPath);
-
-    // insertQuestions([
-    //   {
-    //     id: "1",
-    //     question: "What is the capital of France?",
-    //     explanation: "Paris is the capital of France",
-    //     answers: [
-    //       { text: "Paris", isCorrect: true },
-    //       { text: "London", isCorrect: false },
-    //       { text: "Berlin", isCorrect: false },
-    //       { text: "Madrid", isCorrect: false },
-    //     ],
-    //   },
-    //   {
-    //     id: "2",
-    //     question: "What is the capital of Germany?",
-    //     explanation: "Berlin is the capital of Germany",
-    //     answers: [
-    //       { text: "Berlin", isCorrect: true },
-    //       { text: "Paris", isCorrect: false },
-    //       { text: "London", isCorrect: false },
-    //       { text: "Madrid", isCorrect: false },
-    //     ],
-    //   },
-    //   {
-    //     id: "3",
-    //     question: "What is the capital of Italy?",
-    //     explanation: "Rome is the capital of Italy",
-    //     answers: [
-    //       { text: "Rome", isCorrect: true },
-    //       { text: "Paris", isCorrect: false },
-    //       { text: "London", isCorrect: false },
-    //       { text: "Madrid", isCorrect: false },
-    //     ],
-    //   },
-    // ]);
 
     const questions = getAllQuestions();
     console.log(questions);
