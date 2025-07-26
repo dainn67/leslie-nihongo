@@ -62,23 +62,24 @@ export const sendStreamMessage = ({
     },
     onClose: () => {
       wordLength = splitCustomWords(fullText).length;
-      dispatch(updateLastMessageData({ fullText }));
+      dispatch(updateLastMessageData({ fullText: fullText, loading: false }));
     },
     onError: (error) => console.log("SSE error", error),
   });
 
-  let start = false;
-
+  let startStreaming = false;
   const interval = setInterval(() => {
+    if (isQuestionJson) clearInterval(interval);
+
     // Split word every time update to find latest words
     const words = splitCustomWords(fullText);
 
     // Skip if new text haven't arrived yet
     if (words.length > wordIndex + 1) {
       // Start streaming
-      if (!start) {
-        dispatch(updateLastMessageData({ loading: false }));
-        start = true;
+      if (!startStreaming) {
+        if (!isQuestionJson) dispatch(updateLastMessageData({ loading: false }));
+        startStreaming = true;
       }
 
       const nextWord = words[wordIndex];
