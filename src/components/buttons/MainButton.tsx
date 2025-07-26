@@ -1,7 +1,6 @@
 import React from "react";
 import { TouchableOpacity, StyleSheet, View } from "react-native";
-import { WordComponent } from "../streamingText/WordComponent";
-import { splitCustomWords } from "../../utils/utils";
+import { CustomText } from "../text/customText";
 
 interface MainButtonProps {
   title: string;
@@ -54,15 +53,11 @@ const MainButton = ({
     borderWidth
   );
 
-  const words = splitCustomWords(title);
+  const text = title.replaceAll("**", "").replace(/<[^>]*>/g, "");
 
   return (
     <TouchableOpacity style={[style.button, style.shadow]} onPress={onPress}>
-      <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-        {words.map((word, index) => {
-          return <WordComponent key={index} fontSize={fontSize} word={word} color={textColor} />;
-        })}
-      </View>
+      <CustomText>{text}</CustomText>
     </TouchableOpacity>
   );
 };

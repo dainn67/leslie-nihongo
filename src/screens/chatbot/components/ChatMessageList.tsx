@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import { MainChatMessage } from "./chatBubble/MainChatMessage";
+import { ChatMessageBubble } from "./chatBubble/ChatMessageBubble";
 import { ScrollView, View, StyleSheet, LayoutChangeEvent } from "react-native";
 import { useAppSelector } from "../../../hooks/hooks";
 import { useTheme } from "../../../theme";
@@ -38,9 +38,9 @@ export const ChatMessageList = ({ handleClickAction }: ChatMessageListProps) => 
         scrollEventThrottle={16}
       >
         {messages.map((message, index) => (
-          <MainChatMessage
+          <ChatMessageBubble
             key={index}
-            isInitialMessage={index === 0}
+            isLastMessage={index === messages.length - 1}
             message={message}
             onClickAction={handleClickAction}
             componentHeight={componentHeight}

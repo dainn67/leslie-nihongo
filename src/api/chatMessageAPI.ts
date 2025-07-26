@@ -10,14 +10,16 @@ const { DIFY_API_KEY } = Constants.expoConfig?.extra ?? {};
 
 export const sendStreamMessage = ({
   message,
-  dispatch,
+  actionId,
   level,
   target,
+  dispatch,
 }: {
-  message: string;
-  dispatch: AppDispatch;
+  message?: string;
+  actionId?: string;
   level?: string;
   target?: string;
+  dispatch: AppDispatch;
 }) => {
   let fullText = "";
   let wordIndex = 0;
@@ -29,10 +31,11 @@ export const sendStreamMessage = ({
     url: ApiConfig.difyServerUrl,
     token: DIFY_API_KEY,
     body: {
-      query: message,
+      query: message ?? "<init>",
       inputs: {
         level: level,
         target: target,
+        action_id: actionId,
       },
       response_mode: "streaming",
       user: "dainn",
@@ -90,11 +93,15 @@ export const sendStreamMessage = ({
 
         const splittedText = fullText.split(Delimiter);
         if (splittedText.length > 3) {
-          const suggestedActions = splittedText
-            .slice(1)
+          const suggestionString = splittedText.slice(1);
+          const suggestedActions = suggestionString
             .map((text) => {
-              const [id, title] = text.split("-");
-              return { id, title };
+              // Split by "-" or ":"
+              let data = text.split("-");
+              if (data.length < 2) data = text.split(":");
+
+              const [id, title] = data;
+              return { id: id.trim(), title: title.trim() };
             })
             .filter((action) => action.id !== undefined && action.id !== null && action.title !== undefined && action.title !== null);
 

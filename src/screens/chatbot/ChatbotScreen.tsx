@@ -50,16 +50,19 @@ export const ChatbotScreen = () => {
 
         // Add loading message
         dispatch(addLoading());
-        sendStreamMessage({ message: "<init>", dispatch, level: userProgress.level, target: userProgress.target });
+        sendStreamMessage({ level: userProgress.level, target: userProgress.target, dispatch });
       });
     } else {
       if (messages.length === 0) {
         // Add loading message when clear
         dispatch(addLoading());
-        sendStreamMessage({ message: "<init>", dispatch, level: userProgress.level, target: userProgress.target });
+        sendStreamMessage({ level: userProgress.level, target: userProgress.target, dispatch });
       }
     }
   }, [initialized, messages.length]);
+
+  const openClearChatDialog = () => setClearDialogVisible(true);
+  const clearConversation = () => dispatch(clearChat());
 
   const handleSend = (message: string) => {
     const data = message.trim();
@@ -70,13 +73,15 @@ export const ChatbotScreen = () => {
 
     sendStreamMessage({
       message: data,
-      dispatch,
       level: userProgress.level,
       target: userProgress.target,
+      dispatch,
     });
   };
 
   const handleClickAction = async (actionId: string, title: string) => {
+    console.log("action", actionId, ":", title);
+
     let userLevel = userProgress.level;
     let userTarget = userProgress.target;
 
@@ -101,18 +106,11 @@ export const ChatbotScreen = () => {
 
     sendStreamMessage({
       message: title,
-      dispatch,
+      actionId: actionId,
       level: userLevel.length > 0 ? userLevel : userProgress.level,
       target: userTarget.length > 0 ? userTarget : userProgress.target,
+      dispatch,
     });
-  };
-
-  const openClearChatDialog = () => {
-    setClearDialogVisible(true);
-  };
-
-  const clearConversation = () => {
-    dispatch(clearChat());
   };
 
   const handleDevClick = () => {

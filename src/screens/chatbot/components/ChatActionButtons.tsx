@@ -16,10 +16,7 @@ export const ChatActionButtons = ({ suggestedActions, onClickAction }: ChatActio
     if (onClickAction) onClickAction(actionId, title);
   };
 
-  const fadeInAnim = Array.from(
-    { length: suggestedActions.length },
-    () => useRef(new Animated.Value(0)).current
-  );
+  const fadeInAnim = Array.from({ length: suggestedActions.length }, () => useRef(new Animated.Value(0)).current);
 
   useEffect(() => {
     startAnimation(0);
@@ -52,13 +49,12 @@ export const ChatActionButtons = ({ suggestedActions, onClickAction }: ChatActio
             <MainButton
               key={i}
               title={e.title.trim()}
-              radius={16}
-              paddingVertical={12}
-              paddingHorizontal={4}
+              radius={100}
+              paddingVertical={8}
+              paddingHorizontal={12}
               marginHorizontal={4}
               marginVertical={4}
-              borderColor={colors.primary}
-              borderWidth={1}
+              backgroundColor={`${colors.primary}15`}
               onPress={() => handleClickAction(e.id, e.title)}
             />
           </Animated.View>

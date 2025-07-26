@@ -9,12 +9,12 @@ import { ChatMessage, Sender, MessageType } from "../../../../models/chatMessage
 
 interface MainChatMessageProps {
   message: ChatMessage;
-  isInitialMessage?: boolean;
+  isLastMessage?: boolean;
   componentHeight: number;
   onClickAction: (actionId: string, title: string) => void;
 }
 
-export const MainChatMessage = ({ message, onClickAction, componentHeight }: MainChatMessageProps) => {
+export const ChatMessageBubble = ({ message, onClickAction, componentHeight, isLastMessage }: MainChatMessageProps) => {
   const { colors } = useTheme();
   const isUser = message.sender === Sender.USER;
 
@@ -22,7 +22,7 @@ export const MainChatMessage = ({ message, onClickAction, componentHeight }: Mai
     if (onClickAction) onClickAction(actionId, title);
   };
 
-  const styles = getStyle(colors, isUser, componentHeight);
+  const styles = getStyle(colors, isUser, componentHeight, isLastMessage);
 
   const isLoading = message.loading;
   const isStreaming = !message.loading && message.messageType === MessageType.STREAM_TEXT;
@@ -52,12 +52,11 @@ export const MainChatMessage = ({ message, onClickAction, componentHeight }: Mai
   );
 };
 
-const getStyle = (colors: any, isUser: boolean, componentHeight: number) => {
+const getStyle = (colors: any, isUser: boolean, componentHeight: number, isLastMessage?: boolean) => {
   return StyleSheet.create({
     container: {
       marginTop: 16,
-      minHeight: isUser ? 0 : componentHeight * 0.86,
-
+      minHeight: isUser || !isLastMessage ? 0 : componentHeight * 0.86,
       borderRadius: 16,
       ...(isUser
         ? {
