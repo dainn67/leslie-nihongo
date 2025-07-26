@@ -40,7 +40,7 @@ export const QuestionsMessage = ({ questionJson }: QuestionsMessageProps) => {
       // First fade out
       Animated.timing(fadeAnim, {
         toValue: 0,
-        duration: 150,
+        duration: 100,
         useNativeDriver: true,
       }).start(() => {
         // Update the question index after fade out completes
@@ -51,7 +51,7 @@ export const QuestionsMessage = ({ questionJson }: QuestionsMessageProps) => {
         setTimeout(() => {
           Animated.timing(fadeAnim, {
             toValue: 1,
-            duration: 150,
+            duration: 100,
             useNativeDriver: true,
           }).start();
         }, 50);
@@ -84,7 +84,9 @@ export const QuestionsMessage = ({ questionJson }: QuestionsMessageProps) => {
           onPress={() => handleChangeQuestion("prev")}
           disabled={currentQuestionIndex === 0}
         >
-          <CustomText style={[styles.navButtonText, currentQuestionIndex === 0 && styles.disabledButtonText]}>← Previous</CustomText>
+          <CustomText style={[styles.navButtonText, styles.navButtonTextPrev, currentQuestionIndex === 0 && styles.disabledButtonText]}>
+            Previous
+          </CustomText>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -92,7 +94,11 @@ export const QuestionsMessage = ({ questionJson }: QuestionsMessageProps) => {
           onPress={() => handleChangeQuestion("next")}
           disabled={currentQuestionIndex === questions.length - 1}
         >
-          <CustomText style={[styles.navButtonText, currentQuestionIndex === questions.length - 1 && styles.disabledButtonText]}>Next →</CustomText>
+          <CustomText
+            style={[styles.navButtonText, styles.navButtonTextNext, currentQuestionIndex === questions.length - 1 && styles.disabledButtonText]}
+          >
+            Next
+          </CustomText>
         </TouchableOpacity>
       </View>
     </View>
@@ -135,6 +141,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "600",
     textAlign: "center",
+  },
+  navButtonTextPrev: {
+    color: "black",
+  },
+  navButtonTextNext: {
+    color: "white",
   },
   disabledButtonText: {
     color: "#BDBDBD",
