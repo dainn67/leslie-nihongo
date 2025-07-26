@@ -3,12 +3,22 @@ import { ChatMessage, createChatMessage, MessageType, Sender, SuggestedAction } 
 
 type ChatState = {
   messages: ChatMessage[];
+  suggestedPropmpt: string[];
   isLoading: boolean;
 };
 
 const initialState: ChatState = {
   messages: [],
+  suggestedPropmpt: [],
   isLoading: false,
+};
+
+const getLastMessage = (state: ChatState) => {
+  const index = state.messages.length - 1;
+  if (index !== -1) {
+    return state.messages[index];
+  }
+  return null;
 };
 
 const chatbotSlice = createSlice({
@@ -27,23 +37,16 @@ const chatbotSlice = createSlice({
       );
     },
     updateLastStream: (state, action: PayloadAction<{ word: string }>) => {
-      const index = state.messages.length - 1;
-      if (index !== -1) {
-        const message = state.messages[index];
-        message.words.push(action.payload.word);
-      }
+      const message = getLastMessage(state);
+      if (message) message.words.push(action.payload.word);
     },
     updateLastMessageId: (state, action: PayloadAction<{ messageId: string }>) => {
-      const index = state.messages.length - 1;
-      if (index !== -1) {
-        const message = state.messages[index];
-        message.id = action.payload.messageId;
-      }
+      const message = getLastMessage(state);
+      if (message) message.id = action.payload.messageId;
     },
     updateLastSuggestedActions: (state, action: PayloadAction<{ suggestedActions: SuggestedAction[] }>) => {
-      const index = state.messages.length - 1;
-      if (index !== -1) {
-        const message = state.messages[index];
+      const message = getLastMessage(state);
+      if (message) {
         message.suggestedActions = action.payload.suggestedActions.map((action) => ({
           id: action["id"],
           title: action["title"],
@@ -51,27 +54,16 @@ const chatbotSlice = createSlice({
       }
     },
     updateLastMessageType: (state) => {
-      const index = state.messages.length - 1;
-      if (index !== -1) {
-        const message = state.messages[index];
-
-        // Only update if not already a question json
-        if (message.messageType === MessageType.STREAM_TEXT) message.messageType = MessageType.QUESTION_JSON;
-      }
+      const message = getLastMessage(state);
+      if (message) message.messageType = MessageType.QUESTION_JSON;
     },
     updateLastLoading: (state, action: PayloadAction<{ loading: boolean }>) => {
-      const index = state.messages.length - 1;
-      if (index !== -1) {
-        const message = state.messages[index];
-        message.loading = action.payload.loading;
-      }
+      const message = getLastMessage(state);
+      if (message) message.loading = action.payload.loading;
     },
     updateLastFullText: (state, action: PayloadAction<{ fullText: string }>) => {
-      const index = state.messages.length - 1;
-      if (index !== -1) {
-        const message = state.messages[index];
-        message.fullText = action.payload.fullText;
-      }
+      const message = getLastMessage(state);
+      if (message) message.fullText = action.payload.fullText;
     },
     clearChat: () => initialState,
   },

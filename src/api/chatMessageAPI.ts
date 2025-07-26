@@ -1,7 +1,7 @@
-import { connectSSE } from "../../../api/sseClient";
-import { AppDispatch } from "../../../app/store";
-import { ApiConfig } from "../../../config/apiConfig";
-import { splitCustomWords } from "../../../utils/utils";
+import { connectSSE } from "./sseClient";
+import { AppDispatch } from "../app/store";
+import { ApiConfig } from "../config/apiConfig";
+import { splitCustomWords } from "../utils/utils";
 import {
   updateLastMessageType,
   updateLastMessageId,
@@ -9,9 +9,8 @@ import {
   updateLastLoading,
   updateLastStream,
   updateLastSuggestedActions,
-} from "../chatMessageList/chatbotSlice";
-import { Delimiter } from "../../../models/chatMessage";
-import { setIsStreaming } from "./chatMessageSlice";
+} from "../features/chatbot/chatMessageList/chatbotSlice";
+import { Delimiter } from "../models/chatMessage";
 import Constants from "expo-constants";
 
 const { DIFY_API_KEY } = Constants.expoConfig?.extra ?? {};
@@ -46,7 +45,7 @@ export const sendStreamMessage = ({
       user: "dainn",
       auto_generate_name: false,
     },
-    onOpen: () => dispatch(setIsStreaming(true)),
+    onOpen: () => {},
     onMessage: (data) => {
       const type = data["event"];
       const messageId = data["message_id"];

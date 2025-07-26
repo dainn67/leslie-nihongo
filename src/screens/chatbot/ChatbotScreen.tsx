@@ -16,7 +16,7 @@ import { setUserLevel, setUserProgress, setUserTarget } from "../../features/use
 import { createQuestionTable, getAllQuestions } from "../../storage/database/tables/questionTable";
 import * as FileSystem from "expo-file-system";
 import { createChatMessage } from "../../models/chatMessage";
-import { sendStreamMessage } from "../../features/chatbot/chatMessageStream/chatMessageAPI";
+import { sendStreamMessage } from "../../api/chatMessageAPI";
 import { getUserProgressFromStorage } from "../../service/userProgressSerivice";
 
 type DrawerParamList = {

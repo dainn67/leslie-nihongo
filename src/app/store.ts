@@ -1,13 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import chatbotReducer from "../features/chatbot/chatMessageList/chatbotSlice";
 import themeReducer from "../features/theme/themeSlice";
-import chatMessageReducer from "../features/chatbot/chatMessageStream/chatMessageSlice";
 import userProgressReducer from "../features/userProgress/userProgressSlice";
 
 export const store = configureStore({
   reducer: {
     chatbot: chatbotReducer,
-    chatMessage: chatMessageReducer,
     userProgress: userProgressReducer,
     theme: themeReducer,
   },

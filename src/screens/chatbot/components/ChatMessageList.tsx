@@ -1,7 +1,7 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { MainChatMessage } from "./chatBubble/MainChatMessage";
-import { ScrollView, View, StyleSheet } from "react-native";
-import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
+import { ScrollView, View, StyleSheet, LayoutChangeEvent } from "react-native";
+import { useAppSelector } from "../../../hooks/hooks";
 import { useTheme } from "../../../theme";
 
 interface ChatMessageListProps {
@@ -12,8 +12,7 @@ export const ChatMessageList = ({ handleClickAction }: ChatMessageListProps) => 
   const messages = useAppSelector((state) => state.chatbot.messages);
   const scrollViewRef = useRef<ScrollView>(null);
   const { colors } = useTheme();
-
-  const dispatch = useAppDispatch();
+  const [componentHeight, setComponentHeight] = useState(0);
 
   // Auto scroll to bottom when new messages are added
   useEffect(() => {
@@ -24,8 +23,13 @@ export const ChatMessageList = ({ handleClickAction }: ChatMessageListProps) => 
     scrollViewRef.current?.scrollToEnd({ animated: true });
   };
 
+  const handleLayout = (event: LayoutChangeEvent) => {
+    const { height } = event.nativeEvent.layout;
+    setComponentHeight(height);
+  };
+
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <View style={[styles.container, { backgroundColor: colors.background }]} onLayout={handleLayout}>
       <ScrollView
         ref={scrollViewRef}
         style={styles.scrollView}
@@ -39,6 +43,7 @@ export const ChatMessageList = ({ handleClickAction }: ChatMessageListProps) => 
             isInitialMessage={index === 0}
             message={message}
             onClickAction={handleClickAction}
+            componentHeight={componentHeight}
           />
         ))}
       </ScrollView>
