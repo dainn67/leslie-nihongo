@@ -2,15 +2,8 @@ import { connectSSE } from "./sseClient";
 import { AppDispatch } from "../app/store";
 import { ApiConfig } from "../config/apiConfig";
 import { splitCustomWords } from "../utils/utils";
-import {
-  updateLastMessageType,
-  updateLastMessageId,
-  updateLastFullText,
-  updateLastLoading,
-  updateLastStream,
-  updateLastSuggestedActions,
-} from "../features/chatbot/chatMessageList/chatbotSlice";
-import { Delimiter } from "../models/chatMessage";
+import { updateLastMessageData } from "../features/chatbot/chatMessageList/chatbotSlice";
+import { Delimiter, MessageType } from "../models/chatMessage";
 import Constants from "expo-constants";
 
 const { DIFY_API_KEY } = Constants.expoConfig?.extra ?? {};
@@ -55,18 +48,18 @@ export const sendStreamMessage = ({
         const jsonPattern = "``";
 
         if (!isQuestionJson && text.includes(jsonPattern)) {
-          dispatch(updateLastMessageType());
+          dispatch(updateLastMessageData({ messageType: MessageType.QUESTION_JSON }));
           isQuestionJson = true;
         }
 
         fullText += text;
       } else if (type === "workflow_started") {
-        dispatch(updateLastMessageId({ messageId }));
+        dispatch(updateLastMessageData({ messageId }));
       }
     },
     onClose: () => {
       wordLength = splitCustomWords(fullText).length;
-      dispatch(updateLastFullText({ fullText }));
+      dispatch(updateLastMessageData({ fullText }));
     },
     onError: (error) => console.log("SSE error", error),
   });
@@ -81,18 +74,19 @@ export const sendStreamMessage = ({
     if (words.length > wordIndex + 1) {
       // Start streaming
       if (!start) {
-        dispatch(updateLastLoading({ loading: false }));
+        dispatch(updateLastMessageData({ loading: false }));
         start = true;
       }
 
       const nextWord = words[wordIndex];
-      dispatch(updateLastStream({ word: nextWord }));
+      dispatch(updateLastMessageData({ nextWord }));
 
       wordIndex++;
 
       // Stop interval at lastword, after original stream is done
       if (wordLength > 0 && wordIndex == words.length - 1) {
-        dispatch(updateLastStream({ word: words[wordIndex] }));
+        const lastWord = words[wordIndex];
+        dispatch(updateLastMessageData({ nextWord: lastWord }));
 
         const splittedText = fullText.split(Delimiter);
         if (splittedText.length > 3) {
@@ -104,7 +98,7 @@ export const sendStreamMessage = ({
             })
             .filter((action) => action.id !== undefined && action.id !== null && action.title !== undefined && action.title !== null);
 
-          dispatch(updateLastSuggestedActions({ suggestedActions }));
+          dispatch(updateLastMessageData({ suggestedActions }));
         }
 
         clearInterval(interval);

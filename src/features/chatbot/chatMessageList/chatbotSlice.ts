@@ -36,49 +36,37 @@ const chatbotSlice = createSlice({
         })
       );
     },
-    updateLastStream: (state, action: PayloadAction<{ word: string }>) => {
-      const message = getLastMessage(state);
-      if (message) message.words.push(action.payload.word);
-    },
-    updateLastMessageId: (state, action: PayloadAction<{ messageId: string }>) => {
-      const message = getLastMessage(state);
-      if (message) message.id = action.payload.messageId;
-    },
-    updateLastSuggestedActions: (state, action: PayloadAction<{ suggestedActions: SuggestedAction[] }>) => {
+    updateLastMessageData: (
+      state,
+      action: PayloadAction<{
+        messageId?: string;
+        nextWord?: string;
+        loading?: boolean;
+        messageType?: MessageType;
+        fullText?: string;
+        suggestedActions?: SuggestedAction[];
+      }>
+    ) => {
       const message = getLastMessage(state);
       if (message) {
-        message.suggestedActions = action.payload.suggestedActions.map((action) => ({
-          id: action["id"],
-          title: action["title"],
-        }));
+        if (action.payload.messageId !== undefined) message.id = action.payload.messageId;
+        if (action.payload.loading !== undefined) message.loading = action.payload.loading;
+        if (action.payload.messageType !== undefined) message.messageType = action.payload.messageType;
+        if (action.payload.fullText !== undefined) message.fullText = action.payload.fullText;
+        if (action.payload.nextWord !== undefined) message.words.push(action.payload.nextWord);
+        if (action.payload.suggestedActions !== undefined) {
+          message.suggestedActions = action.payload.suggestedActions.map((action) => ({
+            id: action["id"],
+            title: action["title"],
+          }));
+        }
       }
     },
-    updateLastMessageType: (state) => {
-      const message = getLastMessage(state);
-      if (message) message.messageType = MessageType.QUESTION_JSON;
-    },
-    updateLastLoading: (state, action: PayloadAction<{ loading: boolean }>) => {
-      const message = getLastMessage(state);
-      if (message) message.loading = action.payload.loading;
-    },
-    updateLastFullText: (state, action: PayloadAction<{ fullText: string }>) => {
-      const message = getLastMessage(state);
-      if (message) message.fullText = action.payload.fullText;
-    },
+
     clearChat: () => initialState,
   },
 });
 
-export const {
-  clearChat,
-  addMessage,
-  addLoading,
-  updateLastStream,
-  updateLastMessageId,
-  updateLastSuggestedActions,
-  updateLastMessageType,
-  updateLastLoading,
-  updateLastFullText,
-} = chatbotSlice.actions;
+export const { clearChat, addMessage, addLoading, updateLastMessageData } = chatbotSlice.actions;
 
 export default chatbotSlice.reducer;
