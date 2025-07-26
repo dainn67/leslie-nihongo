@@ -18,7 +18,7 @@ export const LoadingMessage = () => {
     const animation = Animated.loop(
       Animated.sequence([
         Animated.timing(dots[index], {
-          toValue: -3,
+          toValue: -4,
           duration: 200,
           useNativeDriver: true,
         }),

@@ -40,7 +40,7 @@ export const ChatMessageBubble = ({ message, onClickAction, componentHeight, isL
 
         {/* Generated questions */}
         {isQuestions && (
-          <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+          <View style={{ flexDirection: "row", flexWrap: "wrap", flex: 1 }}>
             <QuestionsMessage questionJson={message.fullText} />
           </View>
         )}
@@ -58,11 +58,11 @@ const getStyle = (colors: any, isUser: boolean, componentHeight: number, isLastM
       marginTop: 16,
       minHeight: isUser || !isLastMessage ? 0 : componentHeight * 0.86,
       borderRadius: 16,
+      paddingHorizontal: 16,
       ...(isUser
         ? {
             backgroundColor: colors.primary,
             paddingVertical: 12,
-            paddingHorizontal: 16,
             alignItems: "flex-end",
             alignSelf: "flex-end",
             marginLeft: 32,
