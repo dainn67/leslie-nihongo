@@ -4,6 +4,7 @@ import { CustomText } from "../../../../components/text/customText";
 import { Question } from "../../../../models/question";
 import { IconButton } from "../../../../components/buttons";
 import { AppIcons } from "../../../../constants/appIcons";
+import { Answer } from "../../../../models/answer";
 
 interface QuestionViewProps {
   question: Question;
@@ -40,7 +41,7 @@ export const QuestionView = ({
         <View style={styles.questionHeaderContent}>
           <View style={styles.questionIndex}>
             <CustomText style={styles.questionNumberText}>
-              Câu hỏi {questionIndex + 1}/{totalQuestions}: ({question.type})
+              Câu hỏi {questionIndex + 1}/{totalQuestions}:
             </CustomText>
           </View>
           <CustomText style={styles.questionText}>{question.question}</CustomText>
@@ -52,7 +53,7 @@ export const QuestionView = ({
 
       {/* Answers */}
       <View style={styles.answersContainer}>
-        {question.answers.map((a: any, index: number) => (
+        {question.answers.map((a: Answer, index: number) => (
           <TouchableOpacity
             key={index}
             onPress={() => onAnswerSelect(index)}

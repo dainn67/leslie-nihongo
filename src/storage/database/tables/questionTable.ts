@@ -9,7 +9,6 @@ export const QuestionTable = {
   columnQuestion: "question",
   columnExplanation: "explanation",
   columnType: "type",
-  columnBookmarked: "bookmarked",
 };
 
 export const AnswerTable = {
@@ -28,9 +27,7 @@ export const createQuestionTable = () => {
           ${QuestionTable.columnQuestionId} INTEGER,
           ${QuestionTable.columnQuestion} TEXT,
           ${QuestionTable.columnExplanation} TEXT,
-          ${QuestionTable.columnType} TEXT,
-          ${QuestionTable.columnBookmarked} INTEGER
-        )`
+          ${QuestionTable.columnType} TEXT)`
     );
 
     db.execSync(
@@ -39,8 +36,7 @@ export const createQuestionTable = () => {
           ${AnswerTable.columnQuestionId} INTEGER,
           ${AnswerTable.columnAnswer} TEXT,
           ${AnswerTable.columnIsCorrect} INTEGER,
-          FOREIGN KEY (${AnswerTable.columnQuestionId}) REFERENCES ${QuestionTable.tableName}(${QuestionTable.columnQuestionId})
-        )`
+          FOREIGN KEY (${AnswerTable.columnQuestionId}) REFERENCES ${QuestionTable.tableName}(${QuestionTable.columnQuestionId}))`
     );
   });
 };
@@ -51,12 +47,8 @@ export const updateTables = () => {
     Object.values(QuestionTable).forEach((column) => {
       if (column !== QuestionTable.tableName) {
         if (!questionColumns.includes(column)) {
-          // If missing, find the type
-          let columnType = "TEXT";
-          if (column === QuestionTable.columnId || column === QuestionTable.columnQuestionId || column === QuestionTable.columnBookmarked) {
-            columnType = "INTEGER";
-          }
           // Add the column
+          let columnType = column === QuestionTable.columnId || column === QuestionTable.columnQuestionId ? "INTEGER" : "TEXT";
           db.execSync(`ALTER TABLE ${QuestionTable.tableName} ADD COLUMN ${column} ${columnType}`);
         }
       }
@@ -118,8 +110,8 @@ export const insertQuestions = (questions: Question[]) => {
   db.withTransactionSync(() => {
     const questionValues = questions
       .map((question) => {
-        const questionString = question.question.replaceAll('"', '\\"');
-        const explanationString = question.explanation.replaceAll('"', '\\"');
+        const questionString = question.question.replaceAll('"', "'");
+        const explanationString = question.explanation.replaceAll('"', "'");
         return `(${question.questionId}, "${questionString}", "${explanationString}", "${question.type}")`;
       })
       .join(", ");
@@ -130,7 +122,7 @@ export const insertQuestions = (questions: Question[]) => {
     const answerValues = questions
       .flatMap((question) =>
         question.answers.map((answer) => {
-          const answerString = answer.text.replaceAll('"', '\\"');
+          const answerString = answer.text.replaceAll('"', "'");
           return `(${question.questionId}, "${answerString}", "${answer.isCorrect ? 1 : 0}")`;
         })
       )
