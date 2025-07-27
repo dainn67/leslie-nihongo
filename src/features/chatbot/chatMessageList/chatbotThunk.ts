@@ -23,9 +23,7 @@ export const sendMessageThunk = createAsyncThunk("chatbot/sendMessage", async (m
 
   const data = await res.json();
 
-  const usage = data.metadata.usage;
-
-  console.log(`Tokens: ${usage.prompt_tokens} prompt, ${usage.completion_tokens} completions => ${usage.total_price} ${usage.currency}`);
+  
 
   return createChatMessage({
     id: data.message_id,

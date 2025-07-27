@@ -1,10 +1,9 @@
+import { Answer } from "./answer";
+
 export type Question = {
   questionId: number;
   question: string;
-  answers: {
-    text: string;
-    isCorrect: boolean;
-  }[];
+  answers: Answer[];
   explanation: string;
   bookmarked: boolean;
   type: "vocab" | "grammar" | "reading_comprehension" | "listening";

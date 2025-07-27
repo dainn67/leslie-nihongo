@@ -1,3 +1,4 @@
+import { createAnswer } from "../../../models/answer";
 import { Question } from "../../../models/question";
 import { db } from "../database";
 
@@ -99,10 +100,14 @@ export const getAllQuestions = () => {
   answerRows.forEach((row: any) => {
     const question = questions.find((question) => question.questionId === row.questionId);
     if (question) {
-      question.answers.push({
-        text: row.answer,
-        isCorrect: row.isCorrect,
-      });
+      question.answers.push(
+        createAnswer({
+          answerId: row.answerId,
+          questionId: row.questionId,
+          text: row.answer,
+          isCorrect: row.isCorrect,
+        })
+      );
     }
   });
 
