@@ -11,7 +11,7 @@ import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { AppConfig } from "../../constants/appConfig";
 import { addLoading, addMessage, clearChat } from "../../features/chatbot/chatMessageList/chatbotSlice";
 import { clearUserProgress, setUserLevel, setUserProgress, setUserTarget } from "../../features/userProgress/userProgressSlice";
-import { clearAllTables, createQuestionTable } from "../../storage/database/tables";
+import { clearAllTables, createQuestionTable, deleteAllTables, updateTables } from "../../storage/database/tables";
 import { createChatMessage } from "../../models/chatMessage";
 import { sendStreamMessage } from "../../api/chatMessageAPI";
 import { getUserProgressFromStorage } from "../../service/userProgressSerivice";
@@ -119,11 +119,15 @@ export const ChatbotScreen = () => {
   };
 
   const handleDevClick = () => {
-    const dbPath = `${FileSystem.documentDirectory}/SQLite/`;
-    console.log(dbPath);
+    // const dbPath = `${FileSystem.documentDirectory}/SQLite/`;
+    // console.log(dbPath);
 
-    clearAllTables();
-    dispatch(clearUserProgress());
+    // clearAllTables();
+    // dispatch(clearUserProgress());
+
+    // updateTables();
+
+    deleteAllTables();
   };
 
   return (

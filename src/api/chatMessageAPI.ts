@@ -4,9 +4,9 @@ import { ApiConfig } from "../constants/apiConfig";
 import { splitCustomWords } from "../utils/utils";
 import { updateConversationId, updateLastMessageData } from "../features/chatbot/chatMessageList/chatbotSlice";
 import { MessageType } from "../models/chatMessage";
-import Constants from "expo-constants";
 import { extractQuestionsFromJson } from "../service/questionService";
 import { Delimiter } from "../utils/utils";
+import Constants from "expo-constants";
 
 const { DIFY_API_KEY } = Constants.expoConfig?.extra ?? {};
 

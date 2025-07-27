@@ -7,6 +7,8 @@ export const QuestionTable = {
   columnQuestionId: "questionId",
   columnQuestion: "question",
   columnExplanation: "explanation",
+  columnType: "type",
+  columnBookmarked: "bookmarked",
 };
 
 export const AnswerTable = {
@@ -24,7 +26,9 @@ export const createQuestionTable = () => {
           ${QuestionTable.columnId} INTEGER PRIMARY KEY AUTOINCREMENT,
           ${QuestionTable.columnQuestionId} INTEGER,
           ${QuestionTable.columnQuestion} TEXT,
-          ${QuestionTable.columnExplanation} TEXT
+          ${QuestionTable.columnExplanation} TEXT,
+          ${QuestionTable.columnType} TEXT,
+          ${QuestionTable.columnBookmarked} INTEGER
         )`
     );
 
@@ -40,6 +44,43 @@ export const createQuestionTable = () => {
   });
 };
 
+export const updateTables = () => {
+  const questionColumns = db.getAllSync(`PRAGMA table_info(${QuestionTable.tableName})`).map((row: any) => row.name);
+  db.withTransactionSync(() => {
+    Object.values(QuestionTable).forEach((column) => {
+      if (column !== QuestionTable.tableName) {
+        if (!questionColumns.includes(column)) {
+          // If missing, find the type
+          let columnType = "TEXT";
+          if (column === QuestionTable.columnId || column === QuestionTable.columnQuestionId || column === QuestionTable.columnBookmarked) {
+            columnType = "INTEGER";
+          }
+          // Add the column
+          db.execSync(`ALTER TABLE ${QuestionTable.tableName} ADD COLUMN ${column} ${columnType}`);
+        }
+      }
+    });
+  });
+
+  const answerColumns = db.getAllSync(`PRAGMA table_info(${AnswerTable.tableName})`).map((row: any) => row.name);
+  db.withTransactionSync(() => {
+    Object.values(AnswerTable).forEach((column) => {
+      if (column !== AnswerTable.tableName) {
+        if (!answerColumns.includes(column)) {
+          // If missing, find the type
+          let columnType = "TEXT";
+          if (column === AnswerTable.columnId || column === AnswerTable.columnQuestionId || column === AnswerTable.columnIsCorrect) {
+            columnType = "INTEGER";
+          }
+
+          // Add the column
+          db.execSync(`ALTER TABLE ${AnswerTable.tableName} ADD COLUMN ${column} ${columnType}`);
+        }
+      }
+    });
+  });
+};
+
 export const getAllQuestions = () => {
   const questionRows = db.getAllSync(`SELECT * FROM ${QuestionTable.tableName}`);
 
@@ -50,6 +91,7 @@ export const getAllQuestions = () => {
     explanation: row.explanation,
     answers: [],
     bookmarked: row.bookmarked,
+    type: row.type,
   }));
 
   const answerRows = db.getAllSync(`SELECT * FROM ${AnswerTable.tableName}`);
@@ -73,14 +115,11 @@ export const insertQuestions = (questions: Question[]) => {
       .map((question) => {
         const questionString = question.question.replaceAll('"', '\\"');
         const explanationString = question.explanation.replaceAll('"', '\\"');
-        return `(${question.questionId}, "${questionString}", "${explanationString}")`;
+        return `(${question.questionId}, "${questionString}", "${explanationString}", "${question.type}")`;
       })
       .join(", ");
-    console.log(
-      `INSERT INTO ${QuestionTable.tableName} (${QuestionTable.columnQuestionId}, ${QuestionTable.columnQuestion}, ${QuestionTable.columnExplanation}) VALUES ${questionValues}`
-    );
     db.execSync(
-      `INSERT INTO ${QuestionTable.tableName} (${QuestionTable.columnQuestionId}, ${QuestionTable.columnQuestion}, ${QuestionTable.columnExplanation}) VALUES ${questionValues}`
+      `INSERT INTO ${QuestionTable.tableName} (${QuestionTable.columnQuestionId}, ${QuestionTable.columnQuestion}, ${QuestionTable.columnExplanation}, ${QuestionTable.columnType}) VALUES ${questionValues}`
     );
 
     const answerValues = questions

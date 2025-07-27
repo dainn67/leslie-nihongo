@@ -40,7 +40,7 @@ export const QuestionView = ({
         <View style={styles.questionHeaderContent}>
           <View style={styles.questionIndex}>
             <CustomText style={styles.questionNumberText}>
-              Câu hỏi {questionIndex + 1}/{totalQuestions}:
+              Câu hỏi {questionIndex + 1}/{totalQuestions}: ({question.type})
             </CustomText>
           </View>
           <CustomText style={styles.questionText}>{question.question}</CustomText>
