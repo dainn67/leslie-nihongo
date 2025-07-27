@@ -10,7 +10,7 @@ import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { AppConfig } from "../../constants/appConfig";
 import { addLoading, addMessage, clearChat } from "../../features/chatbot/chatMessageList/chatbotSlice";
-import { setUserLevel, setUserProgress, setUserTarget } from "../../features/userProgress/userProgressSlice";
+import { clearUserProgress, setUserLevel, setUserProgress, setUserTarget } from "../../features/userProgress/userProgressSlice";
 import { createQuestionTable, deleteAllTables } from "../../storage/database/tables";
 import { createChatMessage } from "../../models/chatMessage";
 import { sendStreamMessage } from "../../api/chatMessageAPI";
@@ -18,6 +18,7 @@ import { getUserProgressFromStorage } from "../../service/userProgressSerivice";
 import ClearChatDialog from "./components/ClearChatDialog";
 import ChatInput from "./components/ChatInput";
 import * as FileSystem from "expo-file-system";
+import { creatConversationHistory as createConversationHistory } from "../../utils";
 
 type DrawerParamList = {
   Chatbot: undefined;
@@ -70,12 +71,14 @@ export const ChatbotScreen = () => {
   const handleSend = (message: string) => {
     const data = message.trim();
     const userMessage = createChatMessage({ fullText: data });
+    const conversationHistory = createConversationHistory(messages);
 
     dispatch(addMessage(userMessage));
     dispatch(addLoading());
 
     sendStreamMessage({
       message: data,
+      conversationHistory,
       level: userProgress.level,
       target: userProgress.target,
       conversationId,
@@ -104,12 +107,14 @@ export const ChatbotScreen = () => {
     }
 
     const userMessage = createChatMessage({ fullText: title });
+    const conversationHistory = createConversationHistory(messages);
 
     dispatch(addMessage(userMessage));
     dispatch(addLoading());
 
     sendStreamMessage({
       message: title,
+      conversationHistory,
       actionId: actionId,
       level: userLevel.length > 0 ? userLevel : userProgress.level,
       target: userTarget.length > 0 ? userTarget : userProgress.target,
@@ -123,6 +128,7 @@ export const ChatbotScreen = () => {
     console.log(dbPath);
 
     deleteAllTables();
+    dispatch(clearUserProgress());
   };
 
   return (
@@ -137,7 +143,7 @@ export const ChatbotScreen = () => {
             onRightPress={openClearChatDialog}
             onDevClick={handleDevClick}
           />
-          <ChatMessageList handleClickAction={handleClickAction} />
+          <ChatMessageList messages={messages} handleClickAction={handleClickAction} />
           <ChatInput onSend={handleSend} />
 
           <ClearChatDialog

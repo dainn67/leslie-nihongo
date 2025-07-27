@@ -1,6 +1,8 @@
+import { ChatMessage, Sender } from "../models/chatMessage";
+
 export const Delimiter = "--//--";
 
-const splitCustomWords = (input: string) => {
+export const splitCustomWords = (input: string) => {
   let splittedText: string[] = [];
 
   const largeChunk = input.split("\n");
@@ -162,4 +164,11 @@ const splitCustomWords = (input: string) => {
   return splittedText;
 };
 
-export { splitCustomWords };
+export const creatConversationHistory = (messages: ChatMessage[]) => {
+  return messages
+    .map((m) => {
+      const senderString = m.sender == Sender.BOT ? "Chatbot" : "User";
+      return `${senderString}: ${m.sender == Sender.BOT ? m.summary : m.fullText}`;
+    })
+    .join("\n");
+};

@@ -12,6 +12,7 @@ const { DIFY_API_KEY } = Constants.expoConfig?.extra ?? {};
 
 export const sendStreamMessage = ({
   message,
+  conversationHistory,
   actionId,
   level,
   target,
@@ -19,6 +20,7 @@ export const sendStreamMessage = ({
   dispatch,
 }: {
   message?: string;
+  conversationHistory?: string;
   actionId?: string;
   level?: string;
   target?: string;
@@ -40,6 +42,7 @@ export const sendStreamMessage = ({
         level: level,
         target: target,
         action_id: actionId,
+        conversation_history: conversationHistory,
       },
       conversation_id: conversationId,
       response_mode: "streaming",
@@ -101,9 +104,9 @@ export const sendStreamMessage = ({
 
         // Extract the suggested actions here to wait for the stream to finish
         const splittedText = fullText.split(Delimiter);
-        if (splittedText.length > 3) {
-          const suggestionString = splittedText.slice(1);
-          const suggestedActions = suggestionString
+        if (splittedText.length > 2) {
+          const suggestedActions = splittedText
+            .slice(1, -1)
             .map((text) => {
               // Split by "-" or ":"
               let data = text.split("-");
@@ -115,6 +118,9 @@ export const sendStreamMessage = ({
             .filter((action) => action.id !== undefined && action.id !== null && action.title !== undefined && action.title !== null);
 
           dispatch(updateLastMessageData({ suggestedActions }));
+
+          const summary = splittedText[splittedText.length - 1];
+          dispatch(updateLastMessageData({ summary: summary.trim() }));
         } else {
           console.log("sendStreamMessage: not enough suggested actions:", splittedText);
         }

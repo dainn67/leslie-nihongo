@@ -36,7 +36,7 @@ const chatbotSlice = createSlice({
         createChatMessage({
           loading: true,
           sender: Sender.BOT,
-        })
+        }),
       );
     },
     updateConversationId: (state, action: PayloadAction<string>) => {
@@ -52,7 +52,8 @@ const chatbotSlice = createSlice({
         fullText?: string;
         questions?: Question[];
         suggestedActions?: SuggestedAction[];
-      }>
+        summary?: string;
+      }>,
     ) => {
       const message = getLastMessage(state);
       if (message) {
@@ -63,6 +64,7 @@ const chatbotSlice = createSlice({
         if (action.payload.nextWord !== undefined) message.words.push(action.payload.nextWord);
         if (action.payload.questions !== undefined) message.questions = action.payload.questions;
         if (action.payload.suggestedActions !== undefined) message.suggestedActions = action.payload.suggestedActions;
+        if (action.payload.summary !== undefined) message.summary = action.payload.summary;
       }
     },
 

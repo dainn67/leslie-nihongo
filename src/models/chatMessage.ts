@@ -1,4 +1,4 @@
-import { splitCustomWords } from "../utils/utils";
+import { splitCustomWords } from "../utils";
 import { Question } from "./question";
 
 export enum Sender {
@@ -33,8 +33,8 @@ export type ChatMessage = {
 
   // Id when click suggested action
   actionId: number;
+  summary: string;
 
-  // Timestamp
   createdAt: string;
 };
 
@@ -52,6 +52,7 @@ export const createChatMessage = (partial?: Partial<ChatMessage>): ChatMessage =
     suggestedActions: partial?.suggestedActions ?? [],
     sender: partial?.sender ?? Sender.USER,
     actionId: partial?.actionId ?? 0,
+    summary: partial?.summary ?? "",
     loading: partial?.loading ?? false,
     messageType: partial?.messageType ?? MessageType.STREAM_TEXT,
     createdAt: partial?.createdAt ?? timestamp,
