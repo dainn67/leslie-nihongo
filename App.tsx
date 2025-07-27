@@ -7,10 +7,10 @@ import { ActivityIndicator } from "react-native";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
-    "Poppins-Black": require("./assets/fonts/Poppins-Black.ttf"),
-    "Poppins-Bold": require("./assets/fonts/Poppins-Bold.ttf"),
-    "Poppins-Regular": require("./assets/fonts/Poppins-Regular.ttf"),
-    "Poppins-Italic": require("./assets/fonts/Poppins-Italic.ttf"),
+    "Inter-Black": require("./assets/fonts/inter/Inter-Black.ttf"),
+    "Inter-Bold": require("./assets/fonts/inter/Inter-Bold.ttf"),
+    "Inter-Regular": require("./assets/fonts/inter/Inter-Regular.ttf"),
+    "Inter-Italic": require("./assets/fonts/inter/Inter-Italic.ttf"),
   });
 
   if (!fontsLoaded) return <ActivityIndicator />;

@@ -15,11 +15,11 @@ export const CustomText: React.FC<CustomTextProps> = ({
   ...props
 }) => {
   const fontMap: Record<string, string> = {
-    Regular: "Poppins-Regular",
-    Bold: "Poppins-Bold",
-    Italic: "Poppins-Italic",
-    Light: "Poppins-Light",
-    SemiBold: "Poppins-SemiBold",
+    Regular: "Inter-Regular",
+    Bold: "Inter-Bold",
+    Italic: "Inter-Italic",
+    Light: "Inter-Light",
+    SemiBold: "Inter-SemiBold",
   };
 
   return (

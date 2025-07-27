@@ -96,6 +96,6 @@ export const WordComponent = ({ word, fontSize, color }: WordComponentProps) => 
   }, []);
 
   return (
-    <Animated.View style={{ marginRight: 3, opacity: fadeAnim }}>{renderContent()}</Animated.View>
+    <Animated.View style={{ marginRight: 4, opacity: fadeAnim }}>{renderContent()}</Animated.View>
   );
 };
