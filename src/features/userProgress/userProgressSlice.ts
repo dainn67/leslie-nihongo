@@ -44,6 +44,7 @@ const userProgressSlice = createSlice({
     },
     clearUserProgress: (state) => {
       state.userProgress = initialState.userProgress;
+      console.log("clearUserProgress", state.userProgress);
       setUserProgressToStorage(state.userProgress);
     },
   },

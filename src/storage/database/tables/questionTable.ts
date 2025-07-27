@@ -104,7 +104,7 @@ export const deleteQuestion = (questionId: number) => {
   });
 };
 
-export const clearAllData = () => {
+export const clearAllTables = () => {
   db.withTransactionSync(() => {
     db.execSync(`DELETE FROM ${QuestionTable.tableName}`);
     db.execSync(`DELETE FROM ${AnswerTable.tableName}`);

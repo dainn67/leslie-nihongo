@@ -4,12 +4,14 @@ import { Question } from "../../../models/question";
 
 type ChatState = {
   messages: ChatMessage[];
+  conversationId?: string;
   suggestedPropmpt: string[];
   isLoading: boolean;
 };
 
 const initialState: ChatState = {
   messages: [],
+  conversationId: undefined,
   suggestedPropmpt: [],
   isLoading: false,
 };
@@ -36,6 +38,9 @@ const chatbotSlice = createSlice({
           sender: Sender.BOT,
         })
       );
+    },
+    updateConversationId: (state, action: PayloadAction<string>) => {
+      state.conversationId = action.payload;
     },
     updateLastMessageData: (
       state,
@@ -65,6 +70,6 @@ const chatbotSlice = createSlice({
   },
 });
 
-export const { clearChat, addMessage, addLoading, updateLastMessageData } = chatbotSlice.actions;
+export const { clearChat, addMessage, addLoading, updateLastMessageData, updateConversationId } = chatbotSlice.actions;
 
 export default chatbotSlice.reducer;

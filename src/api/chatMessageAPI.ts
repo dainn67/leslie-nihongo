@@ -2,10 +2,11 @@ import { connectSSE } from "./sseClient";
 import { AppDispatch } from "../app/store";
 import { ApiConfig } from "../constants/apiConfig";
 import { splitCustomWords } from "../utils/utils";
-import { updateLastMessageData } from "../features/chatbot/chatMessageList/chatbotSlice";
-import { Delimiter, MessageType } from "../models/chatMessage";
+import { updateConversationId, updateLastMessageData } from "../features/chatbot/chatMessageList/chatbotSlice";
+import { MessageType } from "../models/chatMessage";
 import Constants from "expo-constants";
 import { extractQuestionsFromJson } from "../service/questionService";
+import { Delimiter } from "../utils/utils";
 
 const { DIFY_API_KEY } = Constants.expoConfig?.extra ?? {};
 
@@ -14,12 +15,14 @@ export const sendStreamMessage = ({
   actionId,
   level,
   target,
+  conversationId,
   dispatch,
 }: {
   message?: string;
   actionId?: string;
   level?: string;
   target?: string;
+  conversationId?: string;
   dispatch: AppDispatch;
 }) => {
   let fullText = "";
@@ -38,15 +41,16 @@ export const sendStreamMessage = ({
         target: target,
         action_id: actionId,
       },
+      conversation_id: conversationId,
       response_mode: "streaming",
       user: "dainn",
       auto_generate_name: false,
     },
-    onOpen: () => {},
     onMessage: (data) => {
       const type = data["event"];
       const messageId = data["message_id"];
       const text = data["answer"];
+      const conversationId = data["conversation_id"];
 
       if (type === "message") {
         const jsonPattern = "``";
@@ -59,12 +63,13 @@ export const sendStreamMessage = ({
         fullText += text;
       } else if (type === "workflow_started") {
         dispatch(updateLastMessageData({ messageId }));
+        dispatch(updateConversationId(conversationId));
       }
     },
-    onClose: () => {
+    onDone: () => {
       wordLength = splitCustomWords(fullText).length;
       dispatch(updateLastMessageData({ fullText: fullText, loading: false }));
-      dispatch(updateLastMessageData({ questions: extractQuestionsFromJson(fullText) }));
+      if (isQuestionJson) dispatch(updateLastMessageData({ questions: extractQuestionsFromJson(fullText) }));
     },
     onError: (error) => console.log("SSE error", error),
   });
@@ -94,6 +99,7 @@ export const sendStreamMessage = ({
         const lastWord = words[wordIndex];
         dispatch(updateLastMessageData({ nextWord: lastWord }));
 
+        // Extract the suggested actions here to wait for the stream to finish
         const splittedText = fullText.split(Delimiter);
         if (splittedText.length > 3) {
           const suggestionString = splittedText.slice(1);
@@ -109,6 +115,8 @@ export const sendStreamMessage = ({
             .filter((action) => action.id !== undefined && action.id !== null && action.title !== undefined && action.title !== null);
 
           dispatch(updateLastMessageData({ suggestedActions }));
+        } else {
+          console.log("sendStreamMessage: not enough suggested actions:", splittedText);
         }
 
         clearInterval(interval);

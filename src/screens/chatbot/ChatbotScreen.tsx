@@ -9,15 +9,15 @@ import { useNavigation } from "@react-navigation/native";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { AppConfig } from "../../constants/appConfig";
-import ClearChatDialog from "./components/ClearChatDialog";
 import { addLoading, addMessage, clearChat } from "../../features/chatbot/chatMessageList/chatbotSlice";
-import ChatInput from "./components/ChatInput";
-import { setUserLevel, setUserProgress, setUserTarget } from "../../features/userProgress/userProgressSlice";
-import { createQuestionTable, deleteAllTables } from "../../storage/database/tables/questionTable";
-import * as FileSystem from "expo-file-system";
+import { clearUserProgress, setUserLevel, setUserProgress, setUserTarget } from "../../features/userProgress/userProgressSlice";
+import { clearAllTables, createQuestionTable } from "../../storage/database/tables";
 import { createChatMessage } from "../../models/chatMessage";
 import { sendStreamMessage } from "../../api/chatMessageAPI";
 import { getUserProgressFromStorage } from "../../service/userProgressSerivice";
+import ClearChatDialog from "./components/ClearChatDialog";
+import ChatInput from "./components/ChatInput";
+import * as FileSystem from "expo-file-system";
 
 type DrawerParamList = {
   Chatbot: undefined;
@@ -37,6 +37,7 @@ export const ChatbotScreen = () => {
   const dispatch = useAppDispatch();
   const messages = useAppSelector((state) => state.chatbot.messages);
   const userProgress = useAppSelector((state) => state.userProgress.userProgress);
+  const conversationId = useAppSelector((state) => state.chatbot.conversationId);
 
   const [initialized, setInitialized] = useState(false);
 
@@ -45,19 +46,20 @@ export const ChatbotScreen = () => {
     if (!initialized) {
       createQuestionTable();
       getUserProgressFromStorage().then((userProgress) => {
+        console.log("userProgress", userProgress);
         // Set user progress
         dispatch(setUserProgress(userProgress));
         setInitialized(true);
 
         // Add loading message
         dispatch(addLoading());
-        sendStreamMessage({ level: userProgress.level, target: userProgress.target, dispatch });
+        sendStreamMessage({ level: userProgress.level, target: userProgress.target, conversationId, dispatch });
       });
     } else {
       if (messages.length === 0) {
         // Add loading message when clear
         dispatch(addLoading());
-        sendStreamMessage({ level: userProgress.level, target: userProgress.target, dispatch });
+        sendStreamMessage({ level: userProgress.level, target: userProgress.target, conversationId, dispatch });
       }
     }
   }, [initialized, messages.length]);
@@ -76,6 +78,7 @@ export const ChatbotScreen = () => {
       message: data,
       level: userProgress.level,
       target: userProgress.target,
+      conversationId,
       dispatch,
     });
   };
@@ -110,6 +113,7 @@ export const ChatbotScreen = () => {
       actionId: actionId,
       level: userLevel.length > 0 ? userLevel : userProgress.level,
       target: userTarget.length > 0 ? userTarget : userProgress.target,
+      conversationId,
       dispatch,
     });
   };
@@ -118,7 +122,8 @@ export const ChatbotScreen = () => {
     const dbPath = `${FileSystem.documentDirectory}/SQLite/`;
     console.log(dbPath);
 
-    deleteAllTables();
+    clearAllTables();
+    dispatch(clearUserProgress());
   };
 
   return (

@@ -62,5 +62,3 @@ export type SuggestedAction = {
   id: string;
   title: string;
 };
-
-export const Delimiter = "--//--";
