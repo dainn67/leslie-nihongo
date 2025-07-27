@@ -4,17 +4,16 @@ import { CustomText } from "../../../../components/text/customText";
 import { Question } from "../../../../models/question";
 import { QuestionView } from "./QuestionView";
 import { AnimatedProgressBar } from "../../../../components/AnimatedProgressBar";
+import { deleteQuestion, insertQuestions } from "../../../../storage/database/tables/questionTable";
 
 interface QuestionsMessageProps {
-  questionJson: string;
+  questions: Question[];
 }
 
-export const QuestionsMessage = ({ questionJson }: QuestionsMessageProps) => {
-  const data = questionJson.replaceAll("```json", "").replaceAll("```", "");
-  const questions: Question[] = JSON.parse(data);
-
+export const QuestionsMessage = ({ questions }: QuestionsMessageProps) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<(number | null)[]>(Array(questions.length).fill(null));
+  const [bookmarkedQuestions, setBookmarkedQuestions] = useState<boolean[]>(Array(questions.length).fill(false));
   const [showExplanations, setShowExplanations] = useState<boolean[]>(Array(questions.length).fill(false));
 
   // Opacity animation for question transitions - use useRef to prevent recreation on re-render
@@ -31,6 +30,19 @@ export const QuestionsMessage = ({ questionJson }: QuestionsMessageProps) => {
       const newShowExplanations = [...showExplanations];
       newShowExplanations[currentQuestionIndex] = true;
       setShowExplanations(newShowExplanations);
+    }
+  };
+
+  const handleBookmarkPress = (isBookmarked: boolean) => {
+    const newBookmarkedQuestions = [...bookmarkedQuestions];
+    newBookmarkedQuestions[currentQuestionIndex] = isBookmarked;
+    setBookmarkedQuestions(newBookmarkedQuestions);
+
+    // Update database
+    if (isBookmarked) {
+      insertQuestions([questions[currentQuestionIndex]]);
+    } else {
+      deleteQuestion(questions[currentQuestionIndex].questionId);
     }
   };
 
@@ -71,10 +83,12 @@ export const QuestionsMessage = ({ questionJson }: QuestionsMessageProps) => {
         question={question}
         questionIndex={currentQuestionIndex}
         totalQuestions={questions.length}
+        bookmarked={bookmarkedQuestions[currentQuestionIndex]}
         selectedAnswer={selectedAnswers[currentQuestionIndex]}
         showExplanation={showExplanations[currentQuestionIndex]}
-        onAnswerSelect={handleAnswerSelect}
         fadeAnim={fadeAnim}
+        onAnswerSelect={handleAnswerSelect}
+        onBookmarkPress={handleBookmarkPress}
       />
 
       {/* Navigation */}

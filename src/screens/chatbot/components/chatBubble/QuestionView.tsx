@@ -2,15 +2,19 @@ import React from "react";
 import { View, TouchableOpacity, StyleSheet, Animated } from "react-native";
 import { CustomText } from "../../../../components/text/customText";
 import { Question } from "../../../../models/question";
+import { IconButton } from "../../../../components/buttons";
+import { AppIcons } from "../../../../constants/appIcons";
 
 interface QuestionViewProps {
   question: Question;
   questionIndex: number;
   totalQuestions: number;
   selectedAnswer: number | null;
+  bookmarked: boolean;
   showExplanation: boolean;
-  onAnswerSelect: (index: number) => void;
   fadeAnim: Animated.Value;
+  onAnswerSelect: (index: number) => void;
+  onBookmarkPress: (isBookmarked: boolean) => void;
 }
 
 export const QuestionView = ({
@@ -18,9 +22,11 @@ export const QuestionView = ({
   questionIndex,
   totalQuestions,
   selectedAnswer,
+  bookmarked,
   showExplanation,
-  onAnswerSelect,
   fadeAnim,
+  onAnswerSelect,
+  onBookmarkPress,
 }: QuestionViewProps) => {
   const getAnswerLabel = (index: number) => {
     const labels = ["A", "B", "C", "D"];
@@ -29,14 +35,19 @@ export const QuestionView = ({
 
   return (
     <Animated.View style={[styles.questionCard, { opacity: fadeAnim }]}>
-      {/* Question Header */}
       <View style={styles.questionHeader}>
-        <View style={styles.questionIndex}>
-          <CustomText style={styles.questionNumberText}>
-            Câu hỏi {questionIndex + 1}/{totalQuestions}:
-          </CustomText>
+        {/* Question Index and Text */}
+        <View style={styles.questionHeaderContent}>
+          <View style={styles.questionIndex}>
+            <CustomText style={styles.questionNumberText}>
+              Câu hỏi {questionIndex + 1}/{totalQuestions}:
+            </CustomText>
+          </View>
+          <CustomText style={styles.questionText}>{question.question}</CustomText>
         </View>
-        <CustomText style={styles.questionText}>{question.question}</CustomText>
+
+        {/* Save icon button */}
+        <IconButton icon={bookmarked ? AppIcons.bookmarked : AppIcons.bookmark} onPress={() => onBookmarkPress(!bookmarked)} />
       </View>
 
       {/* Answers */}
@@ -100,11 +111,23 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   questionHeader: {
-    alignItems: "flex-start",
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 20,
+  },
+  questionHeaderContent: {
+    flex: 1,
+    marginRight: 20,
   },
   questionIndex: {
     marginBottom: 2,
+  },
+  saveButton: {
+    backgroundColor: "#F0F8FF",
+    borderRadius: 12,
+    padding: 8,
+    paddingHorizontal: 12,
+    marginRight: 12,
   },
   questionNumberText: {
     fontSize: 14,

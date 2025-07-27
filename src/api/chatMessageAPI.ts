@@ -1,10 +1,11 @@
 import { connectSSE } from "./sseClient";
 import { AppDispatch } from "../app/store";
-import { ApiConfig } from "../config/apiConfig";
+import { ApiConfig } from "../constants/apiConfig";
 import { splitCustomWords } from "../utils/utils";
 import { updateLastMessageData } from "../features/chatbot/chatMessageList/chatbotSlice";
 import { Delimiter, MessageType } from "../models/chatMessage";
 import Constants from "expo-constants";
+import { extractQuestionsFromJson } from "../service/questionService";
 
 const { DIFY_API_KEY } = Constants.expoConfig?.extra ?? {};
 
@@ -63,6 +64,7 @@ export const sendStreamMessage = ({
     onClose: () => {
       wordLength = splitCustomWords(fullText).length;
       dispatch(updateLastMessageData({ fullText: fullText, loading: false }));
+      dispatch(updateLastMessageData({ questions: extractQuestionsFromJson(fullText) }));
     },
     onError: (error) => console.log("SSE error", error),
   });

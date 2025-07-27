@@ -1,4 +1,5 @@
 import { splitCustomWords } from "../utils/utils";
+import { Question } from "./question";
 
 export enum Sender {
   USER = "user",
@@ -22,7 +23,8 @@ export type ChatMessage = {
   // Loading status
   loading: boolean;
 
-  // Suggested actions
+  // Data
+  questions: Question[];
   suggestedActions: SuggestedAction[];
 
   // Type and sender
@@ -46,6 +48,7 @@ export const createChatMessage = (partial?: Partial<ChatMessage>): ChatMessage =
     words,
     currentIndex: partial?.currentIndex ?? 0,
     wordsLength: partial?.wordsLength ?? words.length,
+    questions: partial?.questions ?? [],
     suggestedActions: partial?.suggestedActions ?? [],
     sender: partial?.sender ?? Sender.USER,
     actionId: partial?.actionId ?? 0,

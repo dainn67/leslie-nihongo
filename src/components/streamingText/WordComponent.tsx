@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Animated, View } from "react-native";
 import { RenderHTML } from "react-native-render-html";
-import { AppConfig } from "../../config/appConfig";
+import { AppConfig } from "../../constants/appConfig";
 import { CustomText } from "../text/customText";
 
 interface WordComponentProps {

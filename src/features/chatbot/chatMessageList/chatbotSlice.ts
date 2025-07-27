@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ChatMessage, createChatMessage, MessageType, Sender, SuggestedAction } from "../../../models/chatMessage";
+import { Question } from "../../../models/question";
 
 type ChatState = {
   messages: ChatMessage[];
@@ -44,6 +45,7 @@ const chatbotSlice = createSlice({
         loading?: boolean;
         messageType?: MessageType;
         fullText?: string;
+        questions?: Question[];
         suggestedActions?: SuggestedAction[];
       }>
     ) => {
@@ -54,12 +56,8 @@ const chatbotSlice = createSlice({
         if (action.payload.messageType !== undefined) message.messageType = action.payload.messageType;
         if (action.payload.fullText !== undefined) message.fullText = action.payload.fullText;
         if (action.payload.nextWord !== undefined) message.words.push(action.payload.nextWord);
-        if (action.payload.suggestedActions !== undefined) {
-          message.suggestedActions = action.payload.suggestedActions.map((action) => ({
-            id: action["id"],
-            title: action["title"],
-          }));
-        }
+        if (action.payload.questions !== undefined) message.questions = action.payload.questions;
+        if (action.payload.suggestedActions !== undefined) message.suggestedActions = action.payload.suggestedActions;
       }
     },
 

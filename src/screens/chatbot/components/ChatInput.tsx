@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { TextInput as GestureTextInput } from "react-native-gesture-handler";
 import { useTheme } from "../../../theme";
-import { AppConfig } from "../../../config/appConfig";
+import { AppConfig } from "../../../constants/appConfig";
 
 interface ChatInputProps {
   onSend: (message: string) => void;

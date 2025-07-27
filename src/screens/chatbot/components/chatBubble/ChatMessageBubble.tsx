@@ -14,7 +14,7 @@ interface MainChatMessageProps {
   onClickAction: (actionId: string, title: string) => void;
 }
 
-export const ChatMessageBubble = ({ message, onClickAction, componentHeight, isLastMessage }: MainChatMessageProps) => {
+export const ChatMessageBubble = ({ message, componentHeight, isLastMessage, onClickAction }: MainChatMessageProps) => {
   const { colors } = useTheme();
   const isUser = message.sender === Sender.USER;
 
@@ -42,7 +42,7 @@ export const ChatMessageBubble = ({ message, onClickAction, componentHeight, isL
         {/* Generated questions */}
         {isQuestions && (
           <View style={{ flexDirection: "row", flexWrap: "wrap", flex: 1 }}>
-            <QuestionsMessage questionJson={message.fullText} />
+            <QuestionsMessage questions={message.questions} />
           </View>
         )}
       </View>

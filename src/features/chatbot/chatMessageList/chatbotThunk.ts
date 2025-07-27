@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { ApiConfig } from "../../../config/apiConfig";
+import { ApiConfig } from "../../../constants/apiConfig";
 import { ChatMessage, createChatMessage, Sender } from "../../../models/chatMessage";
 import Constants from "expo-constants";
 

@@ -8,12 +8,12 @@ import { ChatMessageList } from "./components/ChatMessageList";
 import { useNavigation } from "@react-navigation/native";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
-import { AppConfig } from "../../config/appConfig";
+import { AppConfig } from "../../constants/appConfig";
 import ClearChatDialog from "./components/ClearChatDialog";
 import { addLoading, addMessage, clearChat } from "../../features/chatbot/chatMessageList/chatbotSlice";
 import ChatInput from "./components/ChatInput";
 import { setUserLevel, setUserProgress, setUserTarget } from "../../features/userProgress/userProgressSlice";
-import { createQuestionTable, getAllQuestions } from "../../storage/database/tables/questionTable";
+import { createQuestionTable, deleteAllTables } from "../../storage/database/tables/questionTable";
 import * as FileSystem from "expo-file-system";
 import { createChatMessage } from "../../models/chatMessage";
 import { sendStreamMessage } from "../../api/chatMessageAPI";
@@ -43,6 +43,7 @@ export const ChatbotScreen = () => {
   // Load user progress and add initial message when first open or clear
   useEffect(() => {
     if (!initialized) {
+      createQuestionTable();
       getUserProgressFromStorage().then((userProgress) => {
         // Set user progress
         dispatch(setUserProgress(userProgress));
@@ -114,13 +115,10 @@ export const ChatbotScreen = () => {
   };
 
   const handleDevClick = () => {
-    createQuestionTable();
-
     const dbPath = `${FileSystem.documentDirectory}/SQLite/`;
     console.log(dbPath);
 
-    const questions = getAllQuestions();
-    console.log(questions);
+    deleteAllTables();
   };
 
   return (
