@@ -1,13 +1,12 @@
 import React, { useRef, useEffect, useState } from "react";
 import { ChatMessageBubble } from "./chatBubble/ChatMessageBubble";
 import { ScrollView, View, StyleSheet, LayoutChangeEvent } from "react-native";
-import { useAppSelector } from "../../../hooks/hooks";
 import { useTheme } from "../../../theme";
 import { ChatMessage } from "../../../models/chatMessage";
 
 interface ChatMessageListProps {
   messages: ChatMessage[];
-  handleClickAction: (actionId: string, title: string) => void;
+  handleClickAction: (title: string, actionId?: string) => void;
 }
 
 export const ChatMessageList = ({ messages, handleClickAction }: ChatMessageListProps) => {

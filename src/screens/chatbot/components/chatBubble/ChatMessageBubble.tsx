@@ -11,15 +11,15 @@ interface MainChatMessageProps {
   message: ChatMessage;
   isLastMessage?: boolean;
   componentHeight: number;
-  onClickAction: (actionId: string, title: string) => void;
+  onClickAction: (title: string, actionId?: string) => void;
 }
 
 export const ChatMessageBubble = ({ message, componentHeight, isLastMessage, onClickAction }: MainChatMessageProps) => {
   const { colors } = useTheme();
   const isUser = message.sender === Sender.USER;
 
-  const handleClickAction = (actionId: string, title: string) => {
-    if (onClickAction) onClickAction(actionId, title);
+  const handleClickAction = (title: string, actionId?: string) => {
+    if (onClickAction) onClickAction(title, actionId);
   };
 
   const styles = getStyle(colors, isUser, componentHeight, isLastMessage);

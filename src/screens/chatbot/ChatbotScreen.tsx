@@ -87,23 +87,23 @@ export const ChatbotScreen = () => {
     });
   };
 
-  const handleClickAction = async (actionId: string, title: string) => {
+  const handleClickAction = async (title: string, actionId?: string) => {
     console.log(`action: "${actionId}": ${title}`);
 
     let userLevel = userProgress.level;
     let userTarget = userProgress.target;
 
-    if (actionId.startsWith("ed1")) {
-      setDatePickerVisible(true);
-      return;
-    }
-
-    if (actionId.startsWith("l")) {
-      userLevel = `N${actionId[1]}`;
-      dispatch(setUserLevel(userLevel));
-    } else if (actionId.startsWith("t")) {
-      userTarget = `N${actionId[1]}`;
-      dispatch(setUserTarget(userTarget));
+    if (actionId) {
+      if (actionId.startsWith("ed1")) {
+        setDatePickerVisible(true);
+        return;
+      } else if (actionId.startsWith("l")) {
+        userLevel = `N${actionId[1]}`;
+        dispatch(setUserLevel(userLevel));
+      } else if (actionId.startsWith("t")) {
+        userTarget = `N${actionId[1]}`;
+        dispatch(setUserTarget(userTarget));
+      }
     }
 
     const userMessage = createChatMessage({ fullText: title });

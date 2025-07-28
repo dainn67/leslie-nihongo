@@ -168,7 +168,7 @@ export const splitCustomWords = (input: string) => {
 export const extractQuestionsFromJson = (json: string): Question[] => {
   const data = json.replaceAll("```json", "").replaceAll("```", "");
   const questions: Question[] = JSON.parse(data).map((question: any, index: number) =>
-    createQuestion({ ...question, questionId: Date.now() + index }),
+    createQuestion({ ...question, questionId: Date.now() + index })
   );
 
   return questions;
@@ -183,11 +183,12 @@ export const extractSuggestedActions = (fullText: string) => {
         // Split by "-" or ":"
         let data = text.split("-");
         if (data.length < 2) data = text.split(":");
+        if (data.length < 2) return { title: text };
 
         const [id, title] = data;
         return { id: id.trim(), title: title.trim() };
       })
-      .filter((action) => action.id !== undefined && action.id !== null && action.title !== undefined && action.title !== null);
+      .filter((action) => action.title !== undefined && action.title !== null);
 
     return suggestedActions;
   }
@@ -199,7 +200,9 @@ export const createConversationHistory = (messages: ChatMessage[]) => {
   return messages
     .map((m) => {
       const senderString = m.sender == Sender.BOT ? "Chatbot" : "User";
-      return `${senderString}: ${m.sender == Sender.BOT ? m.summary : m.fullText}`;
+      let text = `(${senderString}): ${m.sender == Sender.BOT ? m.summary : m.fullText}`;
+      if (text.endsWith(".")) text = text.slice(0, -1);
+      return text;
     })
-    .join("\n");
+    .join(". ");
 };

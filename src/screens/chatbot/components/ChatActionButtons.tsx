@@ -6,14 +6,14 @@ import MainButton from "../../../components/buttons/MainButton";
 
 interface ChatActionButtonsProps {
   suggestedActions: SuggestedAction[];
-  onClickAction: (actionId: string, title: string) => void;
+  onClickAction: (title: string, actionId?: string) => void;
 }
 
 export const ChatActionButtons = ({ suggestedActions, onClickAction }: ChatActionButtonsProps) => {
   const { colors } = useTheme();
 
-  const handleClickAction = (actionId: string, title: string) => {
-    if (onClickAction) onClickAction(actionId, title);
+  const handleClickAction = (title: string, actionId?: string) => {
+    if (onClickAction) onClickAction(title, actionId);
   };
 
   const fadeInAnim = Array.from({ length: suggestedActions.length }, () => useRef(new Animated.Value(0)).current);
@@ -55,7 +55,7 @@ export const ChatActionButtons = ({ suggestedActions, onClickAction }: ChatActio
               marginHorizontal={4}
               marginVertical={4}
               backgroundColor={`${colors.primary}15`}
-              onPress={() => handleClickAction(e.id, e.title)}
+              onPress={() => handleClickAction(e.title, e.id)}
             />
           </Animated.View>
         );

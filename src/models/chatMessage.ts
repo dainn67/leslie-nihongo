@@ -60,6 +60,6 @@ export const createChatMessage = (partial?: Partial<ChatMessage>): ChatMessage =
 };
 
 export type SuggestedAction = {
-  id: string;
+  id?: string;
   title: string;
 };

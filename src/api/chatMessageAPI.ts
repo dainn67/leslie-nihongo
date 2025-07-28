@@ -4,8 +4,8 @@ import { ApiConfig } from "../constants/apiConfig";
 import { updateConversationId, updateLastMessageData } from "../features/chatbot/chatMessageList/chatbotSlice";
 import { MessageType } from "../models/chatMessage";
 import { Delimiter, extractQuestionsFromJson, extractSuggestedActions, splitCustomWords } from "../service/questionService";
-import Constants from "expo-constants";
 import { convertDateToDDMMYYYY } from "../utils/utils";
+import Constants from "expo-constants";
 
 const { DIFY_API_KEY } = Constants.expoConfig?.extra ?? {};
 
@@ -141,5 +141,5 @@ export const sendStreamMessage = ({
         }
       }, 20);
     }
-  }, 50);
+  }, 200);
 };
