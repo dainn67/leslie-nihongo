@@ -5,6 +5,7 @@ import { updateConversationId, updateLastMessageData } from "../features/chatbot
 import { MessageType } from "../models/chatMessage";
 import { Delimiter, extractQuestionsFromJson, extractSuggestedActions, splitCustomWords } from "../service/questionService";
 import Constants from "expo-constants";
+import { convertDateToDDMMYYYY } from "../utils/utils";
 
 const { DIFY_API_KEY } = Constants.expoConfig?.extra ?? {};
 
@@ -14,6 +15,7 @@ export const sendStreamMessage = ({
   actionId,
   level,
   target,
+  examDate,
   conversationId,
   dispatch,
 }: {
@@ -22,6 +24,7 @@ export const sendStreamMessage = ({
   actionId?: string;
   level?: string;
   target?: string;
+  examDate?: number;
   conversationId?: string;
   dispatch: AppDispatch;
 }) => {
@@ -29,6 +32,9 @@ export const sendStreamMessage = ({
   let wordIndex = 0;
   let wordLength = 0;
   let isQuestionJson = false;
+
+  const now = convertDateToDDMMYYYY(new Date());
+  const examDateString = examDate ? convertDateToDDMMYYYY(new Date(examDate)) : undefined;
 
   // Original stream
   connectSSE({
@@ -41,6 +47,8 @@ export const sendStreamMessage = ({
         target: target,
         action_id: actionId,
         conversation_history: conversationHistory,
+        current_date: now,
+        exam_date: examDateString,
       },
       conversation_id: conversationId,
       response_mode: "streaming",

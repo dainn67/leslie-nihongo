@@ -50,14 +50,14 @@ const MainButton = ({
     marginHorizontal,
     marginVertical,
     borderColor,
-    borderWidth
+    borderWidth,
   );
 
   const text = title.replaceAll("**", "").replace(/<[^>]*>/g, "");
 
   return (
     <TouchableOpacity style={[style.button, style.shadow]} onPress={onPress}>
-      <CustomText>{text}</CustomText>
+      <CustomText style={style.text}>{text}</CustomText>
     </TouchableOpacity>
   );
 };
@@ -75,7 +75,7 @@ const getStyles = (
   marginHorizontal?: number,
   marginVertical?: number,
   borderColor?: string,
-  borderWidth?: number
+  borderWidth?: number,
 ) =>
   StyleSheet.create({
     button: {

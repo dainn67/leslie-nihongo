@@ -10,15 +10,16 @@ import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { AppConfig } from "../../constants/appConfig";
 import { addLoading, addMessage, clearChat } from "../../features/chatbot/chatMessageList/chatbotSlice";
-import { clearUserProgress, setUserLevel, setUserProgress, setUserTarget } from "../../features/userProgress/userProgressSlice";
-import { createQuestionTable, deleteAllTables } from "../../storage/database/tables";
+import { setUserExamDate, setUserLevel, setUserProgress, setUserTarget } from "../../features/userProgress/userProgressSlice";
+import { createQuestionTable } from "../../storage/database/tables";
 import { createChatMessage } from "../../models/chatMessage";
 import { sendStreamMessage } from "../../api/chatMessageAPI";
 import { getUserProgressFromStorage } from "../../service/userProgressSerivice";
 import { createConversationHistory } from "../../service/questionService";
-import ClearChatDialog from "./components/ClearChatDialog";
+import { MyDatePicker } from "../../components/datePicker/MyDatePicker";
+import { convertDateToDDMMYYYY } from "../../utils/utils";
 import ChatInput from "./components/ChatInput";
-import * as FileSystem from "expo-file-system";
+import ClearChatDialog from "./components/ClearChatDialog";
 
 type DrawerParamList = {
   Chatbot: undefined;
@@ -40,26 +41,26 @@ export const ChatbotScreen = () => {
   const conversationId = useAppSelector((state) => state.chatbot.conversationId);
 
   const [initialized, setInitialized] = useState(false);
+  const [datePickerVisible, setDatePickerVisible] = useState(false);
 
   // Load user progress and add initial message when first open or clear
   useEffect(() => {
     if (!initialized) {
       createQuestionTable();
       getUserProgressFromStorage().then((userProgress) => {
-        console.log("userProgress", userProgress);
         // Set user progress
         dispatch(setUserProgress(userProgress));
         setInitialized(true);
 
         // Add loading message
         dispatch(addLoading());
-        sendStreamMessage({ level: userProgress.level, target: userProgress.target, conversationId, dispatch });
+        sendStreamMessage({ level: userProgress.level, target: userProgress.target, examDate: userProgress.examDate, conversationId, dispatch });
       });
     } else {
       if (messages.length === 0) {
         // Add loading message when clear
         dispatch(addLoading());
-        sendStreamMessage({ level: userProgress.level, target: userProgress.target, conversationId, dispatch });
+        sendStreamMessage({ level: userProgress.level, target: userProgress.target, examDate: userProgress.examDate, conversationId, dispatch });
       }
     }
   }, [initialized, messages.length]);
@@ -80,29 +81,29 @@ export const ChatbotScreen = () => {
       conversationHistory,
       level: userProgress.level,
       target: userProgress.target,
+      examDate: userProgress.examDate,
       conversationId,
       dispatch,
     });
   };
 
   const handleClickAction = async (actionId: string, title: string) => {
-    console.log("action", actionId, ":", title);
+    console.log(`action: "${actionId}": ${title}`);
 
     let userLevel = userProgress.level;
     let userTarget = userProgress.target;
 
-    // Set level if found
-    if (actionId) {
-      switch (actionId[0]) {
-        case "l":
-          userLevel = `N${actionId[1]}`;
-          dispatch(setUserLevel(userLevel));
-          break;
-        case "t":
-          userTarget = `N${actionId[1]}`;
-          dispatch(setUserTarget(userTarget));
-          break;
-      }
+    if (actionId.startsWith("ed")) {
+      setDatePickerVisible(true);
+      return;
+    }
+
+    if (actionId.startsWith("l")) {
+      userLevel = `N${actionId[1]}`;
+      dispatch(setUserLevel(userLevel));
+    } else if (actionId.startsWith("t")) {
+      userTarget = `N${actionId[1]}`;
+      dispatch(setUserTarget(userTarget));
     }
 
     const userMessage = createChatMessage({ fullText: title });
@@ -117,22 +118,47 @@ export const ChatbotScreen = () => {
       actionId: actionId,
       level: userLevel.length > 0 ? userLevel : userProgress.level,
       target: userTarget.length > 0 ? userTarget : userProgress.target,
+      examDate: userProgress.examDate,
+      conversationId,
+      dispatch,
+    });
+  };
+
+  const handleChange = (selectedDate: Date | undefined) => {
+    if (!selectedDate) return;
+
+    const dateString = convertDateToDDMMYYYY(selectedDate);
+
+    dispatch(setUserExamDate(selectedDate.getTime()));
+
+    const userMessage = createChatMessage({ fullText: dateString });
+    dispatch(addMessage(userMessage));
+    dispatch(addLoading());
+
+    sendStreamMessage({
+      conversationHistory: createConversationHistory(messages),
+      level: userProgress.level,
+      target: userProgress.target,
+      examDate: userProgress.examDate,
       conversationId,
       dispatch,
     });
   };
 
   const handleDevClick = () => {
-    const dbPath = `${FileSystem.documentDirectory}/SQLite/`;
-    console.log(dbPath);
+    // const dbPath = `${FileSystem.documentDirectory}/SQLite/`;
+    // console.log(dbPath);
 
-    deleteAllTables();
-    dispatch(clearUserProgress());
+    // deleteAllTables();
+    // dispatch(clearUserProgress());
+
+    console.log(userProgress);
   };
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
+        {/* Main chatbot screen */}
         <View style={{ flex: 1 }}>
           <AppBar
             title={AppConfig.name}
@@ -155,6 +181,14 @@ export const ChatbotScreen = () => {
             clearConversation={clearConversation}
           />
         </View>
+
+        {/* Date picker to set exam date if not set */}
+        <MyDatePicker
+          visible={datePickerVisible}
+          setVisible={setDatePickerVisible}
+          date={userProgress.examDate ? new Date(userProgress.examDate) : new Date()}
+          handleChange={handleChange}
+        />
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );
