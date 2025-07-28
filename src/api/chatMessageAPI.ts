@@ -32,6 +32,7 @@ export const sendStreamMessage = ({
   let wordIndex = 0;
   let wordLength = 0;
   let isQuestionJson = false;
+  let startReceiveMessage = false;
 
   const now = convertDateToDDMMYYYY(new Date());
   const examDateString = examDate ? convertDateToDDMMYYYY(new Date(examDate)) : undefined;
@@ -71,6 +72,7 @@ export const sendStreamMessage = ({
 
         fullText += text;
       } else if (type === "workflow_started") {
+        startReceiveMessage = true;
         dispatch(updateLastMessageData({ messageId }));
         dispatch(updateConversationId(conversationId));
       }
@@ -83,55 +85,61 @@ export const sendStreamMessage = ({
     onError: (error) => console.log("SSE error", error),
   });
 
-  let startStreaming = false;
-  const interval = setInterval(() => {
-    if (isQuestionJson) clearInterval(interval);
+  const waitCondition = setInterval(() => {
+    if (startReceiveMessage) {
+      clearInterval(waitCondition);
 
-    // Split word every time update to find latest words
-    const words = splitCustomWords(fullText);
+      let startStreaming = false;
+      const interval = setInterval(() => {
+        if (isQuestionJson) clearInterval(interval);
 
-    // Skip if new text haven't arrived yet
-    if (words.length >= wordIndex + 1) {
-      // Start streaming
-      if (!startStreaming) {
-        if (!isQuestionJson) dispatch(updateLastMessageData({ loading: false }));
-        startStreaming = true;
-      }
+        // Split word every time update to find latest words
+        const words = splitCustomWords(fullText);
 
-      const nextWord = words[wordIndex];
-      dispatch(updateLastMessageData({ nextWord }));
+        // Skip if new text haven't arrived yet
+        if (words.length >= wordIndex + 1) {
+          // Start streaming
+          if (!startStreaming) {
+            if (!isQuestionJson) dispatch(updateLastMessageData({ loading: false }));
+            startStreaming = true;
+          }
 
-      wordIndex++;
+          const nextWord = words[wordIndex];
+          dispatch(updateLastMessageData({ nextWord }));
 
-      // Stop interval at lastword, after original stream is done
-      if (wordLength > 0 && wordIndex == wordLength - 1) {
-        const lastWord = words[wordIndex];
-        dispatch(updateLastMessageData({ nextWord: lastWord }));
+          wordIndex++;
 
-        const splittedText = fullText.split(Delimiter);
-        // Extract the suggested actions here to wait for the stream to finish
-        const suggestedActions = extractSuggestedActions(fullText);
-        dispatch(updateLastMessageData({ suggestedActions }));
+          // Stop interval at lastword, after original stream is done
+          if (wordLength > 0 && wordIndex == wordLength - 1) {
+            const lastWord = words[wordIndex];
+            dispatch(updateLastMessageData({ nextWord: lastWord }));
 
-        // Extract the summary when finished
-        const summary = splittedText[splittedText.length - 1].trim();
-        dispatch(updateLastMessageData({ summary }));
+            const splittedText = fullText.split(Delimiter);
+            // Extract the suggested actions here to wait for the stream to finish
+            const suggestedActions = extractSuggestedActions(fullText);
+            dispatch(updateLastMessageData({ suggestedActions }));
 
-        clearInterval(interval);
-      }
+            // Extract the summary when finished
+            const summary = splittedText[splittedText.length - 1].trim();
+            dispatch(updateLastMessageData({ summary }));
+
+            clearInterval(interval);
+          }
+        }
+
+        if (wordLength > 0 && wordIndex + 1 > wordLength) {
+          const splittedText = fullText.split(Delimiter);
+          // Extract the suggested actions here to wait for the stream to finish
+          const suggestedActions = extractSuggestedActions(fullText);
+          dispatch(updateLastMessageData({ suggestedActions }));
+
+          // Extract the summary when finished
+          const summary = splittedText[splittedText.length - 1].trim();
+          dispatch(updateLastMessageData({ summary }));
+
+          clearInterval(interval);
+        }
+      }, 20);
     }
-
-    if (wordLength > 0 && wordIndex + 1 > wordLength) {
-      const splittedText = fullText.split(Delimiter);
-      // Extract the suggested actions here to wait for the stream to finish
-      const suggestedActions = extractSuggestedActions(fullText);
-      dispatch(updateLastMessageData({ suggestedActions }));
-
-      // Extract the summary when finished
-      const summary = splittedText[splittedText.length - 1].trim();
-      dispatch(updateLastMessageData({ summary }));
-
-      clearInterval(interval);
-    }
-  }, 20);
+  }, 50);
 };
