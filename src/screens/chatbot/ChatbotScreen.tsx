@@ -15,14 +15,13 @@ import { createQuestionTable, deleteAllTables } from "../../storage/database/tab
 import { createChatMessage } from "../../models/chatMessage";
 import { sendStreamMessage } from "../../api/chatMessageAPI";
 import { getUserProgressFromStorage } from "../../service/userProgressSerivice";
+import { createConversationHistory } from "../../service/questionService";
 import ClearChatDialog from "./components/ClearChatDialog";
 import ChatInput from "./components/ChatInput";
 import * as FileSystem from "expo-file-system";
-import { creatConversationHistory as createConversationHistory } from "../../utils";
 
 type DrawerParamList = {
   Chatbot: undefined;
-  Counter: undefined;
 };
 
 type ChatbotScreenNavigationProp = DrawerNavigationProp<DrawerParamList, "Chatbot">;

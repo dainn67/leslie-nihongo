@@ -1,11 +1,9 @@
 import { connectSSE } from "./sseClient";
 import { AppDispatch } from "../app/store";
 import { ApiConfig } from "../constants/apiConfig";
-import { splitCustomWords } from "../utils/utils";
 import { updateConversationId, updateLastMessageData } from "../features/chatbot/chatMessageList/chatbotSlice";
 import { MessageType } from "../models/chatMessage";
-import { extractQuestionsFromJson } from "../service/questionService";
-import { Delimiter } from "../utils/utils";
+import { Delimiter, extractQuestionsFromJson, extractSuggestedActions, splitCustomWords } from "../service/questionService";
 import Constants from "expo-constants";
 
 const { DIFY_API_KEY } = Constants.expoConfig?.extra ?? {};
@@ -85,7 +83,7 @@ export const sendStreamMessage = ({
     const words = splitCustomWords(fullText);
 
     // Skip if new text haven't arrived yet
-    if (words.length > wordIndex + 1) {
+    if (words.length >= wordIndex + 1) {
       // Start streaming
       if (!startStreaming) {
         if (!isQuestionJson) dispatch(updateLastMessageData({ loading: false }));
@@ -98,35 +96,34 @@ export const sendStreamMessage = ({
       wordIndex++;
 
       // Stop interval at lastword, after original stream is done
-      if (wordLength > 0 && wordIndex == words.length - 1) {
+      if (wordLength > 0 && wordIndex == wordLength - 1) {
         const lastWord = words[wordIndex];
         dispatch(updateLastMessageData({ nextWord: lastWord }));
 
-        // Extract the suggested actions here to wait for the stream to finish
         const splittedText = fullText.split(Delimiter);
-        if (splittedText.length > 2) {
-          const suggestedActions = splittedText
-            .slice(1, -1)
-            .map((text) => {
-              // Split by "-" or ":"
-              let data = text.split("-");
-              if (data.length < 2) data = text.split(":");
+        // Extract the suggested actions here to wait for the stream to finish
+        const suggestedActions = extractSuggestedActions(fullText);
+        dispatch(updateLastMessageData({ suggestedActions }));
 
-              const [id, title] = data;
-              return { id: id.trim(), title: title.trim() };
-            })
-            .filter((action) => action.id !== undefined && action.id !== null && action.title !== undefined && action.title !== null);
-
-          dispatch(updateLastMessageData({ suggestedActions }));
-
-          const summary = splittedText[splittedText.length - 1];
-          dispatch(updateLastMessageData({ summary: summary.trim() }));
-        } else {
-          console.log("sendStreamMessage: not enough suggested actions:", splittedText);
-        }
+        // Extract the summary when finished
+        const summary = splittedText[splittedText.length - 1].trim();
+        dispatch(updateLastMessageData({ summary }));
 
         clearInterval(interval);
       }
+    }
+
+    if (wordLength > 0 && wordIndex + 1 > wordLength) {
+      const splittedText = fullText.split(Delimiter);
+      // Extract the suggested actions here to wait for the stream to finish
+      const suggestedActions = extractSuggestedActions(fullText);
+      dispatch(updateLastMessageData({ suggestedActions }));
+
+      // Extract the summary when finished
+      const summary = splittedText[splittedText.length - 1].trim();
+      dispatch(updateLastMessageData({ summary }));
+
+      clearInterval(interval);
     }
   }, 20);
 };
