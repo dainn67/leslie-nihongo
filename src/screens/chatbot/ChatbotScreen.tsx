@@ -10,8 +10,8 @@ import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { AppConfig } from "../../constants/appConfig";
 import { addLoading, addMessage, clearChat } from "../../features/chatbot/chatMessageList/chatbotSlice";
-import { setUserExamDate, setUserLevel, setUserProgress, setUserTarget } from "../../features/userProgress/userProgressSlice";
-import { createQuestionTable } from "../../storage/database/tables";
+import { clearUserProgress, setUserExamDate, setUserLevel, setUserProgress, setUserTarget } from "../../features/userProgress/userProgressSlice";
+import { createQuestionTable, deleteAllTables } from "../../storage/database/tables";
 import { createChatMessage } from "../../models/chatMessage";
 import { sendStreamMessage } from "../../api/chatMessageAPI";
 import { getUserProgressFromStorage } from "../../service/userProgressSerivice";
@@ -93,7 +93,7 @@ export const ChatbotScreen = () => {
     let userLevel = userProgress.level;
     let userTarget = userProgress.target;
 
-    if (actionId.startsWith("ed")) {
+    if (actionId.startsWith("ed1")) {
       setDatePickerVisible(true);
       return;
     }
@@ -124,7 +124,7 @@ export const ChatbotScreen = () => {
     });
   };
 
-  const handleChange = (selectedDate: Date | undefined) => {
+  const handleSelectExamDate = (selectedDate: Date | undefined) => {
     if (!selectedDate) return;
 
     const dateString = convertDateToDDMMYYYY(selectedDate);
@@ -139,7 +139,7 @@ export const ChatbotScreen = () => {
       conversationHistory: createConversationHistory(messages),
       level: userProgress.level,
       target: userProgress.target,
-      examDate: userProgress.examDate,
+      examDate: selectedDate.getTime(),
       conversationId,
       dispatch,
     });
@@ -149,10 +149,10 @@ export const ChatbotScreen = () => {
     // const dbPath = `${FileSystem.documentDirectory}/SQLite/`;
     // console.log(dbPath);
 
-    // deleteAllTables();
-    // dispatch(clearUserProgress());
+    deleteAllTables();
+    dispatch(clearUserProgress());
 
-    console.log(userProgress);
+    // console.log(userProgress);
   };
 
   return (
@@ -187,7 +187,7 @@ export const ChatbotScreen = () => {
           visible={datePickerVisible}
           setVisible={setDatePickerVisible}
           date={userProgress.examDate ? new Date(userProgress.examDate) : new Date()}
-          handleChange={handleChange}
+          handleChange={handleSelectExamDate}
         />
       </SafeAreaProvider>
     </GestureHandlerRootView>

@@ -3,7 +3,7 @@ export type UserProgress = {
   level: string;
   target: string;
   startDate: number;
-  examDate: number;
+  examDate?: number;
   lastUpdated: number;
 };
 
@@ -14,7 +14,7 @@ export const createUserProgress = (partial?: Partial<UserProgress>): UserProgres
     level: partial?.level ?? "",
     target: partial?.target ?? "",
     startDate: partial?.startDate ?? now,
-    examDate: partial?.examDate ?? now,
+    examDate: partial?.examDate,
     lastUpdated: partial?.lastUpdated ?? now,
   };
 };
