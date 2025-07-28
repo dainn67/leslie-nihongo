@@ -80,7 +80,10 @@ export const sendStreamMessage = ({
     onDone: () => {
       wordLength = splitCustomWords(fullText).length;
       dispatch(updateLastMessageData({ fullText: fullText, loading: false }));
-      if (isQuestionJson) dispatch(updateLastMessageData({ questions: extractQuestionsFromJson(fullText) }));
+      if (isQuestionJson) {
+        const { questions, summary } = extractQuestionsFromJson(fullText);
+        dispatch(updateLastMessageData({ questions, summary }));
+      }
     },
     onError: (error) => console.log("SSE error", error),
   });

@@ -165,13 +165,15 @@ export const splitCustomWords = (input: string) => {
   return splittedText;
 };
 
-export const extractQuestionsFromJson = (json: string): Question[] => {
-  const data = json.replaceAll("```json", "").replaceAll("```", "");
-  const questions: Question[] = JSON.parse(data).map((question: any, index: number) =>
+export const extractQuestionsFromJson = (json: string): { questions: Question[]; summary: string } => {
+  const dataString = json.replaceAll("```json", "").replaceAll("```", "");
+  const data = JSON.parse(dataString);
+  const questions: Question[] = data["questions"].map((question: any, index: number) =>
     createQuestion({ ...question, questionId: Date.now() + index })
   );
+  const summary = data["summary"];
 
-  return questions;
+  return { questions, summary };
 };
 
 export const extractSuggestedActions = (fullText: string) => {
