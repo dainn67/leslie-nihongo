@@ -3,14 +3,14 @@ import { Image, ImageSourcePropType, StyleSheet, TouchableOpacity, ViewStyle } f
 
 interface IconButtonProps {
   icon: ImageSourcePropType;
-  width?: number;
-  height?: number;
+  iconWidth?: number;
+  iconHeight?: number;
   style?: ViewStyle;
   onPress?: () => void;
 }
 
-export const IconButton = ({ icon, width, height, style, onPress }: IconButtonProps) => {
-  const styles = getStyles(width, height);
+export const IconButton = ({ icon, iconWidth, iconHeight, style, onPress }: IconButtonProps) => {
+  const styles = getStyles(iconWidth, iconHeight);
 
   return (
     <TouchableOpacity style={[styles.button, style]} onPress={onPress}>
@@ -19,7 +19,7 @@ export const IconButton = ({ icon, width, height, style, onPress }: IconButtonPr
   );
 };
 
-const getStyles = (width?: number, height?: number) =>
+const getStyles = (iconWidth?: number, iconHeight?: number) =>
   StyleSheet.create({
     button: {
       backgroundColor: "#F0F8FF",
@@ -27,7 +27,7 @@ const getStyles = (width?: number, height?: number) =>
       padding: 8,
     },
     icon: {
-      width: width ?? 20,
-      height: height ?? 20,
+      width: iconWidth ?? 20,
+      height: iconHeight ?? 20,
     },
   });

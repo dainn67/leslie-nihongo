@@ -94,13 +94,17 @@ export const ChatbotScreen = () => {
     let userTarget = userProgress.target;
 
     if (actionId) {
-      if (actionId.startsWith("ed1")) {
+      const setExamDateActionId = "ed1";
+      const setLevelActionId = "l";
+      const setTargetActionId = "t";
+
+      if (actionId.startsWith(setExamDateActionId)) {
         setDatePickerVisible(true);
         return;
-      } else if (actionId.startsWith("l")) {
+      } else if (actionId.startsWith(setLevelActionId)) {
         userLevel = `N${actionId[1]}`;
         dispatch(setUserLevel(userLevel));
-      } else if (actionId.startsWith("t")) {
+      } else if (actionId.startsWith(setTargetActionId)) {
         userTarget = `N${actionId[1]}`;
         dispatch(setUserTarget(userTarget));
       }
