@@ -3,6 +3,8 @@ import { View, StyleSheet, TouchableOpacity, SafeAreaView } from "react-native";
 import { useTheme } from "../theme";
 import { Ionicons } from "@expo/vector-icons";
 import { CustomText } from "./text/customText";
+import { IconButton } from "./buttons";
+import { AppIcons } from "../constants/appIcons";
 
 interface AppBarProps {
   title: string;
@@ -13,24 +15,13 @@ interface AppBarProps {
   onDevClick?: () => void;
 }
 
-export const AppBar: React.FC<AppBarProps> = ({
-  title,
-  leftIcon,
-  rightIcon,
-  onLeftPress,
-  onRightPress,
-  onDevClick,
-}) => {
+export const AppBar: React.FC<AppBarProps> = ({ title, leftIcon, rightIcon, onLeftPress, onRightPress, onDevClick }) => {
   const { colors } = useTheme();
 
   return (
     <SafeAreaView style={{ backgroundColor: colors.primary }}>
       <View style={styles.container}>
-        <TouchableOpacity
-          style={[styles.iconContainer, styles.iconButton]}
-          onPress={onLeftPress}
-          activeOpacity={0.7}
-        >
+        <TouchableOpacity style={[styles.iconContainer, styles.iconButton]} onPress={onLeftPress} activeOpacity={0.7}>
           {leftIcon}
         </TouchableOpacity>
 
@@ -43,25 +34,11 @@ export const AppBar: React.FC<AppBarProps> = ({
           </CustomText>
         </View>
 
-        <TouchableOpacity
-          style={[styles.iconContainer, styles.iconButton]}
-          onPress={onRightPress}
-          activeOpacity={0.7}
-        >
+        <TouchableOpacity style={[styles.iconContainer, styles.iconButton]} onPress={onRightPress} activeOpacity={0.7}>
           {rightIcon}
         </TouchableOpacity>
 
-        {__DEV__ && (
-          <TouchableOpacity
-            style={{
-              marginLeft: 20,
-            }}
-            onPress={onDevClick}
-            activeOpacity={0.7}
-          >
-            <Ionicons name="wine" size={20} color="white" />
-          </TouchableOpacity>
-        )}
+        {__DEV__ && <IconButton icon={AppIcons.dev} onPress={onDevClick} style={{ marginLeft: 10, backgroundColor: "white" }} />}
       </View>
     </SafeAreaView>
   );
