@@ -9,7 +9,7 @@ import { useNavigation } from "@react-navigation/native";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { AppConfig } from "../../constants/appConfig";
-import { addLoading, addMessage, clearChat } from "../../features/chatbot/chatMessageList/chatbotSlice";
+import { addLoading, addMessage, clearChat } from "../../features/chatbot/chatbotSlice";
 import { clearUserProgress, setUserExamDate, setUserLevel, setUserProgress, setUserTarget } from "../../features/userProgress/userProgressSlice";
 import { createQuestionTable, deleteAllTables } from "../../storage/database/tables";
 import { createChatMessage } from "../../models/chatMessage";

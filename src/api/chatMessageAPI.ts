@@ -1,7 +1,7 @@
 import { connectSSE } from "./sseClient";
 import { AppDispatch } from "../app/store";
 import { ApiConfig } from "../constants/apiConfig";
-import { updateConversationId, updateLastMessageData } from "../features/chatbot/chatMessageList/chatbotSlice";
+import { updateConversationId, updateLastMessageData } from "../features/chatbot/chatbotSlice";
 import { MessageType } from "../models/chatMessage";
 import { extractQuestionsFromJson, extractSuggestedActions } from "../service/questionService";
 import { Delimiter, splitCustomWords } from "../service/chatMessageService";

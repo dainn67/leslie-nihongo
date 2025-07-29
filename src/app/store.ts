@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import chatbotReducer from "../features/chatbot/chatMessageList/chatbotSlice";
+import chatbotReducer from "../features/chatbot/chatbotSlice";
 import themeReducer from "../features/theme/themeSlice";
 import userProgressReducer from "../features/userProgress/userProgressSlice";
 
