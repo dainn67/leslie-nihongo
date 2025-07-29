@@ -1,4 +1,4 @@
-import { splitCustomWords } from "../service/questionService";
+import { splitCustomWords } from "../service/chatMessageService";
 import { Question } from "./question";
 
 export enum Sender {

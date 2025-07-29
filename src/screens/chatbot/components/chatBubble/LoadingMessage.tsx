@@ -1,24 +1,23 @@
 import React, { useEffect, useRef } from "react";
-import { Animated, View, StyleSheet } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
+import { Animated, View, StyleSheet, ViewStyle } from "react-native";
 import { CustomText } from "../../../../components/text/customText";
 import { useTheme } from "../../../../theme";
 
 interface LoadingMessageProps {
   isQuestion?: boolean;
+  style?: ViewStyle;
 }
 
-export const LoadingMessage = ({ isQuestion }: LoadingMessageProps) => {
+export const LoadingMessage = ({ isQuestion, style }: LoadingMessageProps) => {
   const dots = Array.from({ length: 3 }, () => useRef(new Animated.Value(0)).current);
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const { colors } = useTheme();
 
   useEffect(() => {
     // Fade in animation
     Animated.timing(fadeAnim, {
       toValue: 1,
-      duration: 500,
+      duration: 300,
       useNativeDriver: true,
     }).start();
 
@@ -35,7 +34,7 @@ export const LoadingMessage = ({ isQuestion }: LoadingMessageProps) => {
           duration: 1000,
           useNativeDriver: true,
         }),
-      ])
+      ]),
     );
     pulseAnimation.start();
 
@@ -58,7 +57,12 @@ export const LoadingMessage = ({ isQuestion }: LoadingMessageProps) => {
       Animated.sequence([
         Animated.timing(dots[index], {
           toValue: -8,
-          duration: 400,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.timing(dots[index], {
+          toValue: 0,
+          duration: 300,
           useNativeDriver: true,
         }),
         Animated.timing(dots[index], {
@@ -66,12 +70,7 @@ export const LoadingMessage = ({ isQuestion }: LoadingMessageProps) => {
           duration: 400,
           useNativeDriver: true,
         }),
-        Animated.timing(dots[index], {
-          toValue: 0,
-          duration: 800,
-          useNativeDriver: true,
-        }),
-      ])
+      ]),
     );
 
     animation.start();
@@ -89,9 +88,10 @@ export const LoadingMessage = ({ isQuestion }: LoadingMessageProps) => {
           opacity: fadeAnim,
           transform: [{ scale: pulseAnim }],
         },
+        style,
       ]}
     >
-      <LinearGradient colors={[colors.primary, colors.secondary]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.gradientBackground}>
+      <View style={styles.greyBackground}>
         <View style={styles.contentContainer}>
           {isQuestion && <CustomText style={styles.loadingText}>Đang tạo câu hỏi</CustomText>}
           <View style={[styles.dotsContainer, { marginLeft: isQuestion ? 8 : 0 }]}>
@@ -108,7 +108,7 @@ export const LoadingMessage = ({ isQuestion }: LoadingMessageProps) => {
             ))}
           </View>
         </View>
-      </LinearGradient>
+      </View>
     </Animated.View>
   );
 };
@@ -117,7 +117,8 @@ const styles = StyleSheet.create({
   loadingContainer: {
     borderRadius: 100,
   },
-  gradientBackground: {
+  greyBackground: {
+    backgroundColor: "#E4E6EB",
     borderRadius: 20,
     paddingVertical: 12,
     paddingHorizontal: 16,
@@ -128,7 +129,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   loadingText: {
-    color: "white",
+    color: "#65676B",
     fontSize: 16,
     fontWeight: "600",
     textAlign: "center",
@@ -143,7 +144,7 @@ const styles = StyleSheet.create({
     height: 12,
     borderRadius: 6,
     marginHorizontal: 4,
-    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    backgroundColor: "#65676B",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,

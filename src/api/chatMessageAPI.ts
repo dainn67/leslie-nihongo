@@ -3,7 +3,8 @@ import { AppDispatch } from "../app/store";
 import { ApiConfig } from "../constants/apiConfig";
 import { updateConversationId, updateLastMessageData } from "../features/chatbot/chatMessageList/chatbotSlice";
 import { MessageType } from "../models/chatMessage";
-import { Delimiter, extractQuestionsFromJson, extractSuggestedActions, splitCustomWords } from "../service/questionService";
+import { extractQuestionsFromJson, extractSuggestedActions } from "../service/questionService";
+import { Delimiter, splitCustomWords } from "../service/chatMessageService";
 import { convertDateToDDMMYYYY } from "../utils/utils";
 import Constants from "expo-constants";
 
