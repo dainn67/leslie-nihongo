@@ -3,7 +3,6 @@ import { View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { AppBar } from "../../components/AppBar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ChatMessageList } from "./components/ChatMessageList";
 import { useNavigation } from "@react-navigation/native";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
@@ -181,39 +180,37 @@ export const ChatbotScreen = () => {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
-        {/* Main chatbot screen */}
-        <View style={{ flex: 1 }}>
-          <AppBar
-            title={AppConfig.name}
-            leftIcon={<Ionicons name="menu" size={24} color="white" />}
-            rightIcon={<Ionicons name="trash" size={24} color="white" />}
-            onLeftPress={openDrawer}
-            onRightPress={openClearChatDialog}
-            onDevClick={handleDevClick}
-          />
-          <ChatMessageList messages={messages} handleClickAction={handleClickAction} />
-          <ChatInput onSend={handleSend} />
-
-          <ClearChatDialog
-            title="Clear All?"
-            message="Are you sure you want to delete all messages?"
-            cancelText="Cancel"
-            confirmText="Confirm"
-            visible={clearDialogVisible}
-            setVisible={setClearDialogVisible}
-            clearConversation={clearConversation}
-          />
-        </View>
-
-        {/* Date picker to set exam date if not set */}
-        <MyDatePicker
-          visible={datePickerVisible}
-          setVisible={setDatePickerVisible}
-          date={userProgress.examDate ? new Date(userProgress.examDate) : new Date()}
-          handleChange={handleSelectExamDate}
+      {/* Main chatbot screen */}
+      <View style={{ flex: 1 }}>
+        <AppBar
+          title={AppConfig.name}
+          leftIcon={<Ionicons name="menu" size={24} color="white" />}
+          rightIcon={<Ionicons name="trash" size={24} color="white" />}
+          onLeftPress={openDrawer}
+          onRightPress={openClearChatDialog}
+          onDevClick={handleDevClick}
         />
-      </SafeAreaProvider>
+        <ChatMessageList messages={messages} handleClickAction={handleClickAction} />
+        <ChatInput onSend={handleSend} />
+
+        <ClearChatDialog
+          title="Clear All?"
+          message="Are you sure you want to delete all messages?"
+          cancelText="Cancel"
+          confirmText="Confirm"
+          visible={clearDialogVisible}
+          setVisible={setClearDialogVisible}
+          clearConversation={clearConversation}
+        />
+      </View>
+
+      {/* Date picker to set exam date if not set */}
+      <MyDatePicker
+        visible={datePickerVisible}
+        setVisible={setDatePickerVisible}
+        date={userProgress.examDate ? new Date(userProgress.examDate) : new Date()}
+        handleChange={handleSelectExamDate}
+      />
     </GestureHandlerRootView>
   );
 };

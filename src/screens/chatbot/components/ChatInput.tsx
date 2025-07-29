@@ -6,8 +6,8 @@ import {
   View,
   KeyboardAvoidingView,
   Platform,
-  SafeAreaView,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { TextInput as GestureTextInput } from "react-native-gesture-handler";
 import { useTheme } from "../../../theme";
 import { AppConfig } from "../../../constants/appConfig";

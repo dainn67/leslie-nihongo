@@ -4,6 +4,7 @@ import { store } from "./src/app/store";
 import { RootNavigator } from "./src/app/RootNavigator";
 import { useFonts } from "expo-font";
 import { ActivityIndicator } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -17,8 +18,10 @@ export default function App() {
   if (!fontsLoaded) return <ActivityIndicator />;
 
   return (
-    <Provider store={store}>
-      <RootNavigator />
-    </Provider>
+    <SafeAreaProvider>
+      <Provider store={store}>
+        <RootNavigator />
+      </Provider>
+    </SafeAreaProvider>
   );
 }

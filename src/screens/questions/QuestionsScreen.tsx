@@ -1,6 +1,5 @@
 import React from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AppBar } from "../../components/AppBar";
 import { Ionicons } from "@expo/vector-icons";
 import { QuestionCategoryGrid } from "./components/QuestionCategoryGrid";
@@ -14,17 +13,15 @@ export const QuestionsScreen = () => {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
-        <AppBar
-          title={"Questions"}
-          leftIcon={<Ionicons name="menu" size={24} color="white" />}
-          rightIcon={<Ionicons name="search" size={24} color="white" />}
-          onLeftPress={openDrawer}
-          onRightPress={() => {}}
-          onDevClick={() => {}}
-        />
-        <QuestionCategoryGrid />
-      </SafeAreaProvider>
+      <AppBar
+        title={"Questions"}
+        leftIcon={<Ionicons name="menu" size={24} color="white" />}
+        rightIcon={<Ionicons name="search" size={24} color="white" />}
+        onLeftPress={openDrawer}
+        onRightPress={() => {}}
+        onDevClick={() => {}}
+      />
+      <QuestionCategoryGrid />
     </GestureHandlerRootView>
   );
 };

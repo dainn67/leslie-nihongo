@@ -6,7 +6,7 @@ export const extractQuestionsFromJson = (json: string): { questions: Question[];
   const dataString = json.replaceAll("```json", "").replaceAll("```", "");
   const data = JSON.parse(dataString);
   const questions: Question[] = data["questions"].map((question: any, index: number) =>
-    createQuestion({ ...question, questionId: Date.now() + index }),
+    createQuestion({ ...question, questionId: Date.now() + index })
   );
   const summary = data["summary"];
 

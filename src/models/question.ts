@@ -1,4 +1,4 @@
-import { Answer } from "./answer";
+import { Answer, createAnswer } from "./answer";
 
 export enum QuestionType {
   Vocab = "vocab",
@@ -20,9 +20,9 @@ export const createQuestion = (partial?: Partial<Question>): Question => {
   return {
     questionId: partial?.questionId ?? Date.now(),
     question: partial?.question ?? "",
-    answers: partial?.answers ?? [],
     explanation: partial?.explanation ?? "",
     bookmarked: partial?.bookmarked ?? false,
     type: partial?.type ?? QuestionType.Vocab,
+    answers: partial?.answers ? partial.answers.map((a) => createAnswer(a)).sort(() => Math.random() - 0.5) : [],
   };
 };

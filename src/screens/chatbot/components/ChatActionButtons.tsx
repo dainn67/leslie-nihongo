@@ -17,13 +17,13 @@ export const ChatActionButtons = ({ suggestedActions, onClickAction }: ChatActio
   };
 
   const fadeInAnim = Array.from({ length: suggestedActions.length }, () => useRef(new Animated.Value(0)).current);
+  const scaleAnim = Array.from({ length: suggestedActions.length }, () => useRef(new Animated.Value(0.8)).current);
 
   useEffect(() => {
-    startAnimation(0);
-    for (let i = 1; i < suggestedActions.length; i++) {
+    for (let i = 0; i < suggestedActions.length; i++) {
       setTimeout(() => {
         startAnimation(i);
-      }, i * 150);
+      }, i * 100);
     }
   }, []);
 
@@ -34,7 +34,14 @@ export const ChatActionButtons = ({ suggestedActions, onClickAction }: ChatActio
       useNativeDriver: true,
     });
 
+    const scaleAnimation = Animated.timing(scaleAnim[index], {
+      toValue: 1,
+      duration: 200,
+      useNativeDriver: true,
+    });
+
     animation.start();
+    scaleAnimation.start();
 
     return () => {
       animation.stop();
@@ -45,7 +52,7 @@ export const ChatActionButtons = ({ suggestedActions, onClickAction }: ChatActio
     <View style={{ flexDirection: "column" }}>
       {suggestedActions.map((e, i) => {
         return (
-          <Animated.View style={{ opacity: fadeInAnim[i] }} key={i}>
+          <Animated.View style={{ opacity: fadeInAnim[i], transform: [{ scale: scaleAnim[i] }] }} key={i}>
             <MainButton
               key={i}
               title={e.title.trim()}
