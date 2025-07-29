@@ -21,9 +21,11 @@ export const AppBar: React.FC<AppBarProps> = ({ title, leftIcon, rightIcon, onLe
   return (
     <SafeAreaView style={{ backgroundColor: colors.primary }}>
       <View style={styles.container}>
-        <TouchableOpacity style={[styles.iconContainer, styles.iconButton]} onPress={onLeftPress} activeOpacity={0.7}>
-          {leftIcon}
-        </TouchableOpacity>
+        {leftIcon && (
+          <TouchableOpacity style={[styles.iconContainer, styles.iconButton]} onPress={onLeftPress} activeOpacity={0.7}>
+            {leftIcon}
+          </TouchableOpacity>
+        )}
 
         <View style={styles.titleContainer}>
           <View style={styles.iconWrapper}>
@@ -34,9 +36,11 @@ export const AppBar: React.FC<AppBarProps> = ({ title, leftIcon, rightIcon, onLe
           </CustomText>
         </View>
 
-        <TouchableOpacity style={[styles.iconContainer, styles.iconButton]} onPress={onRightPress} activeOpacity={0.7}>
-          {rightIcon}
-        </TouchableOpacity>
+        {rightIcon && (
+          <TouchableOpacity style={[styles.iconContainer, styles.iconButton]} onPress={onRightPress} activeOpacity={0.7}>
+            {rightIcon}
+          </TouchableOpacity>
+        )}
 
         {__DEV__ && <IconButton icon={AppIcons.dev} onPress={onDevClick} style={{ marginLeft: 10, backgroundColor: "white" }} />}
       </View>

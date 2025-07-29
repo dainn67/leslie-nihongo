@@ -18,11 +18,13 @@ import { getUserProgressFromStorage } from "../../service/userProgressSerivice";
 import { createConversationHistory } from "../../service/questionService";
 import { MyDatePicker } from "../../components/datePicker/MyDatePicker";
 import { convertDateToDDMMYYYY } from "../../utils/utils";
+import * as FileSystem from "expo-file-system";
 import ChatInput from "./components/ChatInput";
 import ClearChatDialog from "./components/ClearChatDialog";
 
-type DrawerParamList = {
+export type DrawerParamList = {
   Chatbot: undefined;
+  Questions: undefined;
 };
 
 type ChatbotScreenNavigationProp = DrawerNavigationProp<DrawerParamList, "Chatbot">;
@@ -168,11 +170,11 @@ export const ChatbotScreen = () => {
   };
 
   const handleDevClick = () => {
-    // const dbPath = `${FileSystem.documentDirectory}/SQLite/`;
-    // console.log(dbPath);
+    const dbPath = `${FileSystem.documentDirectory}/SQLite/`;
+    console.log(dbPath);
 
-    deleteAllTables();
-    dispatch(clearUserProgress());
+    // deleteAllTables();
+    // dispatch(clearUserProgress());
 
     // console.log(userProgress);
   };

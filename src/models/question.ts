@@ -1,12 +1,19 @@
 import { Answer } from "./answer";
 
+export enum QuestionType {
+  Vocab = "vocab",
+  Grammar = "grammar",
+  ReadingComprehension = "reading_comprehension",
+  Listening = "listening",
+}
+
 export type Question = {
   questionId: number;
   question: string;
   answers: Answer[];
   explanation: string;
   bookmarked: boolean;
-  type: "vocab" | "grammar" | "reading_comprehension" | "listening";
+  type: QuestionType;
 };
 
 export const createQuestion = (partial?: Partial<Question>): Question => {
@@ -16,6 +23,6 @@ export const createQuestion = (partial?: Partial<Question>): Question => {
     answers: partial?.answers ?? [],
     explanation: partial?.explanation ?? "",
     bookmarked: partial?.bookmarked ?? false,
-    type: partial?.type ?? "vocab",
+    type: partial?.type ?? QuestionType.Vocab,
   };
 };

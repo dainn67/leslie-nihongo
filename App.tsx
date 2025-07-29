@@ -13,6 +13,7 @@ export default function App() {
     "Inter-Italic": require("./assets/fonts/inter/Inter-Italic.ttf"),
   });
 
+  // Spinner
   if (!fontsLoaded) return <ActivityIndicator />;
 
   return (

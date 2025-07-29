@@ -1,16 +1,14 @@
 import React from "react";
-import {
-  createDrawerNavigator,
-  DrawerContentScrollView,
-  DrawerItemList,
-} from "@react-navigation/drawer";
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from "@react-navigation/drawer";
 import { View } from "react-native";
 import { ChatbotScreen } from "../screens/chatbot/ChatbotScreen";
 import { ThemeToggleButton } from "../components/ThemeToggleButton";
 import { useTheme } from "../theme";
 import { Ionicons } from "@expo/vector-icons";
 import { CustomText } from "../components/text/customText";
+import { QuestionsScreen } from "../screens/questions/QuestionsScreen";
 
+// Create a Drawer Navigator object
 const Drawer = createDrawerNavigator();
 
 export const DrawerNavigator = () => {
@@ -18,7 +16,7 @@ export const DrawerNavigator = () => {
 
   return (
     <Drawer.Navigator
-      initialRouteName="Chatbot"
+      initialRouteName="Chatbot" // Default screen
       screenOptions={{
         headerShown: false,
         drawerActiveTintColor: colors.primary,
@@ -46,9 +44,19 @@ export const DrawerNavigator = () => {
               Chatbot
             </CustomText>
           ),
-          drawerIcon: ({ color, size }) => (
-            <Ionicons name="chatbubbles" size={size} color={color} />
+          drawerIcon: ({ color, size }) => <Ionicons name="chatbubbles" size={size} color={color} />,
+        }}
+      />
+      <Drawer.Screen
+        name="Questions"
+        component={QuestionsScreen}
+        options={{
+          drawerLabel: ({ color }) => (
+            <CustomText weight="Regular" style={{ color }}>
+              Questions
+            </CustomText>
           ),
+          drawerIcon: ({ color, size }) => <Ionicons name="list" size={size} color={color} />,
         }}
       />
     </Drawer.Navigator>
