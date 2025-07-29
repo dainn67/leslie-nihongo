@@ -36,7 +36,13 @@ export const sendStreamMessage = ({
   let startReceiveMessage = false;
 
   const now = convertDateToDDMMYYYY(new Date());
-  const examDateString = examDate ? convertDateToDDMMYYYY(new Date(examDate)) : undefined;
+
+  let examDateString = "";
+  if (examDate == 0) {
+    examDateString = "User hasn't decided exam date yet";
+  } else if (examDate) {
+    examDateString = `Current date is ${now} and user JLPT exam date is ${convertDateToDDMMYYYY(new Date(examDate))}`;
+  }
 
   // Original stream
   connectSSE({

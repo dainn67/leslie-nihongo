@@ -95,11 +95,29 @@ export const ChatbotScreen = () => {
 
     if (actionId) {
       const setExamDateActionId = "ed1";
+      const unknownExamDateActionId = "ed2";
       const setLevelActionId = "l";
       const setTargetActionId = "t";
 
       if (actionId.startsWith(setExamDateActionId)) {
         setDatePickerVisible(true);
+        return;
+      } else if (actionId.startsWith(unknownExamDateActionId)) {
+        dispatch(setUserExamDate(0));
+        const userMessage = createChatMessage({ fullText: title });
+        dispatch(addMessage(userMessage));
+        dispatch(addLoading());
+
+        sendStreamMessage({
+          conversationHistory: createConversationHistory(messages),
+          actionId: actionId,
+          level: userLevel,
+          target: userTarget,
+          examDate: 0,
+          conversationId,
+          dispatch,
+        });
+
         return;
       } else if (actionId.startsWith(setLevelActionId)) {
         userLevel = `N${actionId[1]}`;
