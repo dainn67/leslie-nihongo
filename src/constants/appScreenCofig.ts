@@ -1,4 +1,4 @@
-export const APP_SCREEN_CONFIG = {
+export const AppScreenConfig = {
   CHATBOT_SCREEN: "ChatbotScreen",
   QUESTIONS_SCREEN: "QuestionsScreen",
   QUESTION_CATEGORY_SCREEN: "QuestionCategoryScreen",

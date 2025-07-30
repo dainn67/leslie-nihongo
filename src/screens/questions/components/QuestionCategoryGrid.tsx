@@ -3,27 +3,17 @@ import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { CustomText } from "../../../components/text/customText";
 import { QuestionType } from "../../../models/question";
 import { useNavigation } from "@react-navigation/native";
-import { APP_SCREEN_CONFIG } from "../../../constants/appScreenCofig";
+import { AppScreenConfig } from "../../../constants/appScreenCofig";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../../../app/DrawerNavigator";
+
+type NavigationProp = NativeStackNavigationProp<RootStackParamList, "QuestionCategoryScreen">;
 
 export const QuestionCategoryGrid = () => {
-  const navigation = useNavigation();
-
-  const getTitle = (type: QuestionType) => {
-    switch (type) {
-      case QuestionType.Vocab:
-        return "Từ Vựng";
-      case QuestionType.Grammar:
-        return "Ngữ Pháp";
-      case QuestionType.ReadingComprehension:
-        return "Đọc Hiểu";
-      case QuestionType.Listening:
-        return "Nghe Hiểu";
-    }
-  };
+  const navigation = useNavigation<NavigationProp>();
 
   const _handleNavigateToQuestionType = (type: QuestionType) => {
-    navigation.setParams({ type } as never);
-    navigation.navigate(APP_SCREEN_CONFIG.QUESTION_CATEGORY_SCREEN as never);
+    navigation.navigate("QuestionCategoryScreen", { type });
   };
 
   return (
@@ -62,3 +52,16 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
 });
+
+export const getTitle = (type: QuestionType) => {
+  switch (type) {
+    case QuestionType.Vocab:
+      return "Từ Vựng";
+    case QuestionType.Grammar:
+      return "Ngữ Pháp";
+    case QuestionType.ReadingComprehension:
+      return "Đọc Hiểu";
+    case QuestionType.Listening:
+      return "Nghe Hiểu";
+  }
+};

@@ -1,6 +1,6 @@
 import React from "react";
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from "@react-navigation/drawer";
-import { createStackNavigator } from "@react-navigation/stack";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View } from "react-native";
 import { ChatbotScreen } from "../screens/chatbot/ChatbotScreen";
 import { ThemeToggleButton } from "../components/ThemeToggleButton";
@@ -9,18 +9,24 @@ import { Ionicons } from "@expo/vector-icons";
 import { CustomText } from "../components/text/customText";
 import { QuestionsScreen } from "../screens/questions/QuestionsScreen";
 import { QuestionCategoryScreen } from "../screens/questions/QuestionCategoryScreen";
-import { APP_SCREEN_CONFIG } from "../constants/appScreenCofig";
+import { AppScreenConfig } from "../constants/appScreenCofig";
+import { QuestionType } from "../models/question";
 
-// Create a Drawer Navigator object
+export type RootStackParamList = {
+  ChatbotScreen: undefined;
+  QuestionsScreen: undefined;
+  QuestionCategoryScreen: { type: QuestionType };
+};
+
 const Drawer = createDrawerNavigator();
-const Stack = createStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export const DrawerNavigator = () => {
   const { colors } = useTheme();
 
   return (
     <Drawer.Navigator
-      initialRouteName={APP_SCREEN_CONFIG.CHATBOT_SCREEN} // Default screen
+      initialRouteName={AppScreenConfig.CHATBOT_SCREEN} // Default screen
       screenOptions={{
         headerShown: false,
         drawerActiveTintColor: colors.primary,
@@ -40,7 +46,7 @@ export const DrawerNavigator = () => {
       )}
     >
       <Drawer.Screen
-        name={APP_SCREEN_CONFIG.CHATBOT_SCREEN}
+        name={AppScreenConfig.CHATBOT_SCREEN}
         component={ChatbotScreen}
         options={{
           drawerLabel: ({ color }) => (
@@ -52,7 +58,7 @@ export const DrawerNavigator = () => {
         }}
       />
       <Drawer.Screen
-        name={APP_SCREEN_CONFIG.QUESTIONS_SCREEN}
+        name={AppScreenConfig.QUESTIONS_SCREEN}
         component={QuestionStackScreen}
         options={{
           drawerLabel: ({ color }) => (
@@ -70,8 +76,8 @@ export const DrawerNavigator = () => {
 const QuestionStackScreen = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name={APP_SCREEN_CONFIG.QUESTIONS_SCREEN} component={QuestionsScreen} options={{ headerShown: false }} />
-      <Stack.Screen name={APP_SCREEN_CONFIG.QUESTION_CATEGORY_SCREEN} component={QuestionCategoryScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="QuestionsScreen" component={QuestionsScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="QuestionCategoryScreen" component={QuestionCategoryScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 };
