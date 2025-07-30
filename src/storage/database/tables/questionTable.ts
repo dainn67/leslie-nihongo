@@ -1,5 +1,5 @@
 import { createAnswer } from "../../../models/answer";
-import { Question } from "../../../models/question";
+import { createQuestion, Question, QuestionType } from "../../../models/question";
 import { db } from "../database";
 
 export const QuestionTable = {
@@ -27,7 +27,7 @@ export const createQuestionTable = () => {
           ${QuestionTable.columnQuestionId} INTEGER,
           ${QuestionTable.columnQuestion} TEXT,
           ${QuestionTable.columnExplanation} TEXT,
-          ${QuestionTable.columnType} TEXT)`
+          ${QuestionTable.columnType} TEXT)`,
     );
 
     db.execSync(
@@ -36,7 +36,7 @@ export const createQuestionTable = () => {
           ${AnswerTable.columnQuestionId} INTEGER,
           ${AnswerTable.columnAnswer} TEXT,
           ${AnswerTable.columnIsCorrect} INTEGER,
-          FOREIGN KEY (${AnswerTable.columnQuestionId}) REFERENCES ${QuestionTable.tableName}(${QuestionTable.columnQuestionId}))`
+          FOREIGN KEY (${AnswerTable.columnQuestionId}) REFERENCES ${QuestionTable.tableName}(${QuestionTable.columnQuestionId}))`,
     );
   });
 };
@@ -77,15 +77,16 @@ export const updateTables = () => {
 export const getAllQuestions = () => {
   const questionRows = db.getAllSync(`SELECT * FROM ${QuestionTable.tableName}`);
 
-  const questions: Question[] = questionRows.map((row: any) => ({
-    id: row.id,
-    questionId: row.questionId,
-    question: row.question,
-    explanation: row.explanation,
-    answers: [],
-    bookmarked: row.bookmarked,
-    type: row.type,
-  }));
+  const questions: Question[] = questionRows.map((row: any) =>
+    createQuestion({
+      questionId: row.questionId,
+      question: row.question,
+      explanation: row.explanation,
+      answers: [],
+      bookmarked: row.bookmarked,
+      type: row.type,
+    }),
+  );
 
   const answerRows = db.getAllSync(`SELECT * FROM ${AnswerTable.tableName}`);
 
@@ -98,7 +99,7 @@ export const getAllQuestions = () => {
           questionId: row.questionId,
           text: row.answer,
           isCorrect: row.isCorrect,
-        })
+        }),
       );
     }
   });
@@ -116,7 +117,7 @@ export const insertQuestions = (questions: Question[]) => {
       })
       .join(", ");
     db.execSync(
-      `INSERT INTO ${QuestionTable.tableName} (${QuestionTable.columnQuestionId}, ${QuestionTable.columnQuestion}, ${QuestionTable.columnExplanation}, ${QuestionTable.columnType}) VALUES ${questionValues}`
+      `INSERT INTO ${QuestionTable.tableName} (${QuestionTable.columnQuestionId}, ${QuestionTable.columnQuestion}, ${QuestionTable.columnExplanation}, ${QuestionTable.columnType}) VALUES ${questionValues}`,
     );
 
     const answerValues = questions
@@ -124,13 +125,48 @@ export const insertQuestions = (questions: Question[]) => {
         question.answers.map((answer) => {
           const answerString = answer.text.replaceAll('"', "'");
           return `(${question.questionId}, "${answerString}", "${answer.isCorrect ? 1 : 0}")`;
-        })
+        }),
       )
       .join(", ");
     db.execSync(
-      `INSERT INTO ${AnswerTable.tableName} (${AnswerTable.columnQuestionId}, ${AnswerTable.columnAnswer}, ${AnswerTable.columnIsCorrect}) VALUES ${answerValues}`
+      `INSERT INTO ${AnswerTable.tableName} (${AnswerTable.columnQuestionId}, ${AnswerTable.columnAnswer}, ${AnswerTable.columnIsCorrect}) VALUES ${answerValues}`,
     );
   });
+};
+
+export const getQuestionsByType = (type: QuestionType) => {
+  const questionRows = db.getAllSync(`SELECT * FROM ${QuestionTable.tableName} WHERE ${QuestionTable.columnType} = "${type}"`);
+
+  const questions: Question[] = questionRows.map((row: any) =>
+    createQuestion({
+      questionId: row.questionId,
+      question: row.question,
+      explanation: row.explanation,
+      answers: [],
+      bookmarked: row.bookmarked,
+      type: row.type,
+    }),
+  );
+
+  const answerRows = db.getAllSync(
+    `SELECT * FROM ${AnswerTable.tableName} WHERE ${AnswerTable.columnQuestionId} IN (${questions.map((question) => question.questionId).join(", ")})`,
+  );
+
+  answerRows.forEach((row: any) => {
+    const question = questions.find((question) => question.questionId === row.questionId);
+    if (question) {
+      question.answers.push(
+        createAnswer({
+          answerId: row.answerId,
+          questionId: row.questionId,
+          text: row.answer,
+          isCorrect: row.isCorrect,
+        }),
+      );
+    }
+  });
+
+  return questions;
 };
 
 export const deleteQuestion = (questionId: number) => {

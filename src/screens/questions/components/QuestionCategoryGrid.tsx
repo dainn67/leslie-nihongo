@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
 
 export const getTitle = (type: QuestionType) => {
   switch (type) {
-    case QuestionType.Vocab:
+    case QuestionType.Vocabulary:
       return "Từ Vựng";
     case QuestionType.Grammar:
       return "Ngữ Pháp";

@@ -13,9 +13,9 @@ interface QuestionViewProps {
   selectedAnswer: number | null;
   bookmarked: boolean;
   showExplanation: boolean;
-  fadeAnim: Animated.Value;
-  onAnswerSelect: (index: number) => void;
-  onBookmarkPress: (isBookmarked: boolean) => void;
+  fadeAnim?: Animated.Value;
+  onAnswerSelect?: (index: number) => void;
+  onBookmarkPress?: (isBookmarked: boolean) => void;
 }
 
 export const QuestionView = ({
@@ -48,7 +48,7 @@ export const QuestionView = ({
         </View>
 
         {/* Save icon button */}
-        <IconButton icon={bookmarked ? AppIcons.bookmarked : AppIcons.bookmark} onPress={() => onBookmarkPress(!bookmarked)} />
+        <IconButton icon={bookmarked ? AppIcons.bookmarked : AppIcons.bookmark} onPress={() => onBookmarkPress?.(!bookmarked)} />
       </View>
 
       {/* Answers */}
@@ -56,7 +56,7 @@ export const QuestionView = ({
         {question.answers.map((a: Answer, index: number) => (
           <TouchableOpacity
             key={index}
-            onPress={() => onAnswerSelect(index)}
+            onPress={() => onAnswerSelect?.(index)}
             style={[
               styles.answerCard,
               selectedAnswer === index && a.isCorrect && styles.correctAnswer,

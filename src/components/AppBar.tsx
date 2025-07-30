@@ -42,7 +42,7 @@ export const AppBar: React.FC<AppBarProps> = ({ title, leftIcon, rightIcon, onLe
           </TouchableOpacity>
         )}
 
-        {__DEV__ && <IconButton icon={AppIcons.dev} onPress={onDevClick} style={{ marginLeft: 10, backgroundColor: "white" }} />}
+        {__DEV__ && onDevClick && <IconButton icon={AppIcons.dev} onPress={onDevClick} style={{ marginLeft: 10, backgroundColor: "white" }} />}
       </View>
     </SafeAreaView>
   );
