@@ -2,6 +2,12 @@ export default {
   expo: {
     name: "LeslieAI",
     slug: "leslieai",
+    icon: "./assets/images/leslie-logo.png",
+    splash: {
+      image: "./assets/images/leslie-logo.png",
+      resizeMode: "contain",
+      backgroundColor: "#000000",
+    },
     android: {
       package: "com.leslieai.app",
     },
