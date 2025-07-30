@@ -24,7 +24,7 @@ export const QuestionsScreen = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <AppBar
-        title={"Questions"}
+        title={"Câu hỏi"}
         leftIcon={<Ionicons name="menu" size={24} color="white" />}
         rightIcon={<Ionicons name="search" size={24} color="white" />}
         onLeftPress={openDrawer}

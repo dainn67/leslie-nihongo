@@ -63,7 +63,7 @@ export const DrawerNavigator = () => {
         options={{
           drawerLabel: ({ color }) => (
             <CustomText weight="Regular" style={{ color }}>
-              Questions
+              Câu hỏi
             </CustomText>
           ),
           drawerIcon: ({ color, size }) => <Ionicons name="list" size={size} color={color} />,

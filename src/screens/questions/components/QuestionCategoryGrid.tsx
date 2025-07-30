@@ -1,16 +1,20 @@
 import React from "react";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
 import { CustomText } from "../../../components/text/customText";
 import { QuestionType, QuestionTypeTitles } from "../../../models/question";
+
 interface QuestionCategoryGridProps {
   onPress: (type: QuestionType) => void;
 }
 
 export const QuestionCategoryGrid = ({ onPress }: QuestionCategoryGridProps) => {
+  const { width } = Dimensions.get("window");
+  const gridItemWidth = (width - 60) / 2;
+
   return (
     <View style={styles.gridContainer}>
       {Object.values(QuestionType).map((type, index) => (
-        <TouchableOpacity key={index} style={styles.gridItem} onPress={() => onPress(type)}>
+        <TouchableOpacity key={index} style={[styles.gridItem, { width: gridItemWidth }]} onPress={() => onPress(type)}>
           <CustomText key={index} style={{ textAlign: "center" }}>
             {QuestionTypeTitles[type]}
           </CustomText>
@@ -28,8 +32,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   gridItem: {
-    width: "45%",
-    height: 200,
+    height: 180,
     margin: 10,
     padding: 20,
     backgroundColor: "white",
