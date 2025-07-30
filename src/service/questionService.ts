@@ -3,7 +3,7 @@ import { createQuestion, Question } from "../models/question";
 import { Delimiter } from "./chatMessageService";
 
 export const extractQuestionsFromJson = (json: string): { questions: Question[]; summary: string } => {
-  const dataString = json.replaceAll("```json", "").replaceAll("```", "");
+  const dataString = json.replaceAll("```json", "").replaceAll("```", "").trim();
   const data = JSON.parse(dataString);
   const questions: Question[] = data["questions"].map((question: any, index: number) =>
     createQuestion({ ...question, questionId: Date.now() + index })
