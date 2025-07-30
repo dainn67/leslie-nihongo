@@ -22,11 +22,11 @@ import ChatInput from "./components/ChatInput";
 import ClearChatDialog from "./components/ClearChatDialog";
 
 export type DrawerParamList = {
-  Chatbot: undefined;
-  Questions: undefined;
+  ChatbotScreen: undefined;
+  QuestionsScreen: undefined;
 };
 
-type ChatbotScreenNavigationProp = DrawerNavigationProp<DrawerParamList, "Chatbot">;
+type ChatbotScreenNavigationProp = DrawerNavigationProp<DrawerParamList, "ChatbotScreen">;
 
 export const ChatbotScreen = () => {
   // Drawer

@@ -1,6 +1,5 @@
 import React from "react";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { View, StyleSheet, TouchableOpacity, SafeAreaView } from "react-native";
 import { useTheme } from "../theme";
 import { Ionicons } from "@expo/vector-icons";
 import { CustomText } from "./text/customText";
@@ -61,11 +60,11 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   container: {
-    height: 64,
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "transparent",
     paddingHorizontal: 20,
+    paddingBottom: 12,
   },
   iconContainer: {
     width: 44,

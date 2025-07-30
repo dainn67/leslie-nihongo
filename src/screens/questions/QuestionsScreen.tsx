@@ -8,7 +8,7 @@ import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { DrawerParamList } from "../chatbot/ChatbotScreen";
 
 export const QuestionsScreen = () => {
-  const navigation = useNavigation<DrawerNavigationProp<DrawerParamList, "Questions">>();
+  const navigation = useNavigation<DrawerNavigationProp<DrawerParamList, "QuestionsScreen">>();
   const openDrawer = () => navigation.openDrawer();
 
   return (
