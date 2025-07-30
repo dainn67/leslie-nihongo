@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
-import { Question, QuestionType } from "../../models/question";
+import { Question, QuestionType, QuestionTypeTitles } from "../../models/question";
 import { AppBar } from "../../components/AppBar";
-import { getTitle } from "./components/QuestionCategoryGrid";
 import { Ionicons } from "@expo/vector-icons";
 import { RootStackParamList } from "../../app/DrawerNavigator";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
@@ -29,7 +28,7 @@ export const QuestionCategoryScreen = () => {
   return (
     <View style={styles.container}>
       <AppBar
-        title={getTitle(type)}
+        title={QuestionTypeTitles[type]}
         leftIcon={<Ionicons name="arrow-back" size={24} color="white" />}
         rightIcon={<Ionicons name="search" size={24} color="white" />}
         onLeftPress={() => navigation.pop()}

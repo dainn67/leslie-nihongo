@@ -7,6 +7,13 @@ export enum QuestionType {
   Listening = "listening",
 }
 
+export const QuestionTypeTitles: Record<QuestionType, string> = {
+  [QuestionType.Vocabulary]: "Từ Vựng",
+  [QuestionType.Grammar]: "Ngữ Pháp",
+  [QuestionType.ReadingComprehension]: "Đọc Hiểu",
+  [QuestionType.Listening]: "Nghe Hiểu",
+};
+
 export type Question = {
   questionId: number;
   question: string;

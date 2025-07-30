@@ -1,27 +1,18 @@
 import React from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { CustomText } from "../../../components/text/customText";
-import { QuestionType } from "../../../models/question";
-import { useNavigation } from "@react-navigation/native";
-import { AppScreenConfig } from "../../../constants/appScreenCofig";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../../app/DrawerNavigator";
+import { QuestionType, QuestionTypeTitles } from "../../../models/question";
+interface QuestionCategoryGridProps {
+  onPress: (type: QuestionType) => void;
+}
 
-type NavigationProp = NativeStackNavigationProp<RootStackParamList, "QuestionCategoryScreen">;
-
-export const QuestionCategoryGrid = () => {
-  const navigation = useNavigation<NavigationProp>();
-
-  const _handleNavigateToQuestionType = (type: QuestionType) => {
-    navigation.navigate("QuestionCategoryScreen", { type });
-  };
-
+export const QuestionCategoryGrid = ({ onPress }: QuestionCategoryGridProps) => {
   return (
     <View style={styles.gridContainer}>
       {Object.values(QuestionType).map((type, index) => (
-        <TouchableOpacity key={index} style={styles.gridItem} onPress={() => _handleNavigateToQuestionType(type)}>
+        <TouchableOpacity key={index} style={styles.gridItem} onPress={() => onPress(type)}>
           <CustomText key={index} style={{ textAlign: "center" }}>
-            {getTitle(type)}
+            {QuestionTypeTitles[type]}
           </CustomText>
         </TouchableOpacity>
       ))}
@@ -52,16 +43,3 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
 });
-
-export const getTitle = (type: QuestionType) => {
-  switch (type) {
-    case QuestionType.Vocabulary:
-      return "Từ Vựng";
-    case QuestionType.Grammar:
-      return "Ngữ Pháp";
-    case QuestionType.ReadingComprehension:
-      return "Đọc Hiểu";
-    case QuestionType.Listening:
-      return "Nghe Hiểu";
-  }
-};

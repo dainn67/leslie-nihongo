@@ -172,8 +172,8 @@ export const ChatbotScreen = () => {
     const dbPath = `${FileSystem.documentDirectory}/SQLite/`;
     console.log(dbPath);
 
-    // deleteAllTables();
-    // dispatch(clearUserProgress());
+    deleteAllTables();
+    dispatch(clearUserProgress());
 
     // console.log(userProgress);
   };

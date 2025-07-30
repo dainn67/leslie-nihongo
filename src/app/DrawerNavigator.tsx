@@ -76,7 +76,7 @@ export const DrawerNavigator = () => {
 const QuestionStackScreen = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="QuestionsScreen" component={QuestionsScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="ChatbotScreen" component={QuestionsScreen} options={{ headerShown: false }} />
       <Stack.Screen name="QuestionCategoryScreen" component={QuestionCategoryScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );

@@ -6,10 +6,20 @@ import { QuestionCategoryGrid } from "./components/QuestionCategoryGrid";
 import { useNavigation } from "@react-navigation/native";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { DrawerParamList } from "../chatbot/ChatbotScreen";
+import { QuestionType } from "../../models/question";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../../app/DrawerNavigator";
+
+type NavigationProp = NativeStackNavigationProp<RootStackParamList, "QuestionCategoryScreen">;
 
 export const QuestionsScreen = () => {
-  const navigation = useNavigation<DrawerNavigationProp<DrawerParamList, "QuestionsScreen">>();
-  const openDrawer = () => navigation.openDrawer();
+  const drawerNavigation = useNavigation<DrawerNavigationProp<DrawerParamList, "QuestionsScreen">>();
+  const openDrawer = () => drawerNavigation.openDrawer();
+
+  const navigation = useNavigation<NavigationProp>();
+  const handleNavigateToQuestionType = (type: QuestionType) => {
+    navigation.navigate("QuestionCategoryScreen", { type });
+  };
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -21,7 +31,7 @@ export const QuestionsScreen = () => {
         onRightPress={() => {}}
         onDevClick={() => {}}
       />
-      <QuestionCategoryGrid />
+      <QuestionCategoryGrid onPress={handleNavigateToQuestionType} />
     </GestureHandlerRootView>
   );
 };
