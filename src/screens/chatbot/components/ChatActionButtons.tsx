@@ -56,12 +56,15 @@ export const ChatActionButtons = ({ suggestedActions, onClickAction }: ChatActio
             <MainButton
               key={i}
               title={e.title.trim()}
-              radius={100}
-              paddingVertical={8}
-              paddingHorizontal={12}
-              marginHorizontal={4}
-              marginVertical={4}
-              backgroundColor={`${colors.primary}15`}
+              showShadow={true}
+              style={{
+                borderRadius: 100,
+                paddingVertical: 8,
+                paddingHorizontal: 12,
+                marginHorizontal: 4,
+                marginVertical: 4,
+                backgroundColor: colors.primary,
+              }}
               onPress={() => handleClickAction(e.title, e.id)}
             />
           </Animated.View>

@@ -1,109 +1,80 @@
-import React from "react";
-import { TouchableOpacity, StyleSheet, View } from "react-native";
+import React, { useState } from "react";
+import { TouchableOpacity, View, StyleSheet, ViewStyle, TextStyle, StyleProp, ActivityIndicator } from "react-native";
 import { CustomText } from "../text/customText";
 
 interface MainButtonProps {
   title: string;
-  width?: number;
-  height?: number;
-  radius?: number;
-  backgroundColor?: string;
-  borderColor?: string;
-  borderWidth?: number;
-  paddingHorizontal?: number;
-  paddingVertical?: number;
-  marginHorizontal?: number;
-  marginVertical?: number;
-  textColor?: string;
-  fontSize?: number;
-  fontWeight?: "normal" | "bold";
+  disabled?: boolean;
+  loading?: boolean;
+  style?: StyleProp<ViewStyle>;
+  textStyle?: StyleProp<TextStyle>;
+  showShadow?: boolean;
   onPress: () => void;
 }
 
-const MainButton = ({
-  title,
-  width,
-  height,
-  radius,
-  textColor,
-  paddingHorizontal,
-  paddingVertical,
-  marginHorizontal,
-  marginVertical,
-  fontSize,
-  fontWeight,
-  backgroundColor,
-  borderColor,
-  borderWidth,
-  onPress,
-}: MainButtonProps) => {
-  const style = getStyles(
-    width,
-    height,
-    radius,
-    backgroundColor,
-    textColor,
-    fontSize,
-    fontWeight,
-    paddingHorizontal,
-    paddingVertical,
-    marginHorizontal,
-    marginVertical,
-    borderColor,
-    borderWidth,
-  );
+// Component MainButton
+const MainButton = ({ title, onPress, disabled = false, loading = false, style, textStyle, showShadow = false }: MainButtonProps) => {
+  const [isPressed, setIsPressed] = useState(false);
+
+  const handlePressIn = () => setIsPressed(true);
+  const handlePressOut = () => setIsPressed(false);
 
   const text = title.replaceAll("**", "").replace(/<[^>]*>/g, "");
 
+  // Get passed in border radius
+  const flattenedStyle = StyleSheet.flatten(style || {});
+  const borderRadius = flattenedStyle?.borderRadius ?? 8;
+
+  const containerStyles = [showShadow && styles.shadowWrapper, { borderRadius }];
+
+  const buttonStyles = [
+    styles.button,
+    {
+      backgroundColor: disabled ? "#E5E7EB" : "#3B82F6",
+      opacity: isPressed ? 0.9 : 1,
+      transform: isPressed ? [{ scale: 0.98 }] : [],
+      borderRadius,
+    },
+    style,
+  ];
+
+  const labelStyles = [styles.text, { color: disabled ? "#9CA3AF" : "#FFFFFF" }, textStyle];
+
   return (
-    <TouchableOpacity style={[style.button, style.shadow]} onPress={onPress}>
-      <CustomText style={style.text}>{text}</CustomText>
-    </TouchableOpacity>
+    <View style={containerStyles}>
+      <TouchableOpacity
+        onPress={onPress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        disabled={disabled || loading}
+        style={buttonStyles}
+        activeOpacity={0.8}
+      >
+        {loading ? <ActivityIndicator color="#FFFFFF" /> : <CustomText style={labelStyles}>{text}</CustomText>}
+      </TouchableOpacity>
+    </View>
   );
 };
 
-const getStyles = (
-  width?: number,
-  height?: number,
-  radius?: number,
-  backgroundColor?: string,
-  textColor?: string,
-  fontSize?: number,
-  fontWeight?: "normal" | "bold" | undefined,
-  paddingHorizontal?: number,
-  paddingVertical?: number,
-  marginHorizontal?: number,
-  marginVertical?: number,
-  borderColor?: string,
-  borderWidth?: number,
-) =>
-  StyleSheet.create({
-    button: {
-      backgroundColor: backgroundColor ?? "transparent",
-      width: width,
-      height: height,
-      borderRadius: radius,
-      justifyContent: "center",
-      alignItems: "center",
-      paddingHorizontal: paddingHorizontal,
-      paddingVertical: paddingVertical,
-      marginHorizontal: marginHorizontal,
-      marginVertical: marginVertical,
-      borderColor: borderColor,
-      borderWidth: borderWidth,
-    },
-    text: {
-      color: textColor,
-      fontSize: fontSize,
-      fontWeight: fontWeight,
-    },
-    shadow: {
-      shadowColor: "#000",
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-      elevation: 5,
-    },
-  });
+const styles = StyleSheet.create({
+  shadowWrapper: {
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  button: {
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    minHeight: 44,
+  },
+  text: {
+    fontSize: 16,
+    fontWeight: "600",
+  },
+});
 
 export default MainButton;

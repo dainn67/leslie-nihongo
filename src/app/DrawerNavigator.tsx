@@ -7,8 +7,8 @@ import { ThemeToggleButton } from "../components/ThemeToggleButton";
 import { useTheme } from "../theme";
 import { Ionicons } from "@expo/vector-icons";
 import { CustomText } from "../components/text/customText";
-import { QuestionsScreen } from "../screens/questions/QuestionsScreen";
-import { QuestionCategoryScreen } from "../screens/questions/QuestionCategoryScreen";
+import { QuestionsScreen } from "../screens/questions/questionScreen/QuestionsScreen";
+import { QuestionCategoryScreen } from "../screens/questions/questinCategoryScreen/QuestionCategoryScreen";
 import { AppScreenConfig } from "../constants/appScreenCofig";
 import { QuestionType } from "../models/question";
 

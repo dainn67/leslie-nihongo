@@ -194,13 +194,13 @@ export const ChatbotScreen = () => {
         <ChatInput onSend={handleSend} />
 
         <ClearChatDialog
-          title="Clear All?"
-          message="Are you sure you want to delete all messages?"
-          cancelText="Cancel"
-          confirmText="Confirm"
+          title="Xoá hội thoại?"
+          message="Bạn có muốn xoá và tạo đoạn hội thoại mới?"
+          cancelText="Huỷ"
+          confirmText="Xác nhận"
           visible={clearDialogVisible}
           setVisible={setClearDialogVisible}
-          clearConversation={clearConversation}
+          onClearConversation={clearConversation}
         />
       </View>
 

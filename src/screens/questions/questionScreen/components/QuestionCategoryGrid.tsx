@@ -1,7 +1,7 @@
 import React from "react";
 import { View, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
-import { CustomText } from "../../../components/text/customText";
-import { QuestionType, QuestionTypeTitles } from "../../../models/question";
+import { CustomText } from "../../../../components/text/customText";
+import { QuestionType, QuestionTypeTitles } from "../../../../models/question";
 
 interface QuestionCategoryGridProps {
   onPress: (type: QuestionType) => void;

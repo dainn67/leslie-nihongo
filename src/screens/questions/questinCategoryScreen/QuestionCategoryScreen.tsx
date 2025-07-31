@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
-import { Question, QuestionType, QuestionTypeTitles } from "../../models/question";
-import { AppBar } from "../../components/AppBar";
+import { Question, QuestionType, QuestionTypeTitles } from "../../../models/question";
+import { AppBar } from "../../../components/AppBar";
 import { Ionicons } from "@expo/vector-icons";
-import { RootStackParamList } from "../../app/DrawerNavigator";
+import { RootStackParamList } from "../../../app/DrawerNavigator";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { getQuestionsByType } from "../../storage/database/tables";
-import { QuestionView } from "../chatbot/components/chatBubble/QuestionView";
+import { getQuestionsByType } from "../../../storage/database/tables";
+import { QuestionView } from "../../chatbot/components/chatBubble/QuestionView";
+import MainButton from "../../../components/buttons/MainButton";
+import { QuestionNumberSelector } from "./components/QuestionNumberSelector";
 
 type QuestionCategoryScreenRouteProp = RouteProp<RootStackParamList, "QuestionCategoryScreen">;
 type QuestionCategoryScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "QuestionCategoryScreen">;
@@ -19,6 +21,8 @@ export const QuestionCategoryScreen = () => {
   const { type } = route.params as { type: QuestionType };
 
   const [questions, setQuestions] = useState<Question[]>([]);
+
+  const [amountSelectorVisible, setAmountSelectorVisible] = useState(false);
 
   useEffect(() => {
     const questions = getQuestionsByType(type);
@@ -48,6 +52,17 @@ export const QuestionCategoryScreen = () => {
           </View>
         ))}
       </ScrollView>
+      <MainButton title="Ôn tập" onPress={() => setAmountSelectorVisible(true)} style={styles.buttonContainer} />
+
+      <QuestionNumberSelector
+        totalQuestions={questions.length}
+        visible={amountSelectorVisible}
+        setVisible={setAmountSelectorVisible}
+        onSelectQuestion={(amount) => {
+          console.log("Selected question amount:", amount);
+          // TODO: Navigate to question screen with selected amount
+        }}
+      />
     </View>
   );
 };
@@ -63,5 +78,9 @@ const styles = StyleSheet.create({
   },
   questionContainer: {
     padding: 8,
+  },
+  buttonContainer: {
+    borderRadius: 16,
+    margin: 16,
   },
 });

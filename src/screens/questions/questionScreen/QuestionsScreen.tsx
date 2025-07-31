@@ -1,14 +1,14 @@
 import React from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { AppBar } from "../../components/AppBar";
+import { AppBar } from "../../../components/AppBar";
 import { Ionicons } from "@expo/vector-icons";
 import { QuestionCategoryGrid } from "./components/QuestionCategoryGrid";
 import { useNavigation } from "@react-navigation/native";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
-import { DrawerParamList } from "../chatbot/ChatbotScreen";
-import { QuestionType } from "../../models/question";
+import { DrawerParamList } from "../../chatbot/ChatbotScreen";
+import { QuestionType } from "../../../models/question";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../app/DrawerNavigator";
+import { RootStackParamList } from "../../../app/DrawerNavigator";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, "QuestionCategoryScreen">;
 

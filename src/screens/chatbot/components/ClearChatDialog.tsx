@@ -11,36 +11,21 @@ interface ClearChatDialogProps {
   confirmText: string;
   visible: boolean;
   setVisible: (visible: boolean) => void;
-  clearConversation: () => void;
+  onClearConversation: () => void;
 }
 
-export const ClearChatDialog = ({
-  title,
-  message,
-  cancelText,
-  confirmText,
-  visible,
-  setVisible,
-  clearConversation,
-}: ClearChatDialogProps) => {
+export const ClearChatDialog = ({ title, message, cancelText, confirmText, visible, setVisible, onClearConversation }: ClearChatDialogProps) => {
   const { colors } = useTheme();
 
   const handleConfirm = () => {
-    clearConversation();
+    onClearConversation();
     setVisible(false);
   };
 
   return (
-    <Modal
-      transparent
-      visible={visible}
-      animationType="fade"
-      onRequestClose={() => setVisible(false)}
-    >
+    <Modal transparent visible={visible} animationType="fade" onRequestClose={() => setVisible(false)}>
       <View style={[styles.overlay, { backgroundColor: colors.overlay }]}>
-        <View
-          style={[styles.dialog, { backgroundColor: colors.card, shadowColor: colors.cardShadow }]}
-        >
+        <View style={[styles.dialog, { backgroundColor: colors.card, shadowColor: colors.cardShadow }]}>
           <View style={styles.iconContainer}>
             <Ionicons name="trash" size={32} color={colors.error} />
           </View>
@@ -54,18 +39,11 @@ export const ClearChatDialog = ({
 
           <View style={styles.buttonRow}>
             <TouchableOpacity
-              style={[
-                styles.button,
-                styles.cancelButton,
-                { backgroundColor: colors.backgroundSecondary },
-              ]}
+              style={[styles.button, styles.cancelButton, { backgroundColor: colors.backgroundSecondary }]}
               onPress={() => setVisible(false)}
               activeOpacity={0.8}
             >
-              <CustomText
-                weight="Regular"
-                style={[styles.cancelText, { color: colors.textSecondary }]}
-              >
+              <CustomText weight="Regular" style={[styles.cancelText, { color: colors.textSecondary }]}>
                 {cancelText}
               </CustomText>
             </TouchableOpacity>
