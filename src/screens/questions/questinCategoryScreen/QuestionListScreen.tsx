@@ -11,6 +11,7 @@ import { QuestionView } from "../../chatbot/components/chatBubble/QuestionView";
 import { QuestionNumberSelector } from "./components/QuestionNumberSelector";
 import { createReviseQuestionSet } from "../../../service/questionService";
 import MainButton from "../../../components/buttons/MainButton";
+import { useAppSelector } from "../../../hooks/hooks";
 
 type QuestionListScreenRouteProp = RouteProp<RootStackParamList, "QuestionListScreen">;
 type QuestionListScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "QuestionListScreen">;
@@ -21,17 +22,13 @@ export const QuestionListScreen = () => {
 
   const { type } = route.params as { type: QuestionType };
 
-  const [questions, setQuestions] = useState<Question[]>([]);
-
   const [amountSelectorVisible, setAmountSelectorVisible] = useState(false);
 
-  useEffect(() => {
-    const questions = getQuestionsByType(type);
-    setQuestions(questions);
-  }, [type]);
+  const questions = useAppSelector((state) => state.questions.questions).filter((question) => question.type === type);
 
   const handleSelectQuestion = (amount: number) => {
-    navigation.navigate("QuestionGameScreen", { amount, type });
+    const selectedQuestions = createReviseQuestionSet(questions, amount);
+    navigation.navigate("QuestionGameScreen", { questions: selectedQuestions });
   };
 
   return (

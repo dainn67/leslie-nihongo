@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { View, StyleSheet, Animated } from "react-native";
+import { View, StyleSheet, Animated, StyleProp, ViewStyle } from "react-native";
 
 interface AnimatedProgressBarProps {
   progress: number; // 0-100
@@ -8,6 +8,7 @@ interface AnimatedProgressBarProps {
   fillColor?: string;
   borderRadius?: number;
   duration?: number;
+  style?: StyleProp<ViewStyle>;
 }
 
 export const AnimatedProgressBar = ({
@@ -17,6 +18,7 @@ export const AnimatedProgressBar = ({
   fillColor = "#4A90E2",
   borderRadius = 3,
   duration = 500,
+  style,
 }: AnimatedProgressBarProps) => {
   const animatedWidth = useRef(new Animated.Value(0)).current;
 
@@ -32,6 +34,7 @@ export const AnimatedProgressBar = ({
     <View
       style={[
         styles.progressBar,
+        style,
         {
           height,
           backgroundColor,

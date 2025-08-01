@@ -9,14 +9,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { CustomText } from "../components/text/customText";
 import { QuestionsScreen } from "../screens/questions/questionScreen/QuestionsScreen";
 import { QuestionListScreen } from "../screens/questions/questinCategoryScreen/QuestionListScreen";
-import { QuestionType } from "../models/question";
+import { Question, QuestionType } from "../models/question";
 import { QuestionGameScreen } from "../screens/questions/questionGameScreen/QuestionGameScreen";
 
 export type RootStackParamList = {
   ChatbotScreen: undefined;
   QuestionsScreen: undefined;
   QuestionListScreen: { type: QuestionType };
-  QuestionGameScreen: { amount: number; type: QuestionType };
+  QuestionGameScreen: { questions: Question[] };
 };
 
 const Drawer = createDrawerNavigator();

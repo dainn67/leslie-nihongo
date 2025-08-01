@@ -6,7 +6,7 @@ export const extractQuestionsFromJson = (json: string): { questions: Question[];
   const dataString = json.replaceAll("```json", "").replaceAll("```", "").trim();
   const data = JSON.parse(dataString);
   const questions: Question[] = data["questions"].map((question: any, index: number) =>
-    createQuestion({ ...question, questionId: Date.now() + index })
+    createQuestion({ ...question, questionId: Date.now() + index }),
   );
   const summary = data["summary"];
 
@@ -46,6 +46,6 @@ export const createConversationHistory = (messages: ChatMessage[]) => {
     .join(". ");
 };
 
-export const createReviseQuestionSet = (amount: number, type: QuestionType) => {
-  
-}
+export const createReviseQuestionSet = (questions: Question[], amount: number): Question[] => {
+  return questions.sort(() => Math.random() - 0.5).slice(0, amount);
+};

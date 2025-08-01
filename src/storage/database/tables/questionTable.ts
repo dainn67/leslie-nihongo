@@ -74,7 +74,7 @@ export const updateTables = () => {
   });
 };
 
-export const getAllQuestions = () => {
+export const getAllQuestions = (): Question[] => {
   const questionRows = db.getAllSync(`SELECT * FROM ${QuestionTable.tableName}`);
 
   const questions: Question[] = questionRows.map((row: any) =>
