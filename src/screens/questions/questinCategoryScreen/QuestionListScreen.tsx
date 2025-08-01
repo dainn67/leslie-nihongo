@@ -8,15 +8,16 @@ import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { getQuestionsByType } from "../../../storage/database/tables";
 import { QuestionView } from "../../chatbot/components/chatBubble/QuestionView";
-import MainButton from "../../../components/buttons/MainButton";
 import { QuestionNumberSelector } from "./components/QuestionNumberSelector";
+import { createReviseQuestionSet } from "../../../service/questionService";
+import MainButton from "../../../components/buttons/MainButton";
 
-type QuestionCategoryScreenRouteProp = RouteProp<RootStackParamList, "QuestionCategoryScreen">;
-type QuestionCategoryScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "QuestionCategoryScreen">;
+type QuestionListScreenRouteProp = RouteProp<RootStackParamList, "QuestionListScreen">;
+type QuestionListScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "QuestionListScreen">;
 
-export const QuestionCategoryScreen = () => {
-  const navigation = useNavigation<QuestionCategoryScreenNavigationProp>();
-  const route = useRoute<QuestionCategoryScreenRouteProp>();
+export const QuestionListScreen = () => {
+  const navigation = useNavigation<QuestionListScreenNavigationProp>();
+  const route = useRoute<QuestionListScreenRouteProp>();
 
   const { type } = route.params as { type: QuestionType };
 
@@ -28,6 +29,10 @@ export const QuestionCategoryScreen = () => {
     const questions = getQuestionsByType(type);
     setQuestions(questions);
   }, [type]);
+
+  const handleSelectQuestion = (amount: number) => {
+    navigation.navigate("QuestionGameScreen", { amount, type });
+  };
 
   return (
     <View style={styles.container}>
@@ -55,13 +60,10 @@ export const QuestionCategoryScreen = () => {
       <MainButton title="Ôn tập" onPress={() => setAmountSelectorVisible(true)} style={styles.buttonContainer} />
 
       <QuestionNumberSelector
-        totalQuestions={questions.length}
+        totalQuestions={questions.length * 10}
         visible={amountSelectorVisible}
         setVisible={setAmountSelectorVisible}
-        onSelectQuestion={(amount) => {
-          console.log("Selected question amount:", amount);
-          // TODO: Navigate to question screen with selected amount
-        }}
+        onSelectQuestion={(amount) => handleSelectQuestion(amount)}
       />
     </View>
   );

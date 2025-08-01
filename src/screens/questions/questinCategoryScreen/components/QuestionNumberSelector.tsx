@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Dimensions, Modal, StyleSheet, View, TouchableOpacity, ScrollView } from "react-native";
+import { Dimensions, Modal, StyleSheet, View, TouchableOpacity } from "react-native";
 import { useTheme } from "../../../../theme";
 import { CustomText } from "../../../../components/text/customText";
 
@@ -88,7 +88,7 @@ export const QuestionNumberSelector = ({
           </View>
 
           {/* Question Options */}
-          <ScrollView style={styles.optionsContainer} showsVerticalScrollIndicator={false} contentContainerStyle={styles.optionsContent}>
+          <View style={styles.optionsContainer}>
             {questionOptions.length > 0 ? (
               questionOptions.map((option) => (
                 <TouchableOpacity
@@ -105,10 +105,10 @@ export const QuestionNumberSelector = ({
                 >
                   <CustomText
                     weight="SemiBold"
-                    size={16}
+                    size={18}
                     style={[styles.optionText, { color: selectedQuestion === option ? colors.background : colors.text }]}
                   >
-                    {option} câu hỏi
+                    {option}
                   </CustomText>
                   {selectedQuestion === option && <View style={[styles.checkIcon, { backgroundColor: colors.background }]} />}
                 </TouchableOpacity>
@@ -120,7 +120,7 @@ export const QuestionNumberSelector = ({
                 </CustomText>
               </View>
             )}
-          </ScrollView>
+          </View>
 
           {/* Footer */}
           <View style={styles.footer}>
@@ -173,27 +173,32 @@ const styles = StyleSheet.create({
   },
   optionsContainer: {
     flex: 1,
-  },
-  optionsContent: {
-    paddingVertical: 8,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    alignContent: "center",
+    marginVertical: 10,
   },
   optionButton: {
-    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-    borderRadius: 12,
-    marginBottom: 12,
-    borderWidth: 2,
+    justifyContent: "center",
+    borderRadius: 100,
+    borderWidth: 1,
+    width: 40,
+    height: 40,
+    marginHorizontal: 10,
+    position: "relative",
   },
   optionText: {
-    flex: 1,
+    textAlign: "center",
   },
   checkIcon: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    position: "absolute",
+    top: 8,
+    right: 8,
   },
   footer: {
     marginTop: 24,

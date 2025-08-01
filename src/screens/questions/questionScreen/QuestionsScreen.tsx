@@ -10,7 +10,7 @@ import { QuestionType } from "../../../models/question";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../../app/DrawerNavigator";
 
-type NavigationProp = NativeStackNavigationProp<RootStackParamList, "QuestionCategoryScreen">;
+type NavigationProp = NativeStackNavigationProp<RootStackParamList, "QuestionListScreen">;
 
 export const QuestionsScreen = () => {
   const drawerNavigation = useNavigation<DrawerNavigationProp<DrawerParamList, "QuestionsScreen">>();
@@ -18,7 +18,7 @@ export const QuestionsScreen = () => {
 
   const navigation = useNavigation<NavigationProp>();
   const handleNavigateToQuestionType = (type: QuestionType) => {
-    navigation.navigate("QuestionCategoryScreen", { type });
+    navigation.navigate("QuestionListScreen", { type });
   };
 
   return (

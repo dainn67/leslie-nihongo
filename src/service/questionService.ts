@@ -1,5 +1,5 @@
 import { ChatMessage, Sender } from "../models/chatMessage";
-import { createQuestion, Question } from "../models/question";
+import { createQuestion, Question, QuestionType } from "../models/question";
 import { Delimiter } from "./chatMessageService";
 
 export const extractQuestionsFromJson = (json: string): { questions: Question[]; summary: string } => {
@@ -45,3 +45,7 @@ export const createConversationHistory = (messages: ChatMessage[]) => {
     })
     .join(". ");
 };
+
+export const createReviseQuestionSet = (amount: number, type: QuestionType) => {
+  
+}
