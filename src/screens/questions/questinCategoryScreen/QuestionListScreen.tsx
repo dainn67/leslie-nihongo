@@ -38,10 +38,6 @@ export const QuestionListScreen = () => {
         leftIcon={<Ionicons name="arrow-back" size={24} color="white" />}
         rightIcon={<Ionicons name="search" size={24} color="white" />}
         onLeftPress={() => navigation.pop()}
-        onRightPress={() => {
-          const dbPath = `${FileSystem.documentDirectory}/SQLite/`;
-          console.log(dbPath);
-        }}
       />
       <ScrollView style={styles.contentContainer}>
         {questions.map((question, index) => (

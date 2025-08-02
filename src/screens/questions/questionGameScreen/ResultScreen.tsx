@@ -1,28 +1,49 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import { AppBar } from "../../../components/AppBar";
 import { Ionicons } from "@expo/vector-icons";
-import { RouteProp, useNavigation } from "@react-navigation/native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../../app/DrawerNavigator";
 import { useTheme } from "../../../theme";
 import { CustomText } from "../../../components/text/customText";
 import MainButton from "../../../components/buttons/MainButton";
+import { createResultSummary } from "../../../service/questionService";
 
 type ResultScreenRouteProp = RouteProp<RootStackParamList, "ResultScreen">;
 type ResultScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "ResultScreen">;
 
 export const ResultScreen = () => {
+  const route = useRoute<ResultScreenRouteProp>();
   const navigation = useNavigation<ResultScreenNavigationProp>();
   const { colors } = useTheme();
 
-  // Mock data - sẽ được thay thế bằng data thực sau
-  const mockData = {
-    totalQuestions: 10,
-    correctAnswers: 7,
-    incorrectAnswers: 3,
-    passPercentage: 70,
-  };
+  const { questions, mapAnswerIds } = route.params;
+  const [correctQuestions, setCorrectQuestions] = useState(0);
+  const [incorrectQuestions, setIncorrectQuestions] = useState(0);
+  const [totalQuestions, setTotalQuestions] = useState(0);
+
+  useEffect(() => {
+    let correctQuestions = 0;
+    let incorrectQuestions = 0;
+    let totalQuestions = questions.length;
+
+    for (const question of questions) {
+      const answer = mapAnswerIds[question.questionId];
+      if (answer !== undefined && answer === question.answers.find((a) => a.isCorrect)?.answerId) {
+        correctQuestions++;
+      } else {
+        incorrectQuestions++;
+      }
+    }
+
+    setCorrectQuestions(correctQuestions);
+    setIncorrectQuestions(incorrectQuestions);
+    setTotalQuestions(totalQuestions);
+
+    const summary = createResultSummary(questions, mapAnswerIds);
+    // TODO: Implement analyze progress
+  }, []);
 
   const handleTryAgain = () => {
     // TODO: Implement try again logic
@@ -34,14 +55,6 @@ export const ResultScreen = () => {
     navigation.pop();
   };
 
-  const getPassStatus = (percentage: number) => {
-    if (percentage >= 80) return { status: "Xuất sắc", color: colors.success, icon: "trophy" };
-    if (percentage >= 60) return { status: "Đạt", color: colors.success, icon: "checkmark-circle" };
-    return { status: "Chưa đạt", color: colors.error, icon: "close-circle" };
-  };
-
-  const passStatus = getPassStatus(mockData.passPercentage);
-
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <AppBar
@@ -51,19 +64,6 @@ export const ResultScreen = () => {
       />
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        {/* Header Section */}
-        <View style={[styles.headerSection, { backgroundColor: colors.card }]}>
-          <View style={[styles.resultCircle, { borderColor: passStatus.color }]}>
-            <Ionicons name={passStatus.icon as any} size={48} color={passStatus.color} />
-          </View>
-          <CustomText style={[styles.resultTitle, { color: colors.text }]} weight="Bold" size={24}>
-            {passStatus.status}
-          </CustomText>
-          <CustomText style={[styles.percentageText, { color: passStatus.color }]} weight="Bold" size={36}>
-            {mockData.passPercentage}%
-          </CustomText>
-        </View>
-
         {/* Statistics Section */}
         <View style={[styles.statsSection, { backgroundColor: colors.card }]}>
           <CustomText style={[styles.sectionTitle, { color: colors.text }]} weight="SemiBold" size={18}>
@@ -76,7 +76,7 @@ export const ResultScreen = () => {
                 <Ionicons name="checkmark" size={20} color="white" />
               </View>
               <CustomText style={[styles.statNumber, { color: colors.text }]} weight="Bold" size={24}>
-                {mockData.correctAnswers}
+                {correctQuestions}
               </CustomText>
               <CustomText style={[styles.statLabel, { color: colors.textSecondary }]} size={14}>
                 Câu đúng
@@ -88,7 +88,7 @@ export const ResultScreen = () => {
                 <Ionicons name="close" size={20} color="white" />
               </View>
               <CustomText style={[styles.statNumber, { color: colors.text }]} weight="Bold" size={24}>
-                {mockData.incorrectAnswers}
+                {incorrectQuestions}
               </CustomText>
               <CustomText style={[styles.statLabel, { color: colors.textSecondary }]} size={14}>
                 Câu sai
@@ -100,7 +100,7 @@ export const ResultScreen = () => {
                 <Ionicons name="help-circle" size={20} color="white" />
               </View>
               <CustomText style={[styles.statNumber, { color: colors.text }]} weight="Bold" size={24}>
-                {mockData.totalQuestions}
+                {totalQuestions}
               </CustomText>
               <CustomText style={[styles.statLabel, { color: colors.textSecondary }]} size={14}>
                 Tổng câu hỏi
@@ -121,14 +121,14 @@ export const ResultScreen = () => {
                 style={[
                   styles.progressFill,
                   {
-                    backgroundColor: passStatus.color,
-                    width: `${mockData.passPercentage}%`,
+                    backgroundColor: colors.success,
+                    width: `${(correctQuestions / totalQuestions) * 100}%`,
                   },
                 ]}
               />
             </View>
             <CustomText style={[styles.performanceText, { color: colors.textSecondary }]} size={14}>
-              {mockData.correctAnswers}/{mockData.totalQuestions} câu trả lời đúng
+              {correctQuestions}/{totalQuestions} câu trả lời đúng
             </CustomText>
           </View>
         </View>

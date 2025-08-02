@@ -18,7 +18,10 @@ export type RootStackParamList = {
   QuestionsScreen: undefined;
   QuestionListScreen: { type: QuestionType };
   QuestionGameScreen: { questions: Question[] };
-  ResultScreen: undefined;
+  ResultScreen: {
+    questions: Question[];
+    mapAnswerIds: { [key: number]: number };
+  };
 };
 
 const Drawer = createDrawerNavigator();

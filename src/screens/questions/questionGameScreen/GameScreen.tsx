@@ -24,7 +24,7 @@ export const QuestionGameScreen = () => {
   const { colors } = useTheme();
 
   const currentIndex = useAppSelector((state: RootState) => state.game.currentIndex);
-  const answerMap = useAppSelector((state: RootState) => state.game.selectedAnswers);
+  const mapAnswerIds = useAppSelector((state: RootState) => state.game.selectedAnswers);
 
   const question = questions[currentIndex];
   const progress = ((currentIndex + 1) / questions.length) * 100;
@@ -46,7 +46,10 @@ export const QuestionGameScreen = () => {
   const handleChangeQuestion = (direction: "next" | "prev") => {
     // Check submit
     if (direction == "next" && currentIndex === questions.length - 1) {
-      navigation.navigate("ResultScreen");
+      navigation.navigate("ResultScreen", {
+        questions,
+        mapAnswerIds,
+      });
       return;
     }
 
@@ -80,7 +83,7 @@ export const QuestionGameScreen = () => {
           questionIndex={currentIndex}
           question={question}
           totalQuestions={questions.length}
-          selectedAnswer={answerMap[question.questionId]}
+          selectedAnswer={mapAnswerIds[question.questionId]}
           bookmarked={true}
           onAnswerSelect={handleAnswerSelect}
           onBookmarkPress={handleBookmarkPress}
@@ -100,15 +103,7 @@ export const QuestionGameScreen = () => {
         </TouchableOpacity>
 
         <TouchableOpacity style={[style.navButton, style.nextButton]} onPress={() => handleChangeQuestion("next")}>
-          <CustomText
-            style={[
-              style.navButtonText,
-              style.navButtonTextNext,
-              currentIndex === questions.length - 1 && style.disabledButtonText,
-            ]}
-          >
-            Next
-          </CustomText>
+          <CustomText style={[style.navButtonText, style.navButtonTextNext]}>Next</CustomText>
         </TouchableOpacity>
       </View>
     </View>

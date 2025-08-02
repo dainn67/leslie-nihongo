@@ -49,3 +49,29 @@ export const createConversationHistory = (messages: ChatMessage[]) => {
 export const createReviseQuestionSet = (questions: Question[], amount: number): Question[] => {
   return questions.sort(() => Math.random() - 0.5).slice(0, amount);
 };
+
+export const createResultSummary = (questions: Question[], mapAnswers: { [key: number]: number }) => {
+  let summary = "";
+
+  for (const question of questions) {
+    let questionString = `Question: ${question.question}`;
+    let answerString = "";
+
+    const answerId = mapAnswers[question.questionId];
+
+    const correctAnswer = question.answers.find((a) => a.isCorrect);
+    const userAnswer = question.answers.find((a) => a.answerId === answerId);
+
+    if (answerId === undefined) {
+      answerString = "User skip this question";
+    } else if (answerId === correctAnswer?.answerId) {
+      answerString = `User correctly answered ${userAnswer?.text}`;
+    } else {
+      answerString = `User answered ${userAnswer?.text} but correct answer is ${correctAnswer?.text}`;
+    }
+
+    summary += `${questionString}. ${answerString}\n`;
+  }
+
+  return summary;
+};
