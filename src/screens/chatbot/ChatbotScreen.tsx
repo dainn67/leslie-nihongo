@@ -9,7 +9,13 @@ import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { AppConfig } from "../../constants/appConfig";
 import { addLoading, addMessage, clearChat } from "../../features/chatbot/chatbotSlice";
-import { clearUserProgress, setUserExamDate, setUserLevel, setUserProgress, setUserTarget } from "../../features/userProgress/userProgressSlice";
+import {
+  clearUserProgress,
+  setUserExamDate,
+  setUserLevel,
+  setUserProgress,
+  setUserTarget,
+} from "../../features/userProgress/userProgressSlice";
 import { createQuestionTable, deleteAllTables } from "../../storage/database/tables";
 import { createChatMessage } from "../../models/chatMessage";
 import { sendStreamMessage } from "../../api/chatMessageAPI";
@@ -55,13 +61,25 @@ export const ChatbotScreen = () => {
 
         // Add loading message
         dispatch(addLoading());
-        sendStreamMessage({ level: userProgress.level, target: userProgress.target, examDate: userProgress.examDate, conversationId, dispatch });
+        sendStreamMessage({
+          level: userProgress.level,
+          target: userProgress.target,
+          examDate: userProgress.examDate,
+          conversationId,
+          dispatch,
+        });
       });
     } else {
       if (messages.length === 0) {
         // Add loading message when clear
         dispatch(addLoading());
-        sendStreamMessage({ level: userProgress.level, target: userProgress.target, examDate: userProgress.examDate, conversationId, dispatch });
+        sendStreamMessage({
+          level: userProgress.level,
+          target: userProgress.target,
+          examDate: userProgress.examDate,
+          conversationId,
+          dispatch,
+        });
       }
     }
   }, [initialized, messages.length]);
@@ -89,7 +107,7 @@ export const ChatbotScreen = () => {
   };
 
   const handleClickAction = async (title: string, actionId?: string) => {
-    console.log(`action: "${actionId}": ${title}`);
+    // console.log(`action: "${actionId}": ${title}`);
 
     let userLevel = userProgress.level;
     let userTarget = userProgress.target;
@@ -172,8 +190,8 @@ export const ChatbotScreen = () => {
     const dbPath = `${FileSystem.documentDirectory}/SQLite/`;
     console.log(dbPath);
 
-    deleteAllTables();
-    dispatch(clearUserProgress());
+    // deleteAllTables();
+    // dispatch(clearUserProgress());
 
     // console.log(userProgress);
   };

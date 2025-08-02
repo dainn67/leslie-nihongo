@@ -23,18 +23,22 @@ const gameSlice = createSlice({
   name: "gameState",
   initialState,
   reducers: {
-    setCurrentIndex: (state, action: PayloadAction<{ index: number; questionIndex: number }>) => {
-      state.currentIndex = action.payload.index;
-      state.currenQuestionIndex = action.payload.questionIndex;
+    initGame: (state, action: PayloadAction<Question[]>) => {
+      state.questions = action.payload;
+      state.currentIndex = 0;
+      state.currenQuestionIndex = state.questions[state.currentIndex].questionId;
+    },
+    setIndex: (state, action: PayloadAction<number>) => {
+      state.currentIndex = action.payload;
+      state.currenQuestionIndex = state.questions[state.currentIndex].questionId;
     },
     setSelectedAnswer: (state, action: PayloadAction<number>) => {
       state.selectedAnswers[state.currenQuestionIndex] = action.payload;
-      console.log(state.selectedAnswers);
     },
     resetGame: () => initialState,
   },
 });
 
-export const { setCurrentIndex, setSelectedAnswer, resetGame } = gameSlice.actions;
+export const { initGame, setIndex, setSelectedAnswer, resetGame } = gameSlice.actions;
 
 export default gameSlice.reducer;

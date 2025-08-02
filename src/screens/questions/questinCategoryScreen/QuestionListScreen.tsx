@@ -50,7 +50,6 @@ export const QuestionListScreen = () => {
               question={question}
               questionIndex={index}
               totalQuestions={questions.length}
-              selectedAnswer={null}
               bookmarked={true}
             />
           </View>

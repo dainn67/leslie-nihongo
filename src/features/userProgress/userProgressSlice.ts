@@ -44,11 +44,11 @@ const userProgressSlice = createSlice({
     },
     clearUserProgress: (state) => {
       state.userProgress = initialState.userProgress;
-      console.log("clearUserProgress", state.userProgress);
       setUserProgressToStorage(state.userProgress);
     },
   },
 });
 
-export const { setUserProgress, setUserLevel, setUserTarget, setUserStartDate, setUserExamDate, clearUserProgress } = userProgressSlice.actions;
+export const { setUserProgress, setUserLevel, setUserTarget, setUserStartDate, setUserExamDate, clearUserProgress } =
+  userProgressSlice.actions;
 export default userProgressSlice.reducer;

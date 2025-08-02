@@ -11,9 +11,12 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ScrollView } from "react-native-gesture-handler";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import { RootState } from "../../../app/store";
-import { resetGame, setCurrentIndex, setSelectedAnswer } from "../../../features/game/gameSlice";
-import * as FileSystem from "expo-file-system";
+import { setIndex, initGame, setSelectedAnswer } from "../../../features/game/gameSlice";
+import { deleteAllTables } from "../../../storage/database/tables";
+import { clearUserProgress } from "../../../features/userProgress/userProgressSlice";
+import { CustomText } from "../../../components/text/customText";
 import MainButton from "../../../components/buttons/MainButton";
+import * as FileSystem from "expo-file-system";
 
 type QuestionGameScreenRouteProp = RouteProp<RootStackParamList, "QuestionGameScreen">;
 type QuestionGameScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "QuestionGameScreen">;
@@ -39,16 +42,38 @@ export const QuestionGameScreen = () => {
   };
 
   useEffect(() => {
-    dispatch(resetGame());
-    dispatch(setCurrentIndex({ index: 0, questionIndex: question.questionId }));
+    dispatch(initGame(questions));
   }, []);
 
   const handleBookmarkPress = (isBookmarked: boolean) => {};
 
   const handleDevClick = () => {
-    const dbPath = `${FileSystem.documentDirectory}/SQLite/`;
-    console.log(dbPath);
+    dispatch(clearUserProgress());
+
+    deleteAllTables();
   };
+
+  const handleChangeQuestion = (direction: "next" | "prev") => {
+    // Check submit
+    if (direction == "next" && currentIndex === questions.length - 1) {
+      // TODO: Implement submit
+      return;
+    }
+
+    // Change question
+    if (direction === "next") {
+      dispatch(setIndex(currentIndex + 1));
+    } else {
+      dispatch(setIndex(currentIndex - 1));
+    }
+  };
+
+  if (!question)
+    return (
+      <View style={[style.container, { backgroundColor: colors.background }]}>
+        <CustomText>Lỗi khi tải câu hỏi. Vui lòng thử lại sau</CustomText>
+      </View>
+    );
 
   return (
     <View style={[style.container, { backgroundColor: colors.background }]}>
@@ -74,19 +99,12 @@ export const QuestionGameScreen = () => {
       </ScrollView>
       <View style={style.buttonContainer}>
         <MainButton
+          disabled={currentIndex === 0}
           style={style.button}
           title={"Trước"}
-          onPress={() => {
-            dispatch(setCurrentIndex({ index: currentIndex + 1, questionIndex: question.questionId }));
-          }}
+          onPress={() => handleChangeQuestion("prev")}
         />
-        <MainButton
-          style={style.button}
-          title={"Tiếp"}
-          onPress={() => {
-            dispatch(setCurrentIndex({ index: currentIndex + 1, questionIndex: question.questionId }));
-          }}
-        />
+        <MainButton style={style.button} title={"Tiếp"} onPress={() => handleChangeQuestion("next")} />
       </View>
     </View>
   );

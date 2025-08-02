@@ -28,7 +28,8 @@ export const ChatMessageBubble = ({ message, componentHeight, isLastMessage, onC
   const isStreaming = !isLoading && message.messageType === MessageType.STREAM_TEXT;
   const isLoadingQuestion = isLoading && message.messageType === MessageType.QUESTION_JSON;
   const isQuestions = !isLoading && message.messageType === MessageType.QUESTION_JSON && message.fullText.length > 0;
-  const showButtons = !isLoading && message.suggestedActions.length > 0 && message.messageType === MessageType.STREAM_TEXT;
+  const showButtons =
+    !isLoading && message.suggestedActions.length > 0 && message.messageType === MessageType.STREAM_TEXT;
 
   return (
     <View id={message.id} style={[styles.container]}>
@@ -37,7 +38,9 @@ export const ChatMessageBubble = ({ message, componentHeight, isLastMessage, onC
 
         {/* Streaming text */}
         {isStreaming &&
-          message.words.map((word, index) => <WordComponent key={index} fontSize={16} word={word} color={isUser ? "white" : "black"} />)}
+          message.words.map((word, index) => (
+            <WordComponent key={index} fontSize={16} word={word} color={isUser ? "white" : "black"} />
+          ))}
 
         {/* Generated questions */}
         {isQuestions && (
@@ -48,7 +51,9 @@ export const ChatMessageBubble = ({ message, componentHeight, isLastMessage, onC
       </View>
 
       {/* Action buttons */}
-      {showButtons && <ChatActionButtons suggestedActions={message.suggestedActions} onClickAction={handleClickAction} />}
+      {showButtons && (
+        <ChatActionButtons suggestedActions={message.suggestedActions} onClickAction={handleClickAction} />
+      )}
     </View>
   );
 };

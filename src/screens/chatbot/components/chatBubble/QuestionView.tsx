@@ -10,7 +10,7 @@ interface QuestionViewProps {
   question: Question;
   questionIndex: number;
   totalQuestions: number;
-  selectedAnswer: number | null;
+  selectedAnswer?: number;
   bookmarked: boolean;
   onAnswerSelect?: (index: number) => void;
   onBookmarkPress?: (isBookmarked: boolean) => void;
@@ -44,7 +44,10 @@ export const QuestionView = ({
         </View>
 
         {/* Save icon button */}
-        <IconButton icon={bookmarked ? AppIcons.bookmarked : AppIcons.bookmark} onPress={() => onBookmarkPress?.(!bookmarked)} />
+        <IconButton
+          icon={bookmarked ? AppIcons.bookmarked : AppIcons.bookmark}
+          onPress={() => onBookmarkPress?.(!bookmarked)}
+        />
       </View>
 
       {/* Answers */}
@@ -55,30 +58,32 @@ export const QuestionView = ({
             onPress={() => onAnswerSelect?.(a.answerId)}
             style={[
               styles.answerCard,
-              selectedAnswer === index && a.isCorrect && styles.correctAnswer,
-              selectedAnswer === index && !a.isCorrect && styles.wrongAnswer,
-              selectedAnswer !== null && selectedAnswer !== index && a.isCorrect && styles.correctAnswer,
+              selectedAnswer === a.answerId && a.isCorrect && styles.correctAnswer,
+              selectedAnswer === a.answerId && !a.isCorrect && styles.wrongAnswer,
+              selectedAnswer !== undefined && selectedAnswer !== a.answerId && a.isCorrect && styles.correctAnswer,
             ]}
-            disabled={selectedAnswer !== null}
+            disabled={selectedAnswer !== undefined}
           >
             <View style={styles.answerContent}>
               <CustomText
                 style={[
                   styles.answerLabelText,
-                  selectedAnswer === index && !a.isCorrect && styles.wrongLabel,
-                  selectedAnswer !== null && selectedAnswer !== index && a.isCorrect && styles.correctLabel,
+                  selectedAnswer === a.answerId && !a.isCorrect && styles.wrongLabel,
+                  selectedAnswer !== undefined && selectedAnswer !== a.answerId && a.isCorrect && styles.correctLabel,
                 ]}
               >
                 {getAnswerLabel(index)}
               </CustomText>
-              <CustomText style={[styles.answerText, selectedAnswer === index && styles.selectedAnswerText]}>{a.text}</CustomText>
+              <CustomText style={[styles.answerText, selectedAnswer === a.answerId && styles.selectedAnswerText]}>
+                {a.text}
+              </CustomText>
             </View>
           </TouchableOpacity>
         ))}
       </View>
 
       {/* Explanation */}
-      {selectedAnswer && (
+      {selectedAnswer !== undefined && (
         <View style={styles.explanationContainer}>
           <View style={styles.explanationHeader}>
             <CustomText style={styles.explanationIcon}>💡</CustomText>

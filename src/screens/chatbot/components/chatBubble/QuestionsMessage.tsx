@@ -12,7 +12,9 @@ interface QuestionsMessageProps {
 
 export const QuestionsMessage = ({ questions }: QuestionsMessageProps) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedAnswers, setSelectedAnswers] = useState<(number | null)[]>(Array(questions.length).fill(null));
+  const [selectedAnswers, setSelectedAnswers] = useState<(number | undefined)[]>(
+    Array(questions.length).fill(undefined),
+  );
   const [bookmarkedQuestions, setBookmarkedQuestions] = useState<boolean[]>(Array(questions.length).fill(false));
   const [showExplanations, setShowExplanations] = useState<boolean[]>(Array(questions.length).fill(false));
 
