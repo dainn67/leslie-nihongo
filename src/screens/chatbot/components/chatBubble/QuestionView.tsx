@@ -1,5 +1,5 @@
 import React from "react";
-import { View, TouchableOpacity, StyleSheet, Animated } from "react-native";
+import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { CustomText } from "../../../../components/text/customText";
 import { Question } from "../../../../models/question";
 import { IconButton } from "../../../../components/buttons";
@@ -12,8 +12,6 @@ interface QuestionViewProps {
   totalQuestions: number;
   selectedAnswer: number | null;
   bookmarked: boolean;
-  showExplanation: boolean;
-  fadeAnim?: Animated.Value;
   onAnswerSelect?: (index: number) => void;
   onBookmarkPress?: (isBookmarked: boolean) => void;
 }
@@ -24,8 +22,6 @@ export const QuestionView = ({
   totalQuestions,
   selectedAnswer,
   bookmarked,
-  showExplanation,
-  fadeAnim,
   onAnswerSelect,
   onBookmarkPress,
 }: QuestionViewProps) => {
@@ -35,7 +31,7 @@ export const QuestionView = ({
   };
 
   return (
-    <Animated.View style={[styles.questionCard, { opacity: fadeAnim }]}>
+    <View style={[styles.questionCard]}>
       <View style={styles.questionHeader}>
         {/* Question Index and Text */}
         <View style={styles.questionHeaderContent}>
@@ -56,7 +52,7 @@ export const QuestionView = ({
         {question.answers.map((a: Answer, index: number) => (
           <TouchableOpacity
             key={index}
-            onPress={() => onAnswerSelect?.(index)}
+            onPress={() => onAnswerSelect?.(a.answerId)}
             style={[
               styles.answerCard,
               selectedAnswer === index && a.isCorrect && styles.correctAnswer,
@@ -82,7 +78,7 @@ export const QuestionView = ({
       </View>
 
       {/* Explanation */}
-      {showExplanation && (
+      {selectedAnswer && (
         <View style={styles.explanationContainer}>
           <View style={styles.explanationHeader}>
             <CustomText style={styles.explanationIcon}>💡</CustomText>
@@ -91,7 +87,7 @@ export const QuestionView = ({
           <CustomText style={styles.explanationText}>{question.explanation}</CustomText>
         </View>
       )}
-    </Animated.View>
+    </View>
   );
 };
 
@@ -113,7 +109,7 @@ const styles = StyleSheet.create({
   },
   questionHeader: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-start",
     marginBottom: 20,
   },
   questionHeaderContent: {

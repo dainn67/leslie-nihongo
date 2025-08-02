@@ -1,5 +1,5 @@
-import React, { useState, useRef } from "react";
-import { View, TouchableOpacity, StyleSheet, Animated } from "react-native";
+import React, { useState } from "react";
+import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { CustomText } from "../../../../components/text/customText";
 import { Question } from "../../../../models/question";
 import { QuestionView } from "./QuestionView";
@@ -15,9 +15,6 @@ export const QuestionsMessage = ({ questions }: QuestionsMessageProps) => {
   const [selectedAnswers, setSelectedAnswers] = useState<(number | null)[]>(Array(questions.length).fill(null));
   const [bookmarkedQuestions, setBookmarkedQuestions] = useState<boolean[]>(Array(questions.length).fill(false));
   const [showExplanations, setShowExplanations] = useState<boolean[]>(Array(questions.length).fill(false));
-
-  // Opacity animation for question transitions - use useRef to prevent recreation on re-render
-  const fadeAnim = useRef(new Animated.Value(1)).current;
 
   const handleAnswerSelect = (index: number) => {
     if (selectedAnswers[currentQuestionIndex] === null) {
@@ -47,28 +44,8 @@ export const QuestionsMessage = ({ questions }: QuestionsMessageProps) => {
   };
 
   const handleChangeQuestion = (direction: "next" | "prev") => {
-    // Check if the question can be changed in the specified direction
-    if ((direction === "next" && currentQuestionIndex < questions.length - 1) || (direction === "prev" && currentQuestionIndex > 0)) {
-      // First fade out
-      Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: 100,
-        useNativeDriver: true,
-      }).start(() => {
-        // Update the question index after fade out completes
-        const newIndex = direction === "next" ? currentQuestionIndex + 1 : currentQuestionIndex - 1;
-        setCurrentQuestionIndex(newIndex);
-
-        // Then fade in with the new content
-        setTimeout(() => {
-          Animated.timing(fadeAnim, {
-            toValue: 1,
-            duration: 100,
-            useNativeDriver: true,
-          }).start();
-        }, 50);
-      });
-    }
+    const newIndex = direction === "next" ? currentQuestionIndex + 1 : currentQuestionIndex - 1;
+    setCurrentQuestionIndex(newIndex);
   };
 
   const question = questions[currentQuestionIndex];
@@ -85,8 +62,6 @@ export const QuestionsMessage = ({ questions }: QuestionsMessageProps) => {
         totalQuestions={questions.length}
         bookmarked={bookmarkedQuestions[currentQuestionIndex]}
         selectedAnswer={selectedAnswers[currentQuestionIndex]}
-        showExplanation={showExplanations[currentQuestionIndex]}
-        fadeAnim={fadeAnim}
         onAnswerSelect={handleAnswerSelect}
         onBookmarkPress={handleBookmarkPress}
       />
@@ -98,18 +73,32 @@ export const QuestionsMessage = ({ questions }: QuestionsMessageProps) => {
           onPress={() => handleChangeQuestion("prev")}
           disabled={currentQuestionIndex === 0}
         >
-          <CustomText style={[styles.navButtonText, styles.navButtonTextPrev, currentQuestionIndex === 0 && styles.disabledButtonText]}>
+          <CustomText
+            style={[
+              styles.navButtonText,
+              styles.navButtonTextPrev,
+              currentQuestionIndex === 0 && styles.disabledButtonText,
+            ]}
+          >
             Previous
           </CustomText>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.navButton, styles.nextButton, currentQuestionIndex === questions.length - 1 && styles.disabledButton]}
+          style={[
+            styles.navButton,
+            styles.nextButton,
+            currentQuestionIndex === questions.length - 1 && styles.disabledButton,
+          ]}
           onPress={() => handleChangeQuestion("next")}
           disabled={currentQuestionIndex === questions.length - 1}
         >
           <CustomText
-            style={[styles.navButtonText, styles.navButtonTextNext, currentQuestionIndex === questions.length - 1 && styles.disabledButtonText]}
+            style={[
+              styles.navButtonText,
+              styles.navButtonTextNext,
+              currentQuestionIndex === questions.length - 1 && styles.disabledButtonText,
+            ]}
           >
             Next
           </CustomText>

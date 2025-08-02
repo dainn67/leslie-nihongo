@@ -3,6 +3,7 @@ import chatbotReducer from "../features/chatbot/chatbotSlice";
 import themeReducer from "../features/theme/themeSlice";
 import userProgressReducer from "../features/userProgress/userProgressSlice";
 import questionReducer from "../features/questions/questionSlice";
+import gameReducer from "../features/game/gameSlice";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     userProgress: userProgressReducer,
     theme: themeReducer,
     questions: questionReducer,
+    game: gameReducer,
   },
 });
 

@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
-import { Question, QuestionType, QuestionTypeTitles } from "../../../models/question";
+import { QuestionType, QuestionTypeTitles } from "../../../models/question";
 import { AppBar } from "../../../components/AppBar";
 import { Ionicons } from "@expo/vector-icons";
 import { RootStackParamList } from "../../../app/DrawerNavigator";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { getQuestionsByType } from "../../../storage/database/tables";
 import { QuestionView } from "../../chatbot/components/chatBubble/QuestionView";
 import { QuestionNumberSelector } from "./components/QuestionNumberSelector";
 import { createReviseQuestionSet } from "../../../service/questionService";
-import MainButton from "../../../components/buttons/MainButton";
 import { useAppSelector } from "../../../hooks/hooks";
+import MainButton from "../../../components/buttons/MainButton";
+import * as FileSystem from "expo-file-system";
 
 type QuestionListScreenRouteProp = RouteProp<RootStackParamList, "QuestionListScreen">;
 type QuestionListScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "QuestionListScreen">;
@@ -38,7 +38,10 @@ export const QuestionListScreen = () => {
         leftIcon={<Ionicons name="arrow-back" size={24} color="white" />}
         rightIcon={<Ionicons name="search" size={24} color="white" />}
         onLeftPress={() => navigation.pop()}
-        onRightPress={() => {}}
+        onRightPress={() => {
+          const dbPath = `${FileSystem.documentDirectory}/SQLite/`;
+          console.log(dbPath);
+        }}
       />
       <ScrollView style={styles.contentContainer}>
         {questions.map((question, index) => (
@@ -48,8 +51,7 @@ export const QuestionListScreen = () => {
               questionIndex={index}
               totalQuestions={questions.length}
               selectedAnswer={null}
-              bookmarked={false}
-              showExplanation={false}
+              bookmarked={true}
             />
           </View>
         ))}
@@ -76,7 +78,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   questionContainer: {
-    padding: 8,
+    paddingHorizontal: 8,
   },
   buttonContainer: {
     borderRadius: 16,
