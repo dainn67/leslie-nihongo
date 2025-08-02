@@ -7,7 +7,6 @@ type GameState = {
   questions: Question[];
   selectedAnswers: { [key: number]: number };
   bookmarkedQuestions: { [key: number]: boolean };
-  showExplanations: { [key: number]: boolean };
 };
 
 const initialState: GameState = {
@@ -16,7 +15,6 @@ const initialState: GameState = {
   questions: [],
   selectedAnswers: {},
   bookmarkedQuestions: {},
-  showExplanations: {},
 };
 
 const gameSlice = createSlice({
@@ -27,6 +25,8 @@ const gameSlice = createSlice({
       state.questions = action.payload;
       state.currentIndex = 0;
       state.currenQuestionIndex = state.questions[state.currentIndex].questionId;
+      state.selectedAnswers = {};
+      state.bookmarkedQuestions = {};
     },
     setIndex: (state, action: PayloadAction<number>) => {
       state.currentIndex = action.payload;

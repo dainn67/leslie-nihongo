@@ -10,13 +10,15 @@ import { CustomText } from "../components/text/customText";
 import { QuestionsScreen } from "../screens/questions/questionScreen/QuestionsScreen";
 import { QuestionListScreen } from "../screens/questions/questinCategoryScreen/QuestionListScreen";
 import { Question, QuestionType } from "../models/question";
-import { QuestionGameScreen } from "../screens/questions/questionGameScreen/QuestionGameScreen";
+import { QuestionGameScreen } from "../screens/questions/questionGameScreen/GameScreen";
+import { ResultScreen } from "../screens/questions/questionGameScreen/ResultScreen";
 
 export type RootStackParamList = {
   ChatbotScreen: undefined;
   QuestionsScreen: undefined;
   QuestionListScreen: { type: QuestionType };
   QuestionGameScreen: { questions: Question[] };
+  ResultScreen: undefined;
 };
 
 const Drawer = createDrawerNavigator();
@@ -80,6 +82,7 @@ const QuestionStackScreen = () => {
       <Stack.Screen name="ChatbotScreen" component={QuestionsScreen} options={{ headerShown: false }} />
       <Stack.Screen name="QuestionListScreen" component={QuestionListScreen} options={{ headerShown: false }} />
       <Stack.Screen name="QuestionGameScreen" component={QuestionGameScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="ResultScreen" component={ResultScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { RootStackParamList } from "../../../app/DrawerNavigator";
 import { useTheme } from "../../../theme";
@@ -12,11 +12,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import { RootState } from "../../../app/store";
 import { setIndex, initGame, setSelectedAnswer } from "../../../features/game/gameSlice";
-import { deleteAllTables } from "../../../storage/database/tables";
-import { clearUserProgress } from "../../../features/userProgress/userProgressSlice";
 import { CustomText } from "../../../components/text/customText";
-import MainButton from "../../../components/buttons/MainButton";
-import * as FileSystem from "expo-file-system";
 
 type QuestionGameScreenRouteProp = RouteProp<RootStackParamList, "QuestionGameScreen">;
 type QuestionGameScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "QuestionGameScreen">;
@@ -47,16 +43,10 @@ export const QuestionGameScreen = () => {
 
   const handleBookmarkPress = (isBookmarked: boolean) => {};
 
-  const handleDevClick = () => {
-    dispatch(clearUserProgress());
-
-    deleteAllTables();
-  };
-
   const handleChangeQuestion = (direction: "next" | "prev") => {
     // Check submit
     if (direction == "next" && currentIndex === questions.length - 1) {
-      // TODO: Implement submit
+      navigation.navigate("ResultScreen");
       return;
     }
 
@@ -81,7 +71,6 @@ export const QuestionGameScreen = () => {
         title={"Câu hỏi"}
         leftIcon={<Ionicons name="arrow-back" size={24} color="white" />}
         onLeftPress={() => navigation.pop()}
-        onDevClick={handleDevClick}
       />
       <View style={style.progressBar}>
         <AnimatedProgressBar progress={progress} />
@@ -98,13 +87,29 @@ export const QuestionGameScreen = () => {
         />
       </ScrollView>
       <View style={style.buttonContainer}>
-        <MainButton
-          disabled={currentIndex === 0}
-          style={style.button}
-          title={"Trước"}
+        <TouchableOpacity
+          style={[style.navButton, style.prevButton, currentIndex === 0 && style.disabledButton]}
           onPress={() => handleChangeQuestion("prev")}
-        />
-        <MainButton style={style.button} title={"Tiếp"} onPress={() => handleChangeQuestion("next")} />
+          disabled={currentIndex === 0}
+        >
+          <CustomText
+            style={[style.navButtonText, style.navButtonTextPrev, currentIndex === 0 && style.disabledButtonText]}
+          >
+            Previous
+          </CustomText>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={[style.navButton, style.nextButton]} onPress={() => handleChangeQuestion("next")}>
+          <CustomText
+            style={[
+              style.navButtonText,
+              style.navButtonTextNext,
+              currentIndex === questions.length - 1 && style.disabledButtonText,
+            ]}
+          >
+            Next
+          </CustomText>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -126,9 +131,41 @@ const style = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: 16,
-    marginBottom: 16,
+    marginBottom: 32,
   },
-  button: {
+  navButton: {
     flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    marginHorizontal: 4,
+  },
+  prevButton: {
+    backgroundColor: "#F8F9FA",
+    borderWidth: 1,
+    borderColor: "#E8E8E8",
+    marginRight: 8,
+  },
+  nextButton: {
+    backgroundColor: "#4A90E2",
+    marginLeft: 8,
+  },
+  disabledButton: {
+    backgroundColor: "#F5F5F5",
+    borderColor: "#E0E0E0",
+  },
+  navButtonText: {
+    fontSize: 14,
+    fontWeight: "600",
+    textAlign: "center",
+  },
+  navButtonTextPrev: {
+    color: "black",
+  },
+  navButtonTextNext: {
+    color: "white",
+  },
+  disabledButtonText: {
+    color: "#BDBDBD",
   },
 });
