@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { CustomText } from "../../../../components/text/customText";
 import { Question } from "../../../../models/question";
@@ -11,31 +11,29 @@ interface QuestionsMessageProps {
 }
 
 export const QuestionsMessage = ({ questions }: QuestionsMessageProps) => {
+  // Use local state only for separated question messages
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedAnswers, setSelectedAnswers] = useState<(number | undefined)[]>(
-    Array(questions.length).fill(undefined),
-  );
-  const [bookmarkedQuestions, setBookmarkedQuestions] = useState<boolean[]>(Array(questions.length).fill(false));
-  const [showExplanations, setShowExplanations] = useState<boolean[]>(Array(questions.length).fill(false));
+  const [mapAnswer, setMapAnswer] = useState<{ [key: number]: number }>({});
+  const [mapBookmark, setMapBookmark] = useState<{ [key: number]: boolean }>({});
+
+  useEffect(() => {
+    if (Object.keys(mapAnswer).length === questions.length) {
+      // TODO: Implement analyze
+      console.log("All selected");
+    }
+  }, [mapAnswer, questions]);
 
   const handleAnswerSelect = (index: number) => {
-    if (selectedAnswers[currentQuestionIndex] === null) {
+    if (!mapAnswer[currentQuestionIndex]) {
       // Update selected answer list
-      const newSelectedAnswers = [...selectedAnswers];
-      newSelectedAnswers[currentQuestionIndex] = index;
-      setSelectedAnswers(newSelectedAnswers);
-
-      // Update explanation list
-      const newShowExplanations = [...showExplanations];
-      newShowExplanations[currentQuestionIndex] = true;
-      setShowExplanations(newShowExplanations);
+      setMapAnswer({ ...mapAnswer, [currentQuestionIndex]: index });
     }
   };
 
   const handleBookmarkPress = (isBookmarked: boolean) => {
-    const newBookmarkedQuestions = [...bookmarkedQuestions];
-    newBookmarkedQuestions[currentQuestionIndex] = isBookmarked;
-    setBookmarkedQuestions(newBookmarkedQuestions);
+    if (!mapBookmark[currentQuestionIndex]) {
+      setMapBookmark({ ...mapBookmark, [currentQuestionIndex]: isBookmarked });
+    }
 
     // Update database
     if (isBookmarked) {
@@ -62,8 +60,8 @@ export const QuestionsMessage = ({ questions }: QuestionsMessageProps) => {
         question={question}
         questionIndex={currentQuestionIndex}
         totalQuestions={questions.length}
-        bookmarked={bookmarkedQuestions[currentQuestionIndex]}
-        selectedAnswer={selectedAnswers[currentQuestionIndex]}
+        bookmarked={mapBookmark[currentQuestionIndex]}
+        selectedAnswer={mapAnswer[currentQuestionIndex]}
         onAnswerSelect={handleAnswerSelect}
         onBookmarkPress={handleBookmarkPress}
       />

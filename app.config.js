@@ -1,7 +1,7 @@
 export default {
   expo: {
-    name: "ToriiAI",
-    slug: "torii-ai",
+    name: "Leslie AI",
+    slug: "leslieai",
     icon: "./assets/images/torii-logo.png",
     splash: {
       image: "./assets/images/torii-logo.png",
@@ -9,10 +9,10 @@ export default {
       backgroundColor: "#000000",
     },
     android: {
-      package: "com.torii.app",
+      package: "com.leslie.app",
     },
     ios: {
-      bundleIdentifier: "com.torii.app",
+      bundleIdentifier: "com.leslie.app",
     },
     plugins: ["expo-sqlite"],
     extra: {
