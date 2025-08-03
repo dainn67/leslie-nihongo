@@ -186,6 +186,10 @@ export const ChatbotScreen = () => {
     });
   };
 
+  const handleAnalyze = (summary: string) => {
+    console.log(summary);
+  };
+
   const handleDevClick = () => {
     const dbPath = `${FileSystem.documentDirectory}/SQLite/`;
     console.log(dbPath);
@@ -208,7 +212,7 @@ export const ChatbotScreen = () => {
           onRightPress={openClearChatDialog}
           onDevClick={handleDevClick}
         />
-        <ChatMessageList messages={messages} handleClickAction={handleClickAction} />
+        <ChatMessageList messages={messages} onClickAction={handleClickAction} onAnalyze={handleAnalyze} />
         <ChatInput onSend={handleSend} />
 
         <ClearChatDialog

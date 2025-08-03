@@ -6,10 +6,11 @@ import { ChatMessage } from "../../../models/chatMessage";
 
 interface ChatMessageListProps {
   messages: ChatMessage[];
-  handleClickAction: (title: string, actionId?: string) => void;
+  onClickAction: (title: string, actionId?: string) => void;
+  onAnalyze: (summary: string) => void;
 }
 
-export const ChatMessageList = ({ messages, handleClickAction }: ChatMessageListProps) => {
+export const ChatMessageList = ({ messages, onClickAction, onAnalyze }: ChatMessageListProps) => {
   const scrollViewRef = useRef<ScrollView>(null);
   const { colors } = useTheme();
   const [componentHeight, setComponentHeight] = useState(0);
@@ -42,8 +43,9 @@ export const ChatMessageList = ({ messages, handleClickAction }: ChatMessageList
             key={index}
             isLastMessage={index === messages.length - 1}
             message={message}
-            onClickAction={handleClickAction}
             componentHeight={componentHeight}
+            onClickAction={onClickAction}
+            onAnalyze={onAnalyze}
           />
         ))}
       </ScrollView>

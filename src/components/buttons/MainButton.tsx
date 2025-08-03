@@ -8,12 +8,11 @@ interface MainButtonProps {
   loading?: boolean;
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
-  showShadow?: boolean;
   onPress: () => void;
 }
 
 // Component MainButton
-const MainButton = ({ title, onPress, disabled = false, loading = false, style, textStyle, showShadow = false }: MainButtonProps) => {
+const MainButton = ({ title, onPress, disabled = false, loading = false, style, textStyle }: MainButtonProps) => {
   const [isPressed, setIsPressed] = useState(false);
 
   const handlePressIn = () => setIsPressed(true);
@@ -25,7 +24,7 @@ const MainButton = ({ title, onPress, disabled = false, loading = false, style, 
   const flattenedStyle = StyleSheet.flatten(style || {});
   const borderRadius = flattenedStyle?.borderRadius ?? 8;
 
-  const containerStyles = [showShadow && styles.shadowWrapper, { borderRadius }];
+  const containerStyles = [{ borderRadius }];
 
   const buttonStyles = [
     styles.button,
@@ -57,13 +56,6 @@ const MainButton = ({ title, onPress, disabled = false, loading = false, style, 
 };
 
 const styles = StyleSheet.create({
-  shadowWrapper: {
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
   button: {
     justifyContent: "center",
     alignItems: "center",

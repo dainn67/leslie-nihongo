@@ -7,20 +7,23 @@ import { ChatActionButtons } from "../ChatActionButtons";
 import { QuestionsMessage } from "./QuestionsMessage";
 import { ChatMessage, Sender, MessageType } from "../../../../models/chatMessage";
 
-interface MainChatMessageProps {
+interface ChatMessageBubbleProps {
   message: ChatMessage;
   isLastMessage?: boolean;
   componentHeight: number;
   onClickAction: (title: string, actionId?: string) => void;
+  onAnalyze: (summary: string) => void;
 }
 
-export const ChatMessageBubble = ({ message, componentHeight, isLastMessage, onClickAction }: MainChatMessageProps) => {
+export const ChatMessageBubble = ({
+  message,
+  componentHeight,
+  isLastMessage,
+  onClickAction,
+  onAnalyze,
+}: ChatMessageBubbleProps) => {
   const { colors } = useTheme();
   const isUser = message.sender === Sender.USER;
-
-  const handleClickAction = (title: string, actionId?: string) => {
-    if (onClickAction) onClickAction(title, actionId);
-  };
 
   const styles = getStyle(colors, isUser, componentHeight, isLastMessage);
 
@@ -45,15 +48,13 @@ export const ChatMessageBubble = ({ message, componentHeight, isLastMessage, onC
         {/* Generated questions */}
         {isQuestions && (
           <View style={{ flexDirection: "row", flexWrap: "wrap", flex: 1 }}>
-            <QuestionsMessage questions={message.questions} />
+            <QuestionsMessage questions={message.questions} onAnalyze={onAnalyze} />
           </View>
         )}
       </View>
 
       {/* Action buttons */}
-      {showButtons && (
-        <ChatActionButtons suggestedActions={message.suggestedActions} onClickAction={handleClickAction} />
-      )}
+      {showButtons && <ChatActionButtons suggestedActions={message.suggestedActions} onClickAction={onClickAction} />}
     </View>
   );
 };

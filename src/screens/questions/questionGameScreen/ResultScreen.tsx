@@ -7,8 +7,8 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../../app/DrawerNavigator";
 import { useTheme } from "../../../theme";
 import { CustomText } from "../../../components/text/customText";
-import MainButton from "../../../components/buttons/MainButton";
 import { createResultSummary } from "../../../service/questionService";
+import MainButton from "../../../components/buttons/MainButton";
 
 type ResultScreenRouteProp = RouteProp<RootStackParamList, "ResultScreen">;
 type ResultScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "ResultScreen">;
@@ -182,19 +182,7 @@ export const ResultScreen = () => {
 
       {/* Action Buttons */}
       <View style={[styles.buttonContainer, { backgroundColor: colors.background }]}>
-        <MainButton
-          title="Thử lại"
-          onPress={handleTryAgain}
-          style={[styles.tryAgainButton, { backgroundColor: colors.primary }]}
-          showShadow
-        />
-        <MainButton
-          title="Về trang chủ"
-          onPress={handleGoHome}
-          style={[styles.homeButton, { backgroundColor: colors.backgroundSecondary, borderColor: colors.border }]}
-          textStyle={{ color: colors.text }}
-          showShadow
-        />
+        <MainButton title="Thử lại" onPress={handleTryAgain} style={{ backgroundColor: colors.primary }} />
       </View>
     </View>
   );
@@ -300,15 +288,9 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     paddingHorizontal: 16,
-    paddingVertical: 20,
+    paddingVertical: 12,
     borderTopWidth: 1,
     borderTopColor: "#E5E7EB",
-  },
-  tryAgainButton: {
-    marginBottom: 12,
-  },
-  homeButton: {
-    borderWidth: 1,
   },
   aiInsightSection: {
     marginTop: 16,

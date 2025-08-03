@@ -5,12 +5,14 @@ import { Question } from "../../../../models/question";
 import { QuestionView } from "./QuestionView";
 import { AnimatedProgressBar } from "../../../../components/AnimatedProgressBar";
 import { deleteQuestion, insertQuestions } from "../../../../storage/database/tables/questionTable";
+import { createResultSummary } from "../../../../service/questionService";
 
 interface QuestionsMessageProps {
   questions: Question[];
+  onAnalyze: (summary: string) => void;
 }
 
-export const QuestionsMessage = ({ questions }: QuestionsMessageProps) => {
+export const QuestionsMessage = ({ questions, onAnalyze }: QuestionsMessageProps) => {
   // Use local state only for separated question messages
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [mapAnswer, setMapAnswer] = useState<{ [key: number]: number }>({});
@@ -18,28 +20,28 @@ export const QuestionsMessage = ({ questions }: QuestionsMessageProps) => {
 
   useEffect(() => {
     if (Object.keys(mapAnswer).length === questions.length) {
-      // TODO: Implement analyze
-      console.log("All selected");
+      const summary = createResultSummary(questions, mapAnswer);
+      onAnalyze(summary);
     }
   }, [mapAnswer, questions]);
 
+  const question = questions[currentQuestionIndex];
+  const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+
   const handleAnswerSelect = (index: number) => {
-    if (!mapAnswer[currentQuestionIndex]) {
-      // Update selected answer list
-      setMapAnswer({ ...mapAnswer, [currentQuestionIndex]: index });
-    }
+    setMapAnswer({ ...mapAnswer, [question.questionId]: index });
   };
 
   const handleBookmarkPress = (isBookmarked: boolean) => {
-    if (!mapBookmark[currentQuestionIndex]) {
-      setMapBookmark({ ...mapBookmark, [currentQuestionIndex]: isBookmarked });
+    if (!mapBookmark[question.questionId]) {
+      setMapBookmark({ ...mapBookmark, [question.questionId]: isBookmarked });
     }
 
     // Update database
     if (isBookmarked) {
-      insertQuestions([questions[currentQuestionIndex]]);
+      insertQuestions([question]);
     } else {
-      deleteQuestion(questions[currentQuestionIndex].questionId);
+      deleteQuestion(question.questionId);
     }
   };
 
@@ -47,9 +49,6 @@ export const QuestionsMessage = ({ questions }: QuestionsMessageProps) => {
     const newIndex = direction === "next" ? currentQuestionIndex + 1 : currentQuestionIndex - 1;
     setCurrentQuestionIndex(newIndex);
   };
-
-  const question = questions[currentQuestionIndex];
-  const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
 
   return (
     <View style={styles.container}>
@@ -60,8 +59,8 @@ export const QuestionsMessage = ({ questions }: QuestionsMessageProps) => {
         question={question}
         questionIndex={currentQuestionIndex}
         totalQuestions={questions.length}
-        bookmarked={mapBookmark[currentQuestionIndex]}
-        selectedAnswer={mapAnswer[currentQuestionIndex]}
+        bookmarked={mapBookmark[question.questionId]}
+        selectedAnswer={mapAnswer[question.questionId]}
         onAnswerSelect={handleAnswerSelect}
         onBookmarkPress={handleBookmarkPress}
       />

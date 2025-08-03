@@ -1,5 +1,5 @@
 import { ChatMessage, Sender } from "../models/chatMessage";
-import { createQuestion, Question, QuestionType } from "../models/question";
+import { createQuestion, Question } from "../models/question";
 import { Delimiter } from "./chatMessageService";
 
 export const extractQuestionsFromJson = (json: string): { questions: Question[]; summary: string } => {
@@ -53,8 +53,8 @@ export const createReviseQuestionSet = (questions: Question[], amount: number): 
 export const createResultSummary = (questions: Question[], mapAnswers: { [key: number]: number }) => {
   let summary = "";
 
-  for (const question of questions) {
-    let questionString = `Question: ${question.question}`;
+  for (const [index, question] of questions.entries()) {
+    let questionString = `Question ${index + 1}: ${question.question}`;
     let answerString = "";
 
     const answerId = mapAnswers[question.questionId];
