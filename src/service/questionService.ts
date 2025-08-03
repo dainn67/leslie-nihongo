@@ -54,7 +54,7 @@ export const createResultSummary = (questions: Question[], mapAnswers: { [key: n
   let summary = "";
 
   for (const [index, question] of questions.entries()) {
-    let questionString = `Question ${index + 1}: ${question.question}`;
+    let questionString = `Question ${index + 1}: ${question.question}`.replaceAll("\n", " ");
     let answerString = "";
 
     const answerId = mapAnswers[question.questionId];
@@ -70,7 +70,7 @@ export const createResultSummary = (questions: Question[], mapAnswers: { [key: n
       answerString = `User answered ${userAnswer?.text} but correct answer is ${correctAnswer?.text}`;
     }
 
-    summary += `${questionString}. ${answerString}\n`;
+    summary += `${questionString}. ${answerString}. `;
   }
 
   return summary;

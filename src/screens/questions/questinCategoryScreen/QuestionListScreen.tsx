@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
-import { QuestionType, QuestionTypeTitles } from "../../../models/question";
+import { Question, QuestionType, QuestionTypeTitles } from "../../../models/question";
 import { AppBar } from "../../../components/AppBar";
 import { Ionicons } from "@expo/vector-icons";
 import { RootStackParamList } from "../../../app/DrawerNavigator";
@@ -9,9 +9,8 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { QuestionView } from "../../chatbot/components/chatBubble/QuestionView";
 import { QuestionNumberSelector } from "./components/QuestionNumberSelector";
 import { createReviseQuestionSet } from "../../../service/questionService";
-import { useAppSelector } from "../../../hooks/hooks";
+import { getQuestionsByType } from "../../../storage/database/tables";
 import MainButton from "../../../components/buttons/MainButton";
-import * as FileSystem from "expo-file-system";
 
 type QuestionListScreenRouteProp = RouteProp<RootStackParamList, "QuestionListScreen">;
 type QuestionListScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "QuestionListScreen">;
@@ -24,7 +23,12 @@ export const QuestionListScreen = () => {
 
   const [amountSelectorVisible, setAmountSelectorVisible] = useState(false);
 
-  const questions = useAppSelector((state) => state.questions.questions).filter((question) => question.type === type);
+  const [questions, setQuestions] = useState<Question[]>([]);
+
+  useEffect(() => {
+    const questions = getQuestionsByType(type);
+    setQuestions(questions);
+  }, []);
 
   const handleSelectQuestion = (amount: number) => {
     const selectedQuestions = createReviseQuestionSet(questions, amount);
@@ -54,7 +58,7 @@ export const QuestionListScreen = () => {
       <MainButton title="Ôn tập" onPress={() => setAmountSelectorVisible(true)} style={styles.buttonContainer} />
 
       <QuestionNumberSelector
-        totalQuestions={questions.length * 10}
+        totalQuestions={questions.length}
         visible={amountSelectorVisible}
         setVisible={setAmountSelectorVisible}
         onSelectQuestion={(amount) => handleSelectQuestion(amount)}

@@ -195,7 +195,7 @@ export const ChatbotScreen = () => {
       level: userProgress.level,
       target: userProgress.target,
       examDate: userProgress.examDate,
-      shouldAnalyze: true,
+      analyzeChatGame: true,
       conversationId,
       dispatch,
     });

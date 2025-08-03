@@ -7,8 +7,11 @@ import { extractQuestionsFromJson, extractSuggestedActions } from "../service/qu
 import { Delimiter, splitCustomWords } from "../service/chatMessageService";
 import { convertDateToDDMMYYYY } from "../utils/utils";
 import Constants from "expo-constants";
+import { postData } from "./apiClient";
 
 const { DIFY_API_KEY } = Constants.expoConfig?.extra ?? {};
+
+const user = "dainn";
 
 export const sendStreamMessage = ({
   message,
@@ -17,7 +20,7 @@ export const sendStreamMessage = ({
   level,
   target,
   examDate,
-  shouldAnalyze,
+  analyzeChatGame,
   conversationId,
   dispatch,
 }: {
@@ -27,7 +30,7 @@ export const sendStreamMessage = ({
   level?: string;
   target?: string;
   examDate?: number;
-  shouldAnalyze?: boolean;
+  analyzeChatGame?: boolean;
   conversationId?: string;
   dispatch: AppDispatch;
 }) => {
@@ -59,11 +62,11 @@ export const sendStreamMessage = ({
         conversation_history: conversationHistory,
         current_date: now,
         exam_date: examDateString,
-        should_analyze: shouldAnalyze ? 1 : 0,
+        analyze_chat_game: analyzeChatGame ? 1 : 0,
       },
       conversation_id: conversationId,
       response_mode: "streaming",
-      user: "dainn",
+      user: user,
       auto_generate_name: false,
     },
     onMessage: (data) => {
@@ -155,4 +158,27 @@ export const sendStreamMessage = ({
       }, 20);
     }
   }, 200);
+};
+
+export const sendMessage = async ({
+  message,
+  data,
+}: {
+  message: string;
+  data?: { [key: string]: any };
+  conversationId: string;
+}) => {
+  const result = await postData({
+    url: ApiConfig.difyServerUrl,
+    token: DIFY_API_KEY,
+    body: {
+      query: message,
+      inputs: data ?? {},
+      response_mode: "blocking",
+      user: user,
+      auto_generate_name: false,
+    },
+  });
+
+  return result["answer"];
 };
