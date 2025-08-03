@@ -187,7 +187,18 @@ export const ChatbotScreen = () => {
   };
 
   const handleAnalyze = (summary: string) => {
-    console.log(summary);
+    dispatch(addLoading());
+
+    sendStreamMessage({
+      message: summary,
+      conversationHistory: createConversationHistory(messages),
+      level: userProgress.level,
+      target: userProgress.target,
+      examDate: userProgress.examDate,
+      shouldAnalyze: true,
+      conversationId,
+      dispatch,
+    });
   };
 
   const handleDevClick = () => {

@@ -17,6 +17,7 @@ export const sendStreamMessage = ({
   level,
   target,
   examDate,
+  shouldAnalyze,
   conversationId,
   dispatch,
 }: {
@@ -26,6 +27,7 @@ export const sendStreamMessage = ({
   level?: string;
   target?: string;
   examDate?: number;
+  shouldAnalyze?: boolean;
   conversationId?: string;
   dispatch: AppDispatch;
 }) => {
@@ -57,6 +59,7 @@ export const sendStreamMessage = ({
         conversation_history: conversationHistory,
         current_date: now,
         exam_date: examDateString,
+        should_analyze: shouldAnalyze ? 1 : 0,
       },
       conversation_id: conversationId,
       response_mode: "streaming",
