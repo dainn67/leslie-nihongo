@@ -51,6 +51,7 @@ export const QuestionListScreen = () => {
               questionIndex={index}
               totalQuestions={questions.length}
               bookmarked={true}
+              showCorrectAnswer={true}
             />
           </View>
         ))}

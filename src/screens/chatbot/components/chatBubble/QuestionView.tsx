@@ -12,6 +12,7 @@ interface QuestionViewProps {
   totalQuestions: number;
   selectedAnswer?: number;
   bookmarked: boolean;
+  showCorrectAnswer?: boolean;
   onAnswerSelect?: (index: number) => void;
   onBookmarkPress?: (isBookmarked: boolean) => void;
 }
@@ -22,6 +23,7 @@ export const QuestionView = ({
   totalQuestions,
   selectedAnswer,
   bookmarked,
+  showCorrectAnswer,
   onAnswerSelect,
   onBookmarkPress,
 }: QuestionViewProps) => {
@@ -58,7 +60,7 @@ export const QuestionView = ({
             onPress={() => onAnswerSelect?.(a.answerId)}
             style={[
               styles.answerCard,
-              selectedAnswer === a.answerId && a.isCorrect && styles.correctAnswer,
+              (selectedAnswer === a.answerId || showCorrectAnswer) && a.isCorrect && styles.correctAnswer,
               selectedAnswer === a.answerId && !a.isCorrect && styles.wrongAnswer,
               selectedAnswer !== undefined && selectedAnswer !== a.answerId && a.isCorrect && styles.correctAnswer,
             ]}
