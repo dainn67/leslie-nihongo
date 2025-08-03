@@ -11,6 +11,7 @@ import { QuestionNumberSelector } from "./components/QuestionNumberSelector";
 import { createReviseQuestionSet } from "../../../service/questionService";
 import { getQuestionsByType } from "../../../storage/database/tables";
 import MainButton from "../../../components/buttons/MainButton";
+import { SimpleTextInput } from "../../../components/input/SimpleTextInput";
 
 type QuestionListScreenRouteProp = RouteProp<RootStackParamList, "QuestionListScreen">;
 type QuestionListScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "QuestionListScreen">;
@@ -25,6 +26,8 @@ export const QuestionListScreen = () => {
 
   const [questions, setQuestions] = useState<Question[]>([]);
 
+  const [searchWord, setSearchWord] = useState("");
+
   useEffect(() => {
     const questions = getQuestionsByType(type);
     setQuestions(questions);
@@ -35,6 +38,13 @@ export const QuestionListScreen = () => {
     navigation.navigate("QuestionGameScreen", { questions: selectedQuestions });
   };
 
+  const handleOpenSearch = () => {};
+
+  const handleSearch = (text: string) => {
+    setSearchWord(text);
+    console.log(text);
+  };
+
   return (
     <View style={styles.container}>
       <AppBar
@@ -42,7 +52,9 @@ export const QuestionListScreen = () => {
         leftIcon={<Ionicons name="arrow-back" size={24} color="white" />}
         rightIcon={<Ionicons name="search" size={24} color="white" />}
         onLeftPress={() => navigation.pop()}
+        onRightPress={handleOpenSearch}
       />
+      <SimpleTextInput value={searchWord} onChangeText={handleSearch} />
       <ScrollView style={styles.contentContainer}>
         {questions.map((question, index) => (
           <View key={question.questionId} style={styles.questionContainer}>
