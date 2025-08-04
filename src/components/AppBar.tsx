@@ -1,7 +1,6 @@
 import React from "react";
 import { View, StyleSheet, TouchableOpacity, SafeAreaView } from "react-native";
 import { useTheme } from "../theme";
-import { Ionicons } from "@expo/vector-icons";
 import { CustomText } from "./text/customText";
 import { IconButton } from "./buttons";
 import { AppIcons } from "../constants/appIcons";
@@ -28,9 +27,6 @@ export const AppBar: React.FC<AppBarProps> = ({ title, leftIcon, rightIcon, onLe
         )}
 
         <View style={styles.titleContainer}>
-          <View style={styles.iconWrapper}>
-            <Ionicons name="chatbubble" size={20} color="white" />
-          </View>
           <CustomText weight="Bold" style={styles.title}>
             {title}
           </CustomText>
@@ -42,7 +38,9 @@ export const AppBar: React.FC<AppBarProps> = ({ title, leftIcon, rightIcon, onLe
           </TouchableOpacity>
         )}
 
-        {__DEV__ && onDevClick && <IconButton icon={AppIcons.dev} onPress={onDevClick} style={{ marginLeft: 10, backgroundColor: "white" }} />}
+        {__DEV__ && onDevClick && (
+          <IconButton icon={AppIcons.dev} onPress={onDevClick} style={{ marginLeft: 10, backgroundColor: "white" }} />
+        )}
       </View>
     </SafeAreaView>
   );

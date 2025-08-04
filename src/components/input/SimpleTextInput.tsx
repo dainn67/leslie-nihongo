@@ -3,10 +3,12 @@ import { View, TextInput, StyleSheet } from "react-native";
 
 export const SimpleTextInput = ({
   value,
+  inputRef,
   placeholder,
   onChangeText,
 }: {
   value: string;
+  inputRef: React.RefObject<TextInput | null>;
   placeholder?: string;
   onChangeText?: (text: string) => void;
 }) => {
@@ -15,6 +17,7 @@ export const SimpleTextInput = ({
   return (
     <View style={styles.container}>
       <TextInput
+        ref={inputRef}
         style={[styles.input, isFocused && styles.inputFocused]}
         placeholder={placeholder}
         placeholderTextColor="#aaa"

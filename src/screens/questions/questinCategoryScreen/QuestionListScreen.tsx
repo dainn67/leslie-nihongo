@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { View, StyleSheet, ScrollView, Animated } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { View, StyleSheet, ScrollView, Animated, TextInput } from "react-native";
 import { Question, QuestionType, QuestionTypeTitles } from "../../../models/question";
 import { AppBar } from "../../../components/AppBar";
 import { Ionicons } from "@expo/vector-icons";
@@ -22,17 +22,15 @@ export const QuestionListScreen = () => {
 
   const { type } = route.params as { type: QuestionType };
 
-  // Full question list and display question (with search filter)
   const [questions, setQuestions] = useState<Question[]>([]);
   const [filteredQuestions, setFilteredQuestions] = useState<Question[]>([]);
 
-  // Revise questions dialog
   const [amountSelectorVisible, setAmountSelectorVisible] = useState(false);
-
-  // Search feature
   const [searchWord, setSearchWord] = useState("");
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [searchAnimation] = useState(new Animated.Value(0));
+
+  const inputRef = useRef<TextInput>(null);
 
   useEffect(() => {
     const questions = getQuestionsByType(type);
@@ -62,13 +60,14 @@ export const QuestionListScreen = () => {
         toValue: 1,
         duration: 300,
         useNativeDriver: false,
-      }).start();
+      }).start(() => {
+        inputRef.current?.focus();
+      });
     }
   };
 
   const handleSearch = (text: string) => {
     setSearchWord(text);
-
     const searchText = text.toLowerCase();
 
     if (searchText.length === 0) {
@@ -78,9 +77,7 @@ export const QuestionListScreen = () => {
         const questionText = q.question.toLowerCase();
         const answerText = q.answers.map((a) => a.text.toLowerCase()).join(". ");
         const explanationText = q.explanation.toLowerCase();
-        return (
-          questionText.includes(searchText) || answerText.includes(searchText) || explanationText.includes(searchText)
-        );
+        return questionText.includes(searchText) || answerText.includes(searchText) || explanationText.includes(searchText);
       });
       setFilteredQuestions(filteredQuestions);
     }
@@ -96,44 +93,55 @@ export const QuestionListScreen = () => {
         onRightPress={handleOpenSearch}
       />
 
-      {isSearchVisible && (
-        <Animated.View
-          style={[
-            styles.searchContainer,
-            {
-              opacity: searchAnimation,
-              transform: [
-                {
-                  translateY: searchAnimation.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [-20, 0],
-                  }),
-                },
-              ],
-            },
-          ]}
-        >
-          <View style={styles.searchInputWrapper}>
-            <SimpleTextInput value={searchWord} onChangeText={handleSearch} placeholder="Tìm kiếm câu hỏi..." />
-          </View>
-        </Animated.View>
-      )}
+      <View style={styles.stackContainer}>
+        {/* Main content (scrollable list of questions) */}
+        <ScrollView style={styles.questionListContainer}>
+          {filteredQuestions.map((question, index) => (
+            <View key={question.questionId} style={styles.questionContainer}>
+              <QuestionView
+                question={question}
+                questionIndex={index}
+                totalQuestions={questions.length}
+                bookmarked={true}
+                showCorrectAnswer={true}
+              />
+            </View>
+          ))}
+        </ScrollView>
 
-      <ScrollView style={styles.contentContainer}>
-        {filteredQuestions.map((question, index) => (
-          <View key={question.questionId} style={styles.questionContainer}>
-            <QuestionView
-              question={question}
-              questionIndex={index}
-              totalQuestions={questions.length}
-              bookmarked={true}
-              showCorrectAnswer={true}
-            />
-          </View>
-        ))}
-      </ScrollView>
-      <MainButton title="Ôn tập" onPress={() => setAmountSelectorVisible(true)} style={styles.buttonContainer} />
+        <MainButton title="Ôn tập" style={styles.buttonContainer} onPress={() => setAmountSelectorVisible(true)} />
 
+        {/* Animated Search input */}
+        {isSearchVisible && (
+          <Animated.View
+            style={[
+              styles.searchContainer,
+              {
+                opacity: searchAnimation,
+                transform: [
+                  {
+                    translateY: searchAnimation.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [-20, 0],
+                    }),
+                  },
+                ],
+              },
+            ]}
+          >
+            <View style={styles.searchInputWrapper}>
+              <SimpleTextInput
+                value={searchWord}
+                inputRef={inputRef}
+                onChangeText={handleSearch}
+                placeholder="Tìm kiếm câu hỏi..."
+              />
+            </View>
+          </Animated.View>
+        )}
+      </View>
+
+      {/* Question number selector */}
       <QuestionNumberSelector
         totalQuestions={questions.length}
         visible={amountSelectorVisible}
@@ -149,7 +157,17 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
   },
-  contentContainer: {
+  stackContainer: {
+    flex: 1,
+    position: "relative",
+  },
+  searchContainer: {
+    position: "absolute",
+    width: "100%",
+    paddingHorizontal: 24,
+    paddingTop: 12,
+  },
+  questionListContainer: {
     flex: 1,
     padding: 16,
   },
@@ -160,16 +178,18 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     margin: 16,
   },
-  searchContainer: {
-    paddingHorizontal: 24,
-    paddingTop: 12,
-  },
   searchInputWrapper: {
     backgroundColor: "white",
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 8,
+    marginBottom: 12,
     borderWidth: 1,
     borderColor: "#dee2e6",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
+    elevation: 8,
   },
 });
