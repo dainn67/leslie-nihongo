@@ -11,8 +11,9 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ScrollView } from "react-native-gesture-handler";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import { RootState } from "../../../app/store";
-import { setIndex, initGame, setSelectedAnswer } from "../../../features/game/gameSlice";
+import { setIndex, initGame, setSelectedAnswer, updateBookmark } from "../../../features/game/gameSlice";
 import { CustomText } from "../../../components/text/customText";
+import { insertQuestions, deleteQuestion } from "../../../storage/database/tables";
 
 type QuestionGameScreenRouteProp = RouteProp<RootStackParamList, "QuestionGameScreen">;
 type QuestionGameScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "QuestionGameScreen">;
@@ -25,6 +26,7 @@ export const QuestionGameScreen = () => {
 
   const currentQuestionIndex = useAppSelector((state: RootState) => state.game.currentQuestionIndex);
   const mapAnswerIds = useAppSelector((state: RootState) => state.game.selectedAnswers);
+  const bookmarkIds = useAppSelector((state: RootState) => state.game.bookmarkedQuestions);
 
   const question = questions[currentQuestionIndex];
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
@@ -41,7 +43,16 @@ export const QuestionGameScreen = () => {
     dispatch(initGame(questions));
   }, []);
 
-  const handleBookmarkPress = (isBookmarked: boolean) => {};
+  const handleBookmarkPress = (isBookmarked: boolean) => {
+    dispatch(updateBookmark({ questionId: question.questionId, isBookmarked }));
+
+    // Update database
+    if (isBookmarked) {
+      insertQuestions([question]);
+    } else {
+      deleteQuestion(question.questionId);
+    }
+  };
 
   const handleChangeQuestion = (direction: "next" | "prev") => {
     // Check submit
@@ -84,7 +95,7 @@ export const QuestionGameScreen = () => {
           question={question}
           totalQuestions={questions.length}
           selectedAnswer={mapAnswerIds[question.questionId]}
-          bookmarked={true}
+          bookmarked={bookmarkIds.includes(question.questionId)}
           onAnswerSelect={handleAnswerSelect}
           onBookmarkPress={handleBookmarkPress}
         />

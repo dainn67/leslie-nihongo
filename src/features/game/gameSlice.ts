@@ -6,7 +6,7 @@ type GameState = {
   currenQuestionIndex: number;
   questions: Question[];
   selectedAnswers: { [key: number]: number };
-  bookmarkedQuestions: { [key: number]: boolean };
+  bookmarkedQuestions: number[];
 };
 
 const initialState: GameState = {
@@ -14,7 +14,7 @@ const initialState: GameState = {
   currenQuestionIndex: 0,
   questions: [],
   selectedAnswers: {},
-  bookmarkedQuestions: {},
+  bookmarkedQuestions: [],
 };
 
 const gameSlice = createSlice({
@@ -26,7 +26,7 @@ const gameSlice = createSlice({
       state.currentQuestionIndex = 0;
       state.currenQuestionIndex = state.questions[state.currentQuestionIndex].questionId;
       state.selectedAnswers = {};
-      state.bookmarkedQuestions = {};
+      state.bookmarkedQuestions = action.payload.map((q) => q.questionId);
     },
     setIndex: (state, action: PayloadAction<number>) => {
       state.currentQuestionIndex = action.payload;
@@ -35,10 +35,17 @@ const gameSlice = createSlice({
     setSelectedAnswer: (state, action: PayloadAction<number>) => {
       state.selectedAnswers[state.currenQuestionIndex] = action.payload;
     },
+    updateBookmark: (state, action: PayloadAction<{ questionId: number; isBookmarked: boolean }>) => {
+      if (action.payload.isBookmarked) {
+        state.bookmarkedQuestions.push(action.payload.questionId);
+      } else {
+        state.bookmarkedQuestions = state.bookmarkedQuestions.filter((id) => id !== action.payload.questionId);
+      }
+    },
     resetGame: () => initialState,
   },
 });
 
-export const { initGame, setIndex, setSelectedAnswer, resetGame } = gameSlice.actions;
+export const { initGame, setIndex, setSelectedAnswer, updateBookmark, resetGame } = gameSlice.actions;
 
 export default gameSlice.reducer;
