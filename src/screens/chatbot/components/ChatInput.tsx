@@ -1,30 +1,25 @@
 import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import {
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
+import { StyleSheet, TouchableOpacity, View, KeyboardAvoidingView, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TextInput as GestureTextInput } from "react-native-gesture-handler";
 import { useTheme } from "../../../theme";
 import { AppConfig } from "../../../constants/appConfig";
 
 interface ChatInputProps {
+  disable?: boolean;
   onSend: (message: string) => void;
 }
 
-const ChatInput = ({ onSend }: ChatInputProps) => {
+const ChatInput = ({ disable = false, onSend }: ChatInputProps) => {
   const [message, setMessage] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const { colors } = useTheme();
 
-  const styles = getStyles(isFocused, message, colors);
+  const styles = getStyles(isFocused, message, colors, disable);
 
   const handleSend = () => {
-    if (message.trim()) {
+    if (message.trim() && !disable) {
       onSend(message);
       setMessage("");
     }
@@ -38,44 +33,38 @@ const ChatInput = ({ onSend }: ChatInputProps) => {
     >
       <SafeAreaView style={{ backgroundColor: colors.background }}>
         <View style={styles.inputContainer}>
-          <View style={styles.inputBox}>
+          <View style={[styles.inputBox, disable && styles.inputBoxDisabled]}>
             <View style={styles.iconContainer}>
               <Ionicons name="chatbubble-outline" size={18} color={colors.textSecondary} />
             </View>
             <GestureTextInput
-              style={styles.textInput}
+              style={[styles.textInput, disable && styles.textInputDisabled]}
               placeholder="Ask anything..."
               placeholderTextColor={colors.textTertiary}
               value={message}
               onSubmitEditing={handleSend}
               onChangeText={setMessage}
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)}
+              onFocus={() => !disable && setIsFocused(true)}
+              onBlur={() => !disable && setIsFocused(false)}
               multiline
               maxLength={500}
+              editable={!disable}
+              selectTextOnFocus={!disable}
             />
-            {message.length > 0 && (
-              <TouchableOpacity
-                style={styles.clearButton}
-                onPress={() => setMessage("")}
-                activeOpacity={0.7}
-              >
+            {message.length > 0 && !disable && (
+              <TouchableOpacity style={styles.clearButton} onPress={() => setMessage("")} activeOpacity={0.7}>
                 <Ionicons name="close-circle" size={20} color={colors.textSecondary} />
               </TouchableOpacity>
             )}
           </View>
 
           <TouchableOpacity
-            style={styles.sendButton}
-            disabled={message.length === 0}
+            style={[styles.sendButton, (message.length === 0 || disable) && styles.sendButtonDisabled]}
+            disabled={message.length === 0 || disable}
             onPress={handleSend}
             activeOpacity={0.8}
           >
-            <Ionicons
-              name="send"
-              size={18}
-              color={message.length > 0 ? "white" : colors.textTertiary}
-            />
+            <Ionicons name="send" size={18} color={message.length > 0 && !disable ? "white" : colors.textTertiary} />
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -83,7 +72,7 @@ const ChatInput = ({ onSend }: ChatInputProps) => {
   );
 };
 
-const getStyles = (isFocused: boolean, message: string, colors: any) =>
+const getStyles = (isFocused: boolean, message: string, colors: any, disable: boolean) =>
   StyleSheet.create({
     inputContainer: {
       flexDirection: "row",
@@ -121,6 +110,9 @@ const getStyles = (isFocused: boolean, message: string, colors: any) =>
       shadowRadius: 6,
       elevation: 3,
     },
+    inputBoxDisabled: {
+      opacity: 0.6,
+    },
     iconContainer: {
       width: 36,
       height: 36,
@@ -138,6 +130,9 @@ const getStyles = (isFocused: boolean, message: string, colors: any) =>
       paddingVertical: 8,
       maxHeight: 100,
       fontFamily: AppConfig.fontFamily,
+    },
+    textInputDisabled: {
+      color: colors.textTertiary,
     },
     clearButton: {
       width: 32,
@@ -163,6 +158,11 @@ const getStyles = (isFocused: boolean, message: string, colors: any) =>
       shadowOpacity: message.length > 0 ? 0.3 : 0,
       shadowRadius: 6,
       elevation: message.length > 0 ? 4 : 0,
+    },
+    sendButtonDisabled: {
+      backgroundColor: colors.backgroundTertiary,
+      shadowOpacity: 0,
+      elevation: 0,
     },
   });
 

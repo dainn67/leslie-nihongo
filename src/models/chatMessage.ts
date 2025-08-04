@@ -11,6 +11,12 @@ export enum MessageType {
   QUESTION_JSON = "question_json",
 }
 
+export enum MessageStatus {
+  LOADING,
+  STREAMING,
+  DONE,
+}
+
 export type ChatMessage = {
   id: string;
 
@@ -30,6 +36,7 @@ export type ChatMessage = {
   // Type and sender
   messageType: MessageType;
   sender: Sender;
+  messageStatus: MessageStatus;
 
   // Id when click suggested action
   actionId: number;
@@ -55,6 +62,7 @@ export const createChatMessage = (partial?: Partial<ChatMessage>): ChatMessage =
     summary: partial?.summary ?? "",
     loading: partial?.loading ?? false,
     messageType: partial?.messageType ?? MessageType.STREAM_TEXT,
+    messageStatus: partial?.messageStatus ?? MessageStatus.LOADING,
     createdAt: partial?.createdAt ?? timestamp,
   };
 };

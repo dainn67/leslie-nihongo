@@ -2,7 +2,7 @@ import { connectSSE } from "./sseClient";
 import { AppDispatch } from "../app/store";
 import { ApiConfig } from "../constants/apiConfig";
 import { updateConversationId, updateLastMessageData } from "../features/chatbot/chatbotSlice";
-import { MessageType } from "../models/chatMessage";
+import { MessageStatus, MessageType } from "../models/chatMessage";
 import { extractQuestionsFromJson, extractSuggestedActions } from "../service/questionService";
 import { Delimiter, splitCustomWords } from "../service/chatMessageService";
 import { convertDateToDDMMYYYY } from "../utils/utils";
@@ -92,10 +92,12 @@ export const sendStreamMessage = ({
     },
     onDone: () => {
       wordLength = splitCustomWords(fullText).length;
-      dispatch(updateLastMessageData({ fullText: fullText, loading: false }));
+      dispatch(updateLastMessageData({ fullText: fullText }));
       if (isQuestionJson) {
         const { questions, summary } = extractQuestionsFromJson(fullText);
         dispatch(updateLastMessageData({ questions, summary }));
+      } else {
+        dispatch(updateLastMessageData({ status: MessageStatus.STREAMING }));
       }
     },
     onError: (error) => console.log("SSE error", error),
@@ -116,7 +118,7 @@ export const sendStreamMessage = ({
         if (words.length >= wordIndex + 1) {
           // Start streaming
           if (!startStreaming) {
-            if (!isQuestionJson) dispatch(updateLastMessageData({ loading: false }));
+            // if (!isQuestionJson) dispatch(updateLastMessageData({ loading: true }));
             startStreaming = true;
           }
 
@@ -138,6 +140,7 @@ export const sendStreamMessage = ({
             // Extract the summary when finished
             const summary = splittedText[splittedText.length - 1].trim();
             dispatch(updateLastMessageData({ summary }));
+            dispatch(updateLastMessageData({ status: MessageStatus.DONE }));
 
             clearInterval(interval);
           }
@@ -152,6 +155,7 @@ export const sendStreamMessage = ({
           // Extract the summary when finished
           const summary = splittedText[splittedText.length - 1].trim();
           dispatch(updateLastMessageData({ summary }));
+          dispatch(updateLastMessageData({ status: MessageStatus.DONE }));
 
           clearInterval(interval);
         }

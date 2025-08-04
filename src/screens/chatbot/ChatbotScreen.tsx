@@ -46,6 +46,7 @@ export const ChatbotScreen = () => {
   const messages = useAppSelector((state) => state.chatbot.messages);
   const userProgress = useAppSelector((state) => state.userProgress.userProgress);
   const conversationId = useAppSelector((state) => state.chatbot.conversationId);
+  const isLoading = messages[messages.length - 1]?.loading ?? false;
 
   const [initialized, setInitialized] = useState(false);
   const [datePickerVisible, setDatePickerVisible] = useState(false);
@@ -187,18 +188,20 @@ export const ChatbotScreen = () => {
   };
 
   const handleAnalyze = (summary: string) => {
-    dispatch(addLoading());
+    setInterval(() => {
+      dispatch(addLoading());
 
-    sendStreamMessage({
-      message: summary,
-      conversationHistory: createConversationHistory(messages),
-      level: userProgress.level,
-      target: userProgress.target,
-      examDate: userProgress.examDate,
-      analyzeChatGame: true,
-      conversationId,
-      dispatch,
-    });
+      sendStreamMessage({
+        message: summary,
+        conversationHistory: createConversationHistory(messages),
+        level: userProgress.level,
+        target: userProgress.target,
+        examDate: userProgress.examDate,
+        analyzeChatGame: true,
+        conversationId,
+        dispatch,
+      });
+    }, 3000);
   };
 
   const handleDevClick = () => {
@@ -224,7 +227,7 @@ export const ChatbotScreen = () => {
           onDevClick={handleDevClick}
         />
         <ChatMessageList messages={messages} onClickAction={handleClickAction} onAnalyze={handleAnalyze} />
-        <ChatInput onSend={handleSend} />
+        <ChatInput disable={isLoading} onSend={handleSend} />
 
         <ClearChatDialog
           title="Xoá hội thoại?"

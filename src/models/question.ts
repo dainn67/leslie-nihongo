@@ -31,7 +31,9 @@ export const createQuestion = (partial?: Partial<Question>): Question => {
     bookmarked: partial?.bookmarked ?? false,
     type: partial?.type ?? QuestionType.Vocabulary,
     answers: partial?.answers
-      ? partial.answers.map((a, index) => createAnswer({ ...a, answerId: index, questionId: partial.questionId }))
+      ? [...partial.answers]
+          .sort(() => Math.random() - 0.5)
+          .map((a, index) => createAnswer({ ...a, answerId: index, questionId: partial.questionId }))
       : [],
   };
 };

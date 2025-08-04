@@ -1,19 +1,24 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ChatMessage, createChatMessage, MessageType, Sender, SuggestedAction } from "../../models/chatMessage";
+import {
+  ChatMessage,
+  createChatMessage,
+  MessageStatus,
+  MessageType,
+  Sender,
+  SuggestedAction,
+} from "../../models/chatMessage";
 import { Question } from "../../models/question";
 
 type ChatState = {
   messages: ChatMessage[];
   conversationId?: string;
   suggestedPropmpt: string[];
-  isLoading: boolean;
 };
 
 const initialState: ChatState = {
   messages: [],
   conversationId: undefined,
   suggestedPropmpt: [],
-  isLoading: false,
 };
 
 const getLastMessage = (state: ChatState) => {
@@ -47,7 +52,7 @@ const chatbotSlice = createSlice({
       action: PayloadAction<{
         messageId?: string;
         nextWord?: string;
-        loading?: boolean;
+        status?: MessageStatus;
         messageType?: MessageType;
         fullText?: string;
         questions?: Question[];
@@ -58,7 +63,7 @@ const chatbotSlice = createSlice({
       const message = getLastMessage(state);
       if (message) {
         if (action.payload.messageId !== undefined) message.id = action.payload.messageId;
-        if (action.payload.loading !== undefined) message.loading = action.payload.loading;
+        if (action.payload.status !== undefined) message.messageStatus = action.payload.status;
         if (action.payload.messageType !== undefined) message.messageType = action.payload.messageType;
         if (action.payload.fullText !== undefined) message.fullText = action.payload.fullText;
         if (action.payload.nextWord !== undefined) message.words.push(action.payload.nextWord);
