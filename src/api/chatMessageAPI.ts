@@ -95,7 +95,7 @@ export const sendStreamMessage = ({
       dispatch(updateLastMessageData({ fullText: fullText }));
       if (isQuestionJson) {
         const { questions, summary } = extractQuestionsFromJson(fullText);
-        dispatch(updateLastMessageData({ questions, summary }));
+        dispatch(updateLastMessageData({ questions, summary, status: MessageStatus.DONE }));
       } else {
         dispatch(updateLastMessageData({ status: MessageStatus.STREAMING }));
       }
@@ -118,7 +118,7 @@ export const sendStreamMessage = ({
         if (words.length >= wordIndex + 1) {
           // Start streaming
           if (!startStreaming) {
-            // if (!isQuestionJson) dispatch(updateLastMessageData({ loading: true }));
+            if (!isQuestionJson) dispatch(updateLastMessageData({ status: MessageStatus.STREAMING }));
             startStreaming = true;
           }
 

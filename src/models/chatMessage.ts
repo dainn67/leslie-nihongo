@@ -12,6 +12,7 @@ export enum MessageType {
 }
 
 export enum MessageStatus {
+  USER,
   LOADING,
   STREAMING,
   DONE,
@@ -25,9 +26,6 @@ export type ChatMessage = {
   currentIndex: number;
   fullText: string;
   wordsLength: number;
-
-  // Loading status
-  loading: boolean;
 
   // Data
   questions: Question[];
@@ -60,9 +58,8 @@ export const createChatMessage = (partial?: Partial<ChatMessage>): ChatMessage =
     sender: partial?.sender ?? Sender.USER,
     actionId: partial?.actionId ?? 0,
     summary: partial?.summary ?? "",
-    loading: partial?.loading ?? false,
     messageType: partial?.messageType ?? MessageType.STREAM_TEXT,
-    messageStatus: partial?.messageStatus ?? MessageStatus.LOADING,
+    messageStatus: partial?.messageStatus ?? MessageStatus.USER,
     createdAt: partial?.createdAt ?? timestamp,
   };
 };

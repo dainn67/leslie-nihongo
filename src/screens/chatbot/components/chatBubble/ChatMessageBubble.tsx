@@ -5,7 +5,7 @@ import { WordComponent } from "../../../../components/streamingText/WordComponen
 import { LoadingMessage } from "./LoadingMessage";
 import { ChatActionButtons } from "../ChatActionButtons";
 import { QuestionsMessage } from "./QuestionsMessage";
-import { ChatMessage, Sender, MessageType } from "../../../../models/chatMessage";
+import { ChatMessage, Sender, MessageType, MessageStatus } from "../../../../models/chatMessage";
 
 interface ChatMessageBubbleProps {
   message: ChatMessage;
@@ -27,12 +27,11 @@ export const ChatMessageBubble = ({
 
   const styles = getStyle(colors, isUser, componentHeight, isLastMessage);
 
-  const isLoading = message.loading;
+  const isLoading = message.messageStatus == MessageStatus.LOADING;
   const isStreaming = !isLoading && message.messageType === MessageType.STREAM_TEXT;
   const isLoadingQuestion = isLoading && message.messageType === MessageType.QUESTION_JSON;
   const isQuestions = !isLoading && message.messageType === MessageType.QUESTION_JSON && message.fullText.length > 0;
-  const showButtons =
-    !isLoading && message.suggestedActions.length > 0 && message.messageType === MessageType.STREAM_TEXT;
+  const showButtons = !isLoading && message.suggestedActions.length > 0 && message.messageType === MessageType.STREAM_TEXT;
 
   return (
     <View id={message.id} style={[styles.container]}>

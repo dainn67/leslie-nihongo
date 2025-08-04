@@ -1,12 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import {
-  ChatMessage,
-  createChatMessage,
-  MessageStatus,
-  MessageType,
-  Sender,
-  SuggestedAction,
-} from "../../models/chatMessage";
+import { ChatMessage, createChatMessage, MessageStatus, MessageType, Sender, SuggestedAction } from "../../models/chatMessage";
 import { Question } from "../../models/question";
 
 type ChatState = {
@@ -39,7 +32,7 @@ const chatbotSlice = createSlice({
     addLoading: (state) => {
       state.messages.push(
         createChatMessage({
-          loading: true,
+          messageStatus: MessageStatus.LOADING,
           sender: Sender.BOT,
         }),
       );

@@ -46,7 +46,6 @@ export const ChatbotScreen = () => {
   const messages = useAppSelector((state) => state.chatbot.messages);
   const userProgress = useAppSelector((state) => state.userProgress.userProgress);
   const conversationId = useAppSelector((state) => state.chatbot.conversationId);
-  const isLoading = messages[messages.length - 1]?.loading ?? false;
 
   const [initialized, setInitialized] = useState(false);
   const [datePickerVisible, setDatePickerVisible] = useState(false);
@@ -227,7 +226,7 @@ export const ChatbotScreen = () => {
           onDevClick={handleDevClick}
         />
         <ChatMessageList messages={messages} onClickAction={handleClickAction} onAnalyze={handleAnalyze} />
-        <ChatInput disable={isLoading} onSend={handleSend} />
+        <ChatInput onSend={handleSend} />
 
         <ClearChatDialog
           title="Xoá hội thoại?"
