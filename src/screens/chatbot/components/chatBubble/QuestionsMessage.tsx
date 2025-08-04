@@ -73,22 +73,14 @@ export const QuestionsMessage = ({ questions, onAnalyze }: QuestionsMessageProps
           disabled={currentQuestionIndex === 0}
         >
           <CustomText
-            style={[
-              styles.navButtonText,
-              styles.navButtonTextPrev,
-              currentQuestionIndex === 0 && styles.disabledButtonText,
-            ]}
+            style={[styles.navButtonText, styles.navButtonTextPrev, currentQuestionIndex === 0 && styles.disabledButtonText]}
           >
             Previous
           </CustomText>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[
-            styles.navButton,
-            styles.nextButton,
-            currentQuestionIndex === questions.length - 1 && styles.disabledButton,
-          ]}
+          style={[styles.navButton, styles.nextButton, currentQuestionIndex === questions.length - 1 && styles.disabledButton]}
           onPress={() => handleChangeQuestion("next")}
           disabled={currentQuestionIndex === questions.length - 1}
         >

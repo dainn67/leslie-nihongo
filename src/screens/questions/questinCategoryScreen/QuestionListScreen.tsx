@@ -1,15 +1,15 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { View, StyleSheet, ScrollView, Animated, TextInput } from "react-native";
 import { Question, QuestionType, QuestionTypeTitles } from "../../../models/question";
 import { AppBar } from "../../../components/AppBar";
 import { Ionicons } from "@expo/vector-icons";
 import { RootStackParamList } from "../../../app/DrawerNavigator";
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { RouteProp, useNavigation, useRoute, useFocusEffect } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { QuestionView } from "../../chatbot/components/chatBubble/QuestionView";
 import { QuestionNumberSelector } from "./components/QuestionNumberSelector";
 import { createReviseQuestionSet } from "../../../service/questionService";
-import { getQuestionsByType } from "../../../storage/database/tables";
+import { deleteQuestion, getQuestionsByType, insertQuestions } from "../../../storage/database/tables";
 import { SimpleTextInput } from "../../../components/input/SimpleTextInput";
 import MainButton from "../../../components/buttons/MainButton";
 
@@ -30,22 +30,43 @@ export const QuestionListScreen = () => {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [searchAnimation] = useState(new Animated.Value(0));
 
+  // Local state to update the question after leave this screen
+  const [listBookmarked, setListBookmarked] = useState<number[]>([]);
+
   const inputRef = useRef<TextInput>(null);
 
-  useEffect(() => {
-    const questions = getQuestionsByType(type);
-    setQuestions(questions);
-    setFilteredQuestions(questions);
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      const questions = getQuestionsByType(type);
+      setQuestions(questions);
+      setFilteredQuestions(questions);
+      setListBookmarked(questions.map((q) => q.questionId));
+    }, []),
+  );
 
   const handleSelectQuestion = (amount: number) => {
     const selectedQuestions = createReviseQuestionSet(questions, amount);
     navigation.navigate("QuestionGameScreen", { questions: selectedQuestions });
   };
 
+  const handleBookmarkPress = (isBookmarked: boolean, question: Question) => {
+    // Update database
+    if (isBookmarked) {
+      setListBookmarked((prevState) => {
+        if (!prevState.includes(question.questionId)) {
+          return [...prevState, question.questionId];
+        }
+        return prevState;
+      });
+      insertQuestions([question]);
+    } else {
+      setListBookmarked((prevState) => prevState.filter((id) => id !== question.questionId));
+      deleteQuestion(question.questionId);
+    }
+  };
+
   const handleOpenSearch = () => {
     if (isSearchVisible) {
-      // Hide search with animation
       Animated.timing(searchAnimation, {
         toValue: 0,
         duration: 300,
@@ -54,7 +75,6 @@ export const QuestionListScreen = () => {
         setIsSearchVisible(false);
       });
     } else {
-      // Show search with animation
       setIsSearchVisible(true);
       Animated.timing(searchAnimation, {
         toValue: 1,
@@ -102,8 +122,9 @@ export const QuestionListScreen = () => {
                 question={question}
                 questionIndex={index}
                 totalQuestions={questions.length}
-                bookmarked={true}
+                bookmarked={listBookmarked.includes(question.questionId)}
                 showCorrectAnswer={true}
+                onBookmarkPress={(isBookmarked) => handleBookmarkPress(isBookmarked, question)}
               />
             </View>
           ))}
