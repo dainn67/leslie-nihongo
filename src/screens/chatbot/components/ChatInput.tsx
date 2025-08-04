@@ -8,10 +8,11 @@ import { AppConfig } from "../../../constants/appConfig";
 
 interface ChatInputProps {
   disable?: boolean;
+  placeHolderText?: string;
   onSend: (message: string) => void;
 }
 
-const ChatInput = ({ disable = false, onSend }: ChatInputProps) => {
+const ChatInput = ({ disable, placeHolderText, onSend }: ChatInputProps) => {
   const [message, setMessage] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const { colors } = useTheme();
@@ -39,7 +40,7 @@ const ChatInput = ({ disable = false, onSend }: ChatInputProps) => {
             </View>
             <GestureTextInput
               style={[styles.textInput, disable && styles.textInputDisabled]}
-              placeholder="Ask anything..."
+              placeholder={(placeHolderText ?? disable) ? "Đang suy nghĩ ..." : "Nhập câu hỏi"}
               placeholderTextColor={colors.textTertiary}
               value={message}
               onSubmitEditing={handleSend}
@@ -72,7 +73,7 @@ const ChatInput = ({ disable = false, onSend }: ChatInputProps) => {
   );
 };
 
-const getStyles = (isFocused: boolean, message: string, colors: any, disable: boolean) =>
+const getStyles = (isFocused: boolean, message: string, colors: any, disable?: boolean) =>
   StyleSheet.create({
     inputContainer: {
       flexDirection: "row",

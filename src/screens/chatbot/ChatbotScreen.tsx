@@ -17,15 +17,15 @@ import {
   setUserTarget,
 } from "../../features/userProgress/userProgressSlice";
 import { createQuestionTable, deleteAllTables } from "../../storage/database/tables";
-import { createChatMessage } from "../../models/chatMessage";
+import { createChatMessage, MessageStatus } from "../../models/chatMessage";
 import { sendStreamMessage } from "../../api/chatMessageAPI";
 import { getUserProgressFromStorage } from "../../service/userProgressSerivice";
 import { createConversationHistory } from "../../service/questionService";
 import { MyDatePicker } from "../../components/datePicker/MyDatePicker";
 import { convertDateToDDMMYYYY } from "../../utils/utils";
-import * as FileSystem from "expo-file-system";
 import ChatInput from "./components/ChatInput";
 import ClearChatDialog from "./components/ClearChatDialog";
+import * as FileSystem from "expo-file-system";
 
 export type DrawerParamList = {
   ChatbotScreen: undefined;
@@ -46,6 +46,7 @@ export const ChatbotScreen = () => {
   const messages = useAppSelector((state) => state.chatbot.messages);
   const userProgress = useAppSelector((state) => state.userProgress.userProgress);
   const conversationId = useAppSelector((state) => state.chatbot.conversationId);
+  const isGenerating = messages[messages.length - 1]?.messageStatus != MessageStatus.DONE;
 
   const [initialized, setInitialized] = useState(false);
   const [datePickerVisible, setDatePickerVisible] = useState(false);
@@ -226,7 +227,7 @@ export const ChatbotScreen = () => {
           onDevClick={handleDevClick}
         />
         <ChatMessageList messages={messages} onClickAction={handleClickAction} onAnalyze={handleAnalyze} />
-        <ChatInput onSend={handleSend} />
+        <ChatInput disable={isGenerating} onSend={handleSend} />
 
         <ClearChatDialog
           title="Xoá hội thoại?"

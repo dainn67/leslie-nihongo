@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Question } from "../../models/question";
 
 type GameState = {
-  currentIndex: number;
+  currentQuestionIndex: number;
   currenQuestionIndex: number;
   questions: Question[];
   selectedAnswers: { [key: number]: number };
@@ -10,7 +10,7 @@ type GameState = {
 };
 
 const initialState: GameState = {
-  currentIndex: 0,
+  currentQuestionIndex: 0,
   currenQuestionIndex: 0,
   questions: [],
   selectedAnswers: {},
@@ -23,14 +23,14 @@ const gameSlice = createSlice({
   reducers: {
     initGame: (state, action: PayloadAction<Question[]>) => {
       state.questions = action.payload;
-      state.currentIndex = 0;
-      state.currenQuestionIndex = state.questions[state.currentIndex].questionId;
+      state.currentQuestionIndex = 0;
+      state.currenQuestionIndex = state.questions[state.currentQuestionIndex].questionId;
       state.selectedAnswers = {};
       state.bookmarkedQuestions = {};
     },
     setIndex: (state, action: PayloadAction<number>) => {
-      state.currentIndex = action.payload;
-      state.currenQuestionIndex = state.questions[state.currentIndex].questionId;
+      state.currentQuestionIndex = action.payload;
+      state.currenQuestionIndex = state.questions[state.currentQuestionIndex].questionId;
     },
     setSelectedAnswer: (state, action: PayloadAction<number>) => {
       state.selectedAnswers[state.currenQuestionIndex] = action.payload;

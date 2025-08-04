@@ -96,8 +96,6 @@ export const sendStreamMessage = ({
       if (isQuestionJson) {
         const { questions, summary } = extractQuestionsFromJson(fullText);
         dispatch(updateLastMessageData({ questions, summary, status: MessageStatus.DONE }));
-      } else {
-        dispatch(updateLastMessageData({ status: MessageStatus.STREAMING }));
       }
     },
     onError: (error) => console.log("SSE error", error),

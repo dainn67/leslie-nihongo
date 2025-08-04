@@ -23,7 +23,6 @@ export type ChatMessage = {
 
   // Streaming text
   words: string[];
-  currentIndex: number;
   fullText: string;
   wordsLength: number;
 
@@ -51,7 +50,6 @@ export const createChatMessage = (partial?: Partial<ChatMessage>): ChatMessage =
     id: partial?.id ?? timestamp,
     fullText,
     words,
-    currentIndex: partial?.currentIndex ?? 0,
     wordsLength: partial?.wordsLength ?? words.length,
     questions: partial?.questions ?? [],
     suggestedActions: partial?.suggestedActions ?? [],

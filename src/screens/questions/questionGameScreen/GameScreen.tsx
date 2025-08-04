@@ -23,11 +23,11 @@ export const QuestionGameScreen = () => {
 
   const { colors } = useTheme();
 
-  const currentIndex = useAppSelector((state: RootState) => state.game.currentIndex);
+  const currentQuestionIndex = useAppSelector((state: RootState) => state.game.currentQuestionIndex);
   const mapAnswerIds = useAppSelector((state: RootState) => state.game.selectedAnswers);
 
-  const question = questions[currentIndex];
-  const progress = ((currentIndex + 1) / questions.length) * 100;
+  const question = questions[currentQuestionIndex];
+  const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
 
   const navigation = useNavigation<QuestionGameScreenNavigationProp>();
 
@@ -45,7 +45,7 @@ export const QuestionGameScreen = () => {
 
   const handleChangeQuestion = (direction: "next" | "prev") => {
     // Check submit
-    if (direction == "next" && currentIndex === questions.length - 1) {
+    if (direction == "next" && currentQuestionIndex === questions.length - 1) {
       navigation.navigate("ResultScreen", {
         questions,
         mapAnswerIds,
@@ -55,9 +55,9 @@ export const QuestionGameScreen = () => {
 
     // Change question
     if (direction === "next") {
-      dispatch(setIndex(currentIndex + 1));
+      dispatch(setIndex(currentQuestionIndex + 1));
     } else {
-      dispatch(setIndex(currentIndex - 1));
+      dispatch(setIndex(currentQuestionIndex - 1));
     }
   };
 
@@ -80,7 +80,7 @@ export const QuestionGameScreen = () => {
       </View>
       <ScrollView style={style.questionContainer}>
         <QuestionView
-          questionIndex={currentIndex}
+          questionIndex={currentQuestionIndex}
           question={question}
           totalQuestions={questions.length}
           selectedAnswer={mapAnswerIds[question.questionId]}
@@ -91,12 +91,12 @@ export const QuestionGameScreen = () => {
       </ScrollView>
       <View style={style.buttonContainer}>
         <TouchableOpacity
-          style={[style.navButton, style.prevButton, currentIndex === 0 && style.disabledButton]}
+          style={[style.navButton, style.prevButton, currentQuestionIndex === 0 && style.disabledButton]}
           onPress={() => handleChangeQuestion("prev")}
-          disabled={currentIndex === 0}
+          disabled={currentQuestionIndex === 0}
         >
           <CustomText
-            style={[style.navButtonText, style.navButtonTextPrev, currentIndex === 0 && style.disabledButtonText]}
+            style={[style.navButtonText, style.navButtonTextPrev, currentQuestionIndex === 0 && style.disabledButtonText]}
           >
             Previous
           </CustomText>
