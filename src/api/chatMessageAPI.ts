@@ -21,11 +21,13 @@ export const sendStreamMessage = ({
   target,
   examDate,
   analyzeChatGame,
+  conversationSummary,
   conversationId,
   dispatch,
 }: {
   message?: string;
   conversationHistory?: string;
+  conversationSummary?: string;
   actionId?: string;
   level?: string;
   target?: string;
@@ -60,6 +62,7 @@ export const sendStreamMessage = ({
         target: target,
         action_id: actionId,
         conversation_history: conversationHistory,
+        conversation_summary: conversationSummary,
         current_date: now,
         exam_date: examDateString,
         analyze_chat_game: analyzeChatGame ? 1 : 0,
@@ -88,6 +91,11 @@ export const sendStreamMessage = ({
         startReceiveMessage = true;
         dispatch(updateLastMessageData({ messageId }));
         dispatch(updateConversationId(conversationId));
+      } else if (type === "message_end") {
+        const usage = data["metadata"]["usage"];
+        console.log(
+          `Tokens: ${usage["total_tokens"]} (${usage["prompt_tokens"]} input, ${usage["completion_tokens"]} completion) => ${usage["total_price"]} ${usage["currency"]}`,
+        );
       }
     },
     onDone: () => {

@@ -67,6 +67,7 @@ export const ChatbotScreen = () => {
           level: userProgress.level,
           target: userProgress.target,
           examDate: userProgress.examDate,
+          conversationSummary,
           conversationId,
           dispatch,
         });
@@ -79,6 +80,7 @@ export const ChatbotScreen = () => {
           level: userProgress.level,
           target: userProgress.target,
           examDate: userProgress.examDate,
+          conversationSummary,
           conversationId,
           dispatch,
         });
@@ -103,6 +105,7 @@ export const ChatbotScreen = () => {
       level: userProgress.level,
       target: userProgress.target,
       examDate: userProgress.examDate,
+      conversationSummary,
       conversationId,
       dispatch,
     });
@@ -135,6 +138,7 @@ export const ChatbotScreen = () => {
           level: userLevel,
           target: userTarget,
           examDate: 0,
+          conversationSummary,
           conversationId,
           dispatch,
         });
@@ -162,6 +166,7 @@ export const ChatbotScreen = () => {
       level: userLevel.length > 0 ? userLevel : userProgress.level,
       target: userTarget.length > 0 ? userTarget : userProgress.target,
       examDate: userProgress.examDate,
+      conversationSummary,
       conversationId,
       dispatch,
     });
@@ -185,6 +190,7 @@ export const ChatbotScreen = () => {
       level: userProgress.level,
       target: userProgress.target,
       examDate: selectedDate.getTime(),
+      conversationSummary,
       conversationId,
       dispatch,
     });
@@ -201,6 +207,7 @@ export const ChatbotScreen = () => {
         target: userProgress.target,
         examDate: userProgress.examDate,
         analyzeChatGame: true,
+        conversationSummary,
         conversationId,
         dispatch,
       });
