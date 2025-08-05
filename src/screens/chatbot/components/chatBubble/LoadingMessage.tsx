@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Animated, View, StyleSheet, ViewStyle } from "react-native";
 import { CustomText } from "../../../../components/text/customText";
-import { useTheme } from "../../../../theme";
+import { useAppTheme } from "../../../../theme";
 
 interface LoadingMessageProps {
   isQuestion?: boolean;
@@ -12,6 +12,8 @@ export const LoadingMessage = ({ isQuestion, style }: LoadingMessageProps) => {
   const dots = Array.from({ length: 3 }, () => useRef(new Animated.Value(0)).current);
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  const { isDarkMode } = useAppTheme();
 
   useEffect(() => {
     // Fade in animation
@@ -83,7 +85,6 @@ export const LoadingMessage = ({ isQuestion, style }: LoadingMessageProps) => {
   return (
     <Animated.View
       style={[
-        styles.loadingContainer,
         {
           opacity: fadeAnim,
           transform: [{ scale: pulseAnim }],
@@ -91,7 +92,7 @@ export const LoadingMessage = ({ isQuestion, style }: LoadingMessageProps) => {
         style,
       ]}
     >
-      <View style={styles.greyBackground}>
+      <View style={[styles.loadingContainer, { backgroundColor: isDarkMode ? "#222222" : "#f0f0f0" }]}>
         <View style={styles.contentContainer}>
           {isQuestion && <CustomText style={styles.loadingText}>Đang tạo câu hỏi</CustomText>}
           <View style={[styles.dotsContainer, { marginLeft: isQuestion ? 8 : 0 }]}>
@@ -102,6 +103,7 @@ export const LoadingMessage = ({ isQuestion, style }: LoadingMessageProps) => {
                   styles.dot,
                   {
                     transform: [{ translateY: dots[index] }],
+                    backgroundColor: isDarkMode ? "white" : "#65676B",
                   },
                 ]}
               />
@@ -116,10 +118,6 @@ export const LoadingMessage = ({ isQuestion, style }: LoadingMessageProps) => {
 const styles = StyleSheet.create({
   loadingContainer: {
     borderRadius: 100,
-  },
-  greyBackground: {
-    backgroundColor: "#E4E6EB",
-    borderRadius: 20,
     paddingVertical: 12,
     paddingHorizontal: 16,
   },
@@ -144,7 +142,6 @@ const styles = StyleSheet.create({
     height: 12,
     borderRadius: 6,
     marginHorizontal: 4,
-    backgroundColor: "#65676B",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,

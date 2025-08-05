@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import { Dialog } from "react-native-paper";
-import { useTheme } from "../../theme";
+import { useAppTheme } from "../../theme";
 import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import MainButton from "../buttons/MainButton";
 
@@ -24,7 +24,7 @@ export const MyDatePicker = ({
   setVisible,
   handleChange,
 }: MyDatePickerProps) => {
-  const { colors } = useTheme();
+  const { colors } = useAppTheme();
   const [tempDate, setTempDate] = useState(date);
 
   const handleDateChange = (event: DateTimePickerEvent, selectedDate: Date | undefined) => {

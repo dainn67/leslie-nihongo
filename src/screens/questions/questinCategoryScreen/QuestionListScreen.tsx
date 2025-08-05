@@ -12,6 +12,7 @@ import { createReviseQuestionSet } from "../../../service/questionService";
 import { deleteQuestion, getQuestionsByType, insertQuestions } from "../../../storage/database/tables";
 import { SimpleTextInput } from "../../../components/input/SimpleTextInput";
 import MainButton from "../../../components/buttons/MainButton";
+import { useAppTheme } from "../../../theme";
 
 type QuestionListScreenRouteProp = RouteProp<RootStackParamList, "QuestionListScreen">;
 type QuestionListScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "QuestionListScreen">;
@@ -19,6 +20,7 @@ type QuestionListScreenNavigationProp = NativeStackNavigationProp<RootStackParam
 export const QuestionListScreen = () => {
   const navigation = useNavigation<QuestionListScreenNavigationProp>();
   const route = useRoute<QuestionListScreenRouteProp>();
+  const { colors } = useAppTheme();
 
   const { type } = route.params as { type: QuestionType };
 
@@ -113,7 +115,7 @@ export const QuestionListScreen = () => {
         onRightPress={handleOpenSearch}
       />
 
-      <View style={styles.stackContainer}>
+      <View style={[styles.stackContainer, { backgroundColor: colors.background }]}>
         {/* Main content (scrollable list of questions) */}
         <ScrollView style={styles.questionListContainer}>
           {filteredQuestions.map((question, index) => (

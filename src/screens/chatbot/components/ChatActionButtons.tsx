@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { Animated, View } from "react-native";
-import { useTheme } from "../../../theme";
+import { useAppTheme } from "../../../theme";
 import { SuggestedAction } from "../../../models/chatMessage";
 import MainButton from "../../../components/buttons/MainButton";
 
@@ -10,7 +10,7 @@ interface ChatActionButtonsProps {
 }
 
 export const ChatActionButtons = ({ suggestedActions, onClickAction }: ChatActionButtonsProps) => {
-  const { colors } = useTheme();
+  const { colors } = useAppTheme();
 
   const handleClickAction = (title: string, actionId?: string) => {
     if (onClickAction) onClickAction(title, actionId);

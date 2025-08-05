@@ -5,6 +5,7 @@ import { Question } from "../../../../models/question";
 import { IconButton } from "../../../../components/buttons";
 import { AppIcons } from "../../../../constants/appIcons";
 import { Answer } from "../../../../models/answer";
+import { useAppTheme } from "../../../../theme";
 
 interface QuestionViewProps {
   question: Question;
@@ -27,29 +28,29 @@ export const QuestionView = ({
   onAnswerSelect,
   onBookmarkPress,
 }: QuestionViewProps) => {
+  const { colors, isDarkMode } = useAppTheme();
   const getAnswerLabel = (index: number) => {
     const labels = ["A", "B", "C", "D"];
     return (labels[index] || "A") + ".";
   };
 
   return (
-    <View style={[styles.questionCard]}>
+    <View style={[styles.questionCard, { backgroundColor: isDarkMode ? colors.backgroundSecondary : "white" }]}>
       <View style={styles.questionHeader}>
         {/* Question Index and Text */}
         <View style={styles.questionHeaderContent}>
           <View style={styles.questionIndex}>
-            <CustomText style={styles.questionNumberText}>
+            <CustomText style={[styles.questionNumberText, { color: isDarkMode ? colors.textTertiary : "gray" }]}>
               Câu hỏi {questionIndex + 1}/{totalQuestions}:
             </CustomText>
           </View>
-          <CustomText style={styles.questionText}>{question.question}</CustomText>
+          <CustomText style={[styles.questionText, { color: isDarkMode ? colors.textSecondary : "#2C3E50" }]}>
+            {question.question}
+          </CustomText>
         </View>
 
         {/* Save icon button */}
-        <IconButton
-          icon={bookmarked ? AppIcons.bookmarked : AppIcons.bookmark}
-          onPress={() => onBookmarkPress?.(!bookmarked)}
-        />
+        <IconButton icon={bookmarked ? AppIcons.bookmarked : AppIcons.bookmark} onPress={() => onBookmarkPress?.(!bookmarked)} />
       </View>
 
       {/* Answers */}
@@ -60,6 +61,7 @@ export const QuestionView = ({
             onPress={() => onAnswerSelect?.(a.answerId)}
             style={[
               styles.answerCard,
+              { backgroundColor: isDarkMode ? colors.backgroundTertiary : "#F8F9FA" },
               (selectedAnswer === a.answerId || showCorrectAnswer) && a.isCorrect && styles.correctAnswer,
               selectedAnswer === a.answerId && !a.isCorrect && styles.wrongAnswer,
               selectedAnswer !== undefined && selectedAnswer !== a.answerId && a.isCorrect && styles.correctAnswer,
@@ -70,13 +72,25 @@ export const QuestionView = ({
               <CustomText
                 style={[
                   styles.answerLabelText,
+                  { color: isDarkMode ? "white" : "#666" },
                   selectedAnswer === a.answerId && !a.isCorrect && styles.wrongLabel,
-                  selectedAnswer !== undefined && selectedAnswer !== a.answerId && a.isCorrect && styles.correctLabel,
+                  (showCorrectAnswer || (selectedAnswer !== undefined && selectedAnswer !== a.answerId)) &&
+                    a.isCorrect &&
+                    styles.correctLabel,
                 ]}
               >
                 {getAnswerLabel(index)}
               </CustomText>
-              <CustomText style={[styles.answerText, selectedAnswer === a.answerId && styles.selectedAnswerText]}>
+              <CustomText
+                style={[
+                  styles.answerText,
+                  { color: isDarkMode ? "white" : "#2C3E50" },
+                  ((showCorrectAnswer && a.isCorrect) ||
+                    selectedAnswer === a.answerId ||
+                    (selectedAnswer !== undefined && selectedAnswer != a.answerId && a.isCorrect)) &&
+                    styles.selectedAnswerText,
+                ]}
+              >
                 {a.text}
               </CustomText>
             </View>
@@ -100,7 +114,6 @@ export const QuestionView = ({
 
 const styles = StyleSheet.create({
   questionCard: {
-    backgroundColor: "#FFFFFF",
     borderRadius: 16,
     padding: 20,
     paddingBottom: 0,
@@ -135,13 +148,11 @@ const styles = StyleSheet.create({
   },
   questionNumberText: {
     fontSize: 14,
-    color: "gray",
     fontWeight: "bold",
   },
   questionText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#2C3E50",
     flex: 1,
     lineHeight: 24,
   },
@@ -149,7 +160,6 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   answerCard: {
-    backgroundColor: "#F8F9FA",
     borderRadius: 12,
     marginBottom: 12,
     borderWidth: 1.5,
@@ -164,7 +174,6 @@ const styles = StyleSheet.create({
   answerLabelText: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#666",
     marginLeft: 8,
     marginRight: 12,
     marginVertical: 4,
@@ -177,11 +186,11 @@ const styles = StyleSheet.create({
   },
   answerText: {
     fontSize: 16,
-    color: "#2C3E50",
     flex: 1,
     lineHeight: 22,
   },
   selectedAnswerText: {
+    color: "black",
     fontWeight: "600",
   },
   correctAnswer: {

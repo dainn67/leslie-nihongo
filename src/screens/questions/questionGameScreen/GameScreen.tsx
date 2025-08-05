@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { RootStackParamList } from "../../../app/DrawerNavigator";
-import { useTheme } from "../../../theme";
+import { useAppTheme } from "../../../theme";
 import { AppBar } from "../../../components/AppBar";
 import { Ionicons } from "@expo/vector-icons";
 import { QuestionView } from "../../chatbot/components/chatBubble/QuestionView";
@@ -22,7 +22,7 @@ export const QuestionGameScreen = () => {
   const route = useRoute<QuestionGameScreenRouteProp>();
   const { questions } = route.params;
 
-  const { colors } = useTheme();
+  const { colors } = useAppTheme();
 
   const currentQuestionIndex = useAppSelector((state: RootState) => state.game.currentQuestionIndex);
   const mapAnswerIds = useAppSelector((state: RootState) => state.game.selectedAnswers);

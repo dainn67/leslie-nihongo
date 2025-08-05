@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet, TouchableOpacity, SafeAreaView } from "react-native";
-import { useTheme } from "../theme";
+import { useAppTheme } from "../theme";
 import { CustomText } from "./text/customText";
 import { IconButton } from "./buttons";
 import { AppIcons } from "../constants/appIcons";
@@ -15,7 +15,7 @@ interface AppBarProps {
 }
 
 export const AppBar: React.FC<AppBarProps> = ({ title, leftIcon, rightIcon, onLeftPress, onRightPress, onDevClick }) => {
-  const { colors } = useTheme();
+  const { colors } = useAppTheme();
 
   return (
     <SafeAreaView style={{ backgroundColor: colors.primary }}>

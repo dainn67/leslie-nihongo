@@ -37,6 +37,7 @@ export const extractSuggestedActions = (fullText: string) => {
 
 export const createConversationHistory = (messages: ChatMessage[]) => {
   return messages
+    .slice(-10)
     .map((m) => {
       const senderString = m.sender == Sender.BOT ? "Chatbot" : "User";
       let text = `(${senderString}): ${m.sender == Sender.BOT ? m.summary : m.fullText}`;

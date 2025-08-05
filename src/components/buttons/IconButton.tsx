@@ -1,5 +1,6 @@
 import React from "react";
 import { Image, ImageSourcePropType, StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
+import { useAppTheme } from "../../theme";
 
 interface IconButtonProps {
   icon: ImageSourcePropType;
@@ -10,10 +11,14 @@ interface IconButtonProps {
 }
 
 export const IconButton = ({ icon, iconWidth, iconHeight, style, onPress }: IconButtonProps) => {
+  const { colors, isDarkMode } = useAppTheme();
   const styles = getStyles(iconWidth, iconHeight);
 
   return (
-    <TouchableOpacity style={[styles.button, style]} onPress={onPress}>
+    <TouchableOpacity
+      style={[styles.button, { backgroundColor: isDarkMode ? colors.backgroundTertiary : "#F0F8FF" }, style]}
+      onPress={onPress}
+    >
       <Image source={icon} style={styles.icon} />
     </TouchableOpacity>
   );
@@ -22,7 +27,6 @@ export const IconButton = ({ icon, iconWidth, iconHeight, style, onPress }: Icon
 const getStyles = (iconWidth?: number, iconHeight?: number) =>
   StyleSheet.create({
     button: {
-      backgroundColor: "#F0F8FF",
       borderRadius: 12,
       padding: 8,
     },

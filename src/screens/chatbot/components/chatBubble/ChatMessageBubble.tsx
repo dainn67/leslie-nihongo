@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import { useTheme } from "../../../../theme";
+import { useAppTheme } from "../../../../theme";
 import { WordComponent } from "../../../../components/streamingText/WordComponent";
 import { LoadingMessage } from "./LoadingMessage";
 import { ChatActionButtons } from "../ChatActionButtons";
@@ -22,7 +22,8 @@ export const ChatMessageBubble = ({
   onClickAction,
   onAnalyze,
 }: ChatMessageBubbleProps) => {
-  const { colors } = useTheme();
+  const { colors } = useAppTheme();
+
   const isUser = message.sender === Sender.USER;
 
   const styles = getStyle(colors, isUser, componentHeight, isLastMessage);
@@ -41,7 +42,12 @@ export const ChatMessageBubble = ({
         {/* Streaming text */}
         {isStreaming &&
           message.words.map((word, index) => (
-            <WordComponent key={index} fontSize={16} word={word} color={isUser ? "white" : "black"} />
+            <WordComponent
+              key={index}
+              fontSize={16}
+              word={word}
+              color={isUser ? colors.userChatMessageText : colors.botChatMessageText}
+            />
           ))}
 
         {/* Generated questions */}

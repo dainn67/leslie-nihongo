@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { ChatMessageBubble } from "./chatBubble/ChatMessageBubble";
 import { ScrollView, View, StyleSheet, LayoutChangeEvent } from "react-native";
-import { useTheme } from "../../../theme";
+import { useAppTheme } from "../../../theme";
 import { ChatMessage } from "../../../models/chatMessage";
 
 interface ChatMessageListProps {
@@ -12,7 +12,7 @@ interface ChatMessageListProps {
 
 export const ChatMessageList = ({ messages, onClickAction, onAnalyze }: ChatMessageListProps) => {
   const scrollViewRef = useRef<ScrollView>(null);
-  const { colors } = useTheme();
+  const { colors } = useAppTheme();
   const [componentHeight, setComponentHeight] = useState(0);
 
   // Auto scroll to bottom when new messages are added

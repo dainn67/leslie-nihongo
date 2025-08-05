@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { Dimensions, Modal, StyleSheet, View, TouchableOpacity } from "react-native";
-import { useTheme } from "../../../../theme";
+import { useAppTheme } from "../../../../theme";
 import { CustomText } from "../../../../components/text/customText";
 
 interface QuestionNumberSelectorProps {
@@ -20,7 +20,7 @@ export const QuestionNumberSelector = ({
   setVisible,
   onSelectQuestion,
 }: QuestionNumberSelectorProps) => {
-  const { colors } = useTheme();
+  const { colors } = useAppTheme();
 
   // Tính toán các tùy chọn số lượng câu hỏi được làm tròn
   const questionOptions = useMemo(() => {

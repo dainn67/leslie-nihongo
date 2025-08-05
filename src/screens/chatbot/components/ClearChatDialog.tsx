@@ -1,6 +1,6 @@
 import React from "react";
 import { Modal, TouchableOpacity, View, StyleSheet, Dimensions } from "react-native";
-import { useTheme } from "../../../theme";
+import { useAppTheme } from "../../../theme";
 import { Ionicons } from "@expo/vector-icons";
 import { CustomText } from "../../../components/text/customText";
 
@@ -15,7 +15,7 @@ interface ClearChatDialogProps {
 }
 
 export const ClearChatDialog = ({ title, message, cancelText, confirmText, visible, setVisible, onClearConversation }: ClearChatDialogProps) => {
-  const { colors } = useTheme();
+  const { colors } = useAppTheme();
 
   const handleConfirm = () => {
     onClearConversation();

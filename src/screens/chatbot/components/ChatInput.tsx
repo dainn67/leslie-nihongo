@@ -3,7 +3,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, TouchableOpacity, View, KeyboardAvoidingView, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TextInput as GestureTextInput } from "react-native-gesture-handler";
-import { useTheme } from "../../../theme";
+import { useAppTheme } from "../../../theme";
 import { AppConfig } from "../../../constants/appConfig";
 
 interface ChatInputProps {
@@ -15,7 +15,7 @@ interface ChatInputProps {
 const ChatInput = ({ disable, placeHolderText, onSend }: ChatInputProps) => {
   const [message, setMessage] = useState("");
   const [isFocused, setIsFocused] = useState(false);
-  const { colors } = useTheme();
+  const { colors } = useAppTheme();
 
   const styles = getStyles(isFocused, message, colors, disable);
 

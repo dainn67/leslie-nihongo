@@ -5,7 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../../app/DrawerNavigator";
-import { useTheme } from "../../../theme";
+import { useAppTheme } from "../../../theme";
 import { CustomText } from "../../../components/text/customText";
 import { createResultSummary } from "../../../service/questionService";
 import { sendMessage } from "../../../api/chatMessageAPI";
@@ -17,7 +17,7 @@ type ResultScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 
 export const ResultScreen = () => {
   const route = useRoute<ResultScreenRouteProp>();
   const navigation = useNavigation<ResultScreenNavigationProp>();
-  const { colors } = useTheme();
+  const { colors } = useAppTheme();
 
   const { questions, mapAnswerIds } = route.params;
   const [correctQuestions, setCorrectQuestions] = useState(0);

@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View } from "react-native";
 import { ChatbotScreen } from "../screens/chatbot/ChatbotScreen";
 import { ThemeToggleButton } from "../components/ThemeToggleButton";
-import { useTheme } from "../theme";
+import { useAppTheme } from "../theme";
 import { Ionicons } from "@expo/vector-icons";
 import { CustomText } from "../components/text/customText";
 import { QuestionsScreen } from "../screens/questions/questionScreen/QuestionsScreen";
@@ -28,7 +28,7 @@ const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export const DrawerNavigator = () => {
-  const { colors } = useTheme();
+  const { colors } = useAppTheme();
 
   return (
     <Drawer.Navigator

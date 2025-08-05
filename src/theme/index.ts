@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../app/store";
 import { darkColors, lightColors } from "./colors";
 
-export const useTheme = () => {
+export const useAppTheme = () => {
   const systemScheme = useColorScheme();
   const themeMode = useSelector((state: RootState) => state.theme.mode);
 

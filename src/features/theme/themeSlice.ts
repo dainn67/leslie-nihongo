@@ -7,28 +7,22 @@ interface ThemeState {
 }
 
 const initialState: ThemeState = {
-  mode: "system",
+  mode: "light",
 };
 
 export const themeSlice = createSlice({
-  name: "theme",
+  name: "themeSlice",
   initialState,
   reducers: {
-    setThemeMode: (state, action: PayloadAction<ThemeMode>) => {
-      state.mode = action.payload;
-    },
     toggleTheme: (state) => {
       if (state.mode === "light") {
         state.mode = "dark";
-      } else if (state.mode === "dark") {
-        state.mode = "light";
       } else {
-        // If system, default to light
         state.mode = "light";
       }
     },
   },
 });
 
-export const { setThemeMode, toggleTheme } = themeSlice.actions;
+export const { toggleTheme } = themeSlice.actions;
 export default themeSlice.reducer;
