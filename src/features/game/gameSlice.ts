@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Question } from "../../models/question";
+import { shuffleQuestionAnswers } from "../../service/questionService";
 
 type GameState = {
   currentQuestionIndex: number;
@@ -22,7 +23,7 @@ const gameSlice = createSlice({
   initialState,
   reducers: {
     initGame: (state, action: PayloadAction<Question[]>) => {
-      state.questions = action.payload;
+      state.questions = shuffleQuestionAnswers(action.payload);
       state.currentQuestionIndex = 0;
       state.currenQuestionIndex = state.questions[state.currentQuestionIndex].questionId;
       state.selectedAnswers = {};

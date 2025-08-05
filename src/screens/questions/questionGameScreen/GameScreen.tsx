@@ -24,12 +24,14 @@ export const QuestionGameScreen = () => {
 
   const { colors } = useAppTheme();
 
+  const questionList = useAppSelector((state: RootState) => state.game.questions);
+
   const currentQuestionIndex = useAppSelector((state: RootState) => state.game.currentQuestionIndex);
   const mapAnswerIds = useAppSelector((state: RootState) => state.game.selectedAnswers);
   const bookmarkIds = useAppSelector((state: RootState) => state.game.bookmarkedQuestions);
 
-  const question = questions[currentQuestionIndex];
-  const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+  const question = questionList[currentQuestionIndex];
+  const progress = ((currentQuestionIndex + 1) / questionList.length) * 100;
 
   const navigation = useNavigation<QuestionGameScreenNavigationProp>();
 
@@ -56,8 +58,8 @@ export const QuestionGameScreen = () => {
 
   const handleChangeQuestion = (direction: "next" | "prev") => {
     // Check submit
-    if (direction == "next" && currentQuestionIndex === questions.length - 1) {
-      navigation.navigate("ResultScreen", {
+    if (direction == "next" && currentQuestionIndex === questionList.length - 1) {
+      navigation.replace("ResultScreen", {
         questions,
         mapAnswerIds,
       });
@@ -93,7 +95,7 @@ export const QuestionGameScreen = () => {
         <QuestionView
           questionIndex={currentQuestionIndex}
           question={question}
-          totalQuestions={questions.length}
+          totalQuestions={questionList.length}
           selectedAnswer={mapAnswerIds[question.questionId]}
           bookmarked={bookmarkIds.includes(question.questionId)}
           onAnswerSelect={handleAnswerSelect}
