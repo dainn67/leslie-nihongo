@@ -8,21 +8,27 @@ import Constants from "expo-constants";
 const { DIFY_API_KEY } = Constants.expoConfig?.extra ?? {};
 const user = "dainn";
 
-const extractInformation = createAsyncThunk(ApiConfig.difyServerUrl, async (message: string) => {
-  const result = await postData({
-    url: ApiConfig.difyServerUrl,
-    token: DIFY_API_KEY,
-    body: {
-      query: message,
-      inputs: {},
-      response_mode: "blocking",
-      user: user,
-      auto_generate_name: false,
-    },
-  });
+export const extractInformation = createAsyncThunk(
+  ApiConfig.difyServerUrl,
+  async ({ message, previous_information }: { message: string; previous_information: string }) => {
+    const result = await postData({
+      url: ApiConfig.difyServerUrl,
+      token: DIFY_API_KEY,
+      body: {
+        query: message,
+        inputs: {
+          extract_information: 1,
+          previous_information: previous_information,
+        },
+        response_mode: "blocking",
+        user: user,
+        auto_generate_name: false,
+      },
+    });
 
-  return result["answer"];
-});
+    return result["answer"].trim();
+  },
+);
 
 type ChatState = {
   messages: ChatMessage[];
@@ -98,10 +104,11 @@ const chatbotSlice = createSlice({
     clearChat: () => initialState,
   },
   extraReducers: (builder) => {
-    builder
-      .addCase(extractInformation.pending, (state) => {})
-      .addCase(extractInformation.fulfilled, (state, action) => {})
-      .addCase(extractInformation.rejected, (state, action) => {});
+    builder.addCase(extractInformation.fulfilled, (state, action) => {
+      if (action.payload) {
+        state.conversationSummary = action.payload;
+      }
+    });
   },
 });
 

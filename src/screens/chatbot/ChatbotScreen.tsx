@@ -8,7 +8,7 @@ import { useNavigation } from "@react-navigation/native";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { AppConfig } from "../../constants/appConfig";
-import { addLoading, addMessage, clearChat } from "../../features/chatbot/chatbotSlice";
+import { addLoading, addMessage, clearChat, extractInformation } from "../../features/chatbot/chatbotSlice";
 import {
   clearUserProgress,
   setUserExamDate,
@@ -46,6 +46,7 @@ export const ChatbotScreen = () => {
   const messages = useAppSelector((state) => state.chatbot.messages);
   const userProgress = useAppSelector((state) => state.userProgress.userProgress);
   const conversationId = useAppSelector((state) => state.chatbot.conversationId);
+  const conversationSummary = useAppSelector((state) => state.chatbot.conversationSummary);
   const isGenerating = messages[messages.length - 1]?.messageStatus != MessageStatus.DONE;
 
   const [initialized, setInitialized] = useState(false);
@@ -105,6 +106,8 @@ export const ChatbotScreen = () => {
       conversationId,
       dispatch,
     });
+
+    dispatch(extractInformation({ message, previous_information: conversationSummary }));
   };
 
   const handleClickAction = async (title: string, actionId?: string) => {
@@ -162,6 +165,8 @@ export const ChatbotScreen = () => {
       conversationId,
       dispatch,
     });
+
+    dispatch(extractInformation({ message: title, previous_information: conversationSummary }));
   };
 
   const handleSelectExamDate = (selectedDate: Date | undefined) => {
