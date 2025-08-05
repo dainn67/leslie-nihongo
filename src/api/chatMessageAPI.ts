@@ -6,8 +6,8 @@ import { MessageStatus, MessageType } from "../models/chatMessage";
 import { extractQuestionsFromJson, extractSuggestedActions } from "../service/questionService";
 import { Delimiter, splitCustomWords } from "../service/chatMessageService";
 import { convertDateToDDMMYYYY } from "../utils/utils";
-import Constants from "expo-constants";
 import { postData } from "./apiClient";
+import Constants from "expo-constants";
 
 const { DIFY_API_KEY } = Constants.expoConfig?.extra ?? {};
 

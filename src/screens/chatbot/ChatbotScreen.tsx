@@ -108,8 +108,6 @@ export const ChatbotScreen = () => {
   };
 
   const handleClickAction = async (title: string, actionId?: string) => {
-    // console.log(`action: "${actionId}": ${title}`);
-
     let userLevel = userProgress.level;
     let userTarget = userProgress.target;
 
@@ -188,7 +186,7 @@ export const ChatbotScreen = () => {
   };
 
   const handleAnalyze = (summary: string) => {
-    setInterval(() => {
+    setTimeout(() => {
       dispatch(addLoading());
 
       sendStreamMessage({
@@ -201,7 +199,7 @@ export const ChatbotScreen = () => {
         conversationId,
         dispatch,
       });
-    }, 3000);
+    }, 1000);
   };
 
   const handleDevClick = () => {

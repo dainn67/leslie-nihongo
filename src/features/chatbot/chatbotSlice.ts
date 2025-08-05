@@ -1,20 +1,44 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ChatMessage, createChatMessage, MessageStatus, MessageType, Sender, SuggestedAction } from "../../models/chatMessage";
 import { Question } from "../../models/question";
+import { ApiConfig } from "../../constants/apiConfig";
+import { postData } from "../../api/apiClient";
+import Constants from "expo-constants";
+
+const { DIFY_API_KEY } = Constants.expoConfig?.extra ?? {};
+const user = "dainn";
+
+const extractInformation = createAsyncThunk(ApiConfig.difyServerUrl, async (message: string) => {
+  const result = await postData({
+    url: ApiConfig.difyServerUrl,
+    token: DIFY_API_KEY,
+    body: {
+      query: message,
+      inputs: {},
+      response_mode: "blocking",
+      user: user,
+      auto_generate_name: false,
+    },
+  });
+
+  return result["answer"];
+});
 
 type ChatState = {
   messages: ChatMessage[];
   conversationId?: string;
   suggestedPropmpt: string[];
+  conversationSummary: string;
 };
 
 const initialState: ChatState = {
   messages: [],
   conversationId: undefined,
   suggestedPropmpt: [],
+  conversationSummary: "",
 };
 
-const getLastMessage = (state: ChatState) => {
+const getLatestMessage = (state: ChatState) => {
   const index = state.messages.length - 1;
   if (index !== -1) {
     return state.messages[index];
@@ -40,6 +64,11 @@ const chatbotSlice = createSlice({
     updateConversationId: (state, action: PayloadAction<string>) => {
       state.conversationId = action.payload;
     },
+    updateSummary: (state, action: PayloadAction<string>) => {
+      if (action.payload.trim().length != 0) {
+        state.conversationSummary = action.payload;
+      }
+    },
     updateLastMessageData: (
       state,
       action: PayloadAction<{
@@ -53,7 +82,7 @@ const chatbotSlice = createSlice({
         summary?: string;
       }>,
     ) => {
-      const message = getLastMessage(state);
+      const message = getLatestMessage(state);
       if (message) {
         if (action.payload.messageId !== undefined) message.id = action.payload.messageId;
         if (action.payload.status !== undefined) message.messageStatus = action.payload.status;
@@ -68,8 +97,15 @@ const chatbotSlice = createSlice({
 
     clearChat: () => initialState,
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(extractInformation.pending, (state) => {})
+      .addCase(extractInformation.fulfilled, (state, action) => {})
+      .addCase(extractInformation.rejected, (state, action) => {});
+  },
 });
 
-export const { clearChat, addMessage, addLoading, updateLastMessageData, updateConversationId } = chatbotSlice.actions;
+export const { clearChat, addMessage, addLoading, updateLastMessageData, updateConversationId, updateSummary } =
+  chatbotSlice.actions;
 
 export default chatbotSlice.reducer;
