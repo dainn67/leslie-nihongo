@@ -58,15 +58,26 @@ export const MyDatePicker = ({
       </Dialog.Content>
 
       <Dialog.Actions style={styles.actions}>
-        <MainButton title={cancelText} onPress={handleCancel} paddingHorizontal={30} paddingVertical={10} />
+        <MainButton
+          title={cancelText}
+          onPress={handleCancel}
+          style={{
+            paddingHorizontal: 30,
+            paddingVertical: 10,
+          }}
+        />
         <MainButton
           title={confirmText}
           onPress={handleConfirm}
-          paddingHorizontal={30}
-          paddingVertical={10}
-          backgroundColor={colors.primary}
-          radius={100}
-          textColor={"white"}
+          style={{
+            paddingHorizontal: 30,
+            paddingVertical: 10,
+            borderRadius: 100,
+            backgroundColor: colors.primary,
+          }}
+          textStyle={{
+            color: "white",
+          }}
         />
       </Dialog.Actions>
     </Dialog>

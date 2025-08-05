@@ -56,7 +56,6 @@ export const ChatActionButtons = ({ suggestedActions, onClickAction }: ChatActio
             <MainButton
               key={i}
               title={e.title.trim()}
-              showShadow={true}
               style={{
                 borderRadius: 100,
                 paddingVertical: 8,
