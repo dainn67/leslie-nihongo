@@ -4,7 +4,7 @@ export enum QuestionType {
   Vocabulary = "vocabulary",
   Grammar = "grammar",
   ReadingComprehension = "reading_comprehension",
-  Listening = "listening",
+  Listening = "listening_comprehension",
 }
 
 export const QuestionTypeTitles: Record<QuestionType, string> = {

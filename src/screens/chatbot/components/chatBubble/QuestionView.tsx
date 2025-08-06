@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { CustomText } from "../../../../components/text/customText";
 import { Question } from "../../../../models/question";
@@ -16,6 +16,7 @@ interface QuestionViewProps {
   showCorrectAnswer?: boolean;
   onAnswerSelect?: (index: number) => void;
   onBookmarkPress?: (isBookmarked: boolean) => void;
+  onAudioPlay?: (played: boolean) => void;
 }
 
 export const QuestionView = ({
@@ -27,11 +28,19 @@ export const QuestionView = ({
   showCorrectAnswer,
   onAnswerSelect,
   onBookmarkPress,
+  onAudioPlay,
 }: QuestionViewProps) => {
   const { colors, isDarkMode } = useAppTheme();
   const getAnswerLabel = (index: number) => {
     const labels = ["A", "B", "C", "D"];
     return (labels[index] || "A") + ".";
+  };
+
+  const [playAudio, setPlayAudio] = useState(false);
+
+  const handleToggleAudio = () => {
+    onAudioPlay?.(!playAudio);
+    setPlayAudio(!playAudio);
   };
 
   return (
@@ -50,7 +59,14 @@ export const QuestionView = ({
         </View>
 
         {/* Save icon button */}
-        <IconButton icon={bookmarked ? AppIcons.bookmarked : AppIcons.bookmark} onPress={() => onBookmarkPress?.(!bookmarked)} />
+        <View>
+          <IconButton
+            icon={bookmarked ? AppIcons.bookmarked : AppIcons.bookmark}
+            style={styles.saveButton}
+            onPress={() => onBookmarkPress?.(!bookmarked)}
+          />
+          {question.audio && <IconButton icon={playAudio ? AppIcons.audioOn : AppIcons.audioOff} onPress={handleToggleAudio} />}
+        </View>
       </View>
 
       {/* Answers */}
@@ -140,11 +156,7 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   saveButton: {
-    backgroundColor: "#F0F8FF",
-    borderRadius: 12,
-    padding: 8,
-    paddingHorizontal: 12,
-    marginRight: 12,
+    marginBottom: 8,
   },
   questionNumberText: {
     fontSize: 14,

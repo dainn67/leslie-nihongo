@@ -33,9 +33,15 @@ export const QuestionsMessage = ({ questions, onAnalyze }: QuestionsMessageProps
   };
 
   const handleBookmarkPress = (isBookmarked: boolean) => {
-    if (!mapBookmark[question.questionId]) {
+    if (isBookmarked) {
       setMapBookmark({ ...mapBookmark, [question.questionId]: isBookmarked });
+    } else {
+      const newMap = { ...mapBookmark };
+      delete newMap[question.questionId];
+      setMapBookmark(newMap);
     }
+
+    console.log(isBookmarked);
 
     // Update database
     if (isBookmarked) {

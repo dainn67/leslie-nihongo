@@ -16,7 +16,7 @@ import {
   setUserProgress,
   setUserTarget,
 } from "../../features/userProgress/userProgressSlice";
-import { createQuestionTable, deleteAllTables } from "../../storage/database/tables";
+import { createQuestionTable, deleteAllTables, updateTables } from "../../storage/database/tables";
 import { createChatMessage, MessageStatus } from "../../models/chatMessage";
 import { sendStreamMessage } from "../../api/chatMessageAPI";
 import { getUserProgressFromStorage } from "../../service/userProgressSerivice";
@@ -59,6 +59,7 @@ export const ChatbotScreen = () => {
   useEffect(() => {
     if (!initialized) {
       createQuestionTable();
+      updateTables();
       getUserProgressFromStorage().then((userProgress) => {
         // Set user progress
         dispatch(setUserProgress(userProgress));
