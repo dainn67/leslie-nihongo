@@ -19,6 +19,7 @@ export type Question = {
   question: string;
   answers: Answer[];
   explanation: string;
+  audio: string;
   bookmarked: boolean;
   type: QuestionType;
 };
@@ -30,6 +31,7 @@ export const createQuestion = (partial?: Partial<Question>): Question => {
     explanation: partial?.explanation ?? "",
     bookmarked: partial?.bookmarked ?? false,
     type: partial?.type ?? QuestionType.Vocabulary,
+    audio: partial?.audio ?? "",
     answers: partial?.answers
       ? [...partial.answers]
           .sort(() => Math.random() - 0.5)
