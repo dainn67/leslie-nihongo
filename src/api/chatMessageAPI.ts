@@ -110,7 +110,10 @@ export const sendStreamMessage = ({
     },
     onError: (error) => {
       console.log("SSE error", error);
-      dispatch(updateLastMessageData({ hasError: true }));
+      if (!hasError) {
+        hasError = true;
+        dispatch(updateLastMessageData({ hasError: true }));
+      }
     },
   });
 
