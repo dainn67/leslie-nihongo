@@ -27,7 +27,7 @@ export const extractInformation = createAsyncThunk(
     });
 
     return result["answer"].trim();
-  },
+  }
 );
 
 type ChatState = {
@@ -62,9 +62,9 @@ const chatbotSlice = createSlice({
     addLoading: (state) => {
       state.messages.push(
         createChatMessage({
-          messageStatus: MessageStatus.LOADING,
+          status: MessageStatus.LOADING,
           sender: Sender.BOT,
-        }),
+        })
       );
     },
     updateConversationId: (state, action: PayloadAction<string>) => {
@@ -86,18 +86,22 @@ const chatbotSlice = createSlice({
         questions?: Question[];
         suggestedActions?: SuggestedAction[];
         summary?: string;
-      }>,
+        hasError?: boolean;
+      }>
     ) => {
       const message = getLatestMessage(state);
       if (message) {
-        if (action.payload.messageId !== undefined) message.id = action.payload.messageId;
-        if (action.payload.status !== undefined) message.messageStatus = action.payload.status;
-        if (action.payload.messageType !== undefined) message.messageType = action.payload.messageType;
-        if (action.payload.fullText !== undefined) message.fullText = action.payload.fullText;
-        if (action.payload.nextWord !== undefined) message.words.push(action.payload.nextWord);
-        if (action.payload.questions !== undefined) message.questions = action.payload.questions;
-        if (action.payload.suggestedActions !== undefined) message.suggestedActions = action.payload.suggestedActions;
-        if (action.payload.summary !== undefined) message.summary = action.payload.summary;
+        // Loop through the payload and map to fields if exist
+        Object.entries(action.payload).forEach(([key, value]) => {
+          if (value !== undefined && value !== null) {
+            if (key === "nextWord") {
+              message.words.push(value as string);
+            } else {
+              // @ts-ignore: dynamic gán thuộc tính
+              message[key] = value;
+            }
+          }
+        });
       }
     },
 

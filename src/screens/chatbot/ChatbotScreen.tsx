@@ -47,7 +47,7 @@ export const ChatbotScreen = () => {
   const userProgress = useAppSelector((state) => state.userProgress.userProgress);
   const conversationId = useAppSelector((state) => state.chatbot.conversationId);
   const conversationSummary = useAppSelector((state) => state.chatbot.conversationSummary);
-  const isGenerating = messages[messages.length - 1]?.messageStatus != MessageStatus.DONE;
+  const isGenerating = messages[messages.length - 1]?.status != MessageStatus.DONE;
 
   const [initialized, setInitialized] = useState(false);
   const [datePickerVisible, setDatePickerVisible] = useState(false);

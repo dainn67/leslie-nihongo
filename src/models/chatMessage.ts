@@ -33,11 +33,13 @@ export type ChatMessage = {
   // Type and sender
   messageType: MessageType;
   sender: Sender;
-  messageStatus: MessageStatus;
+  status: MessageStatus;
 
   // Id when click suggested action
   actionId: number;
   summary: string;
+
+  hasError: boolean;
 
   createdAt: string;
 };
@@ -57,7 +59,8 @@ export const createChatMessage = (partial?: Partial<ChatMessage>): ChatMessage =
     actionId: partial?.actionId ?? 0,
     summary: partial?.summary ?? "",
     messageType: partial?.messageType ?? MessageType.STREAM_TEXT,
-    messageStatus: partial?.messageStatus ?? MessageStatus.USER,
+    status: partial?.status ?? MessageStatus.USER,
+    hasError: partial?.hasError ?? false,
     createdAt: partial?.createdAt ?? timestamp,
   };
 };

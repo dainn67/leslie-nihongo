@@ -6,6 +6,7 @@ import { LoadingMessage } from "./LoadingMessage";
 import { ChatActionButtons } from "../ChatActionButtons";
 import { QuestionsMessage } from "./QuestionsMessage";
 import { ChatMessage, Sender, MessageType, MessageStatus } from "../../../../models/chatMessage";
+import { CustomText } from "../../../../components/text/customText";
 
 interface ChatMessageBubbleProps {
   message: ChatMessage;
@@ -28,19 +29,22 @@ export const ChatMessageBubble = ({
 
   const styles = getStyle(colors, isUser, componentHeight, isLastMessage);
 
-  const isLoading = message.messageStatus == MessageStatus.LOADING;
-  const isStreaming = !isLoading && message.messageType === MessageType.STREAM_TEXT;
-  const isLoadingQuestion = isLoading && message.messageType === MessageType.QUESTION_JSON;
-  const isQuestions = !isLoading && message.messageType === MessageType.QUESTION_JSON && message.fullText.length > 0;
-  const showButtons = !isLoading && message.suggestedActions.length > 0 && message.messageType === MessageType.STREAM_TEXT;
+  const isLoading = message.status == MessageStatus.LOADING;
+  const hasError = message.hasError;
+  const isStreamText = !isLoading && !hasError && message.messageType === MessageType.STREAM_TEXT;
+  const isLoadingQuestion = isLoading && !hasError && message.messageType === MessageType.QUESTION_JSON;
+  const isQuestions = !isLoading && !hasError && message.messageType === MessageType.QUESTION_JSON && message.fullText.length > 0;
+  const showButtons = isStreamText && message.suggestedActions.length > 0;
 
   return (
     <View id={message.id} style={[styles.container]}>
       <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+        {hasError && <CustomText>Vcui lòng thử lại sau</CustomText>}
+
         {isLoading && <LoadingMessage isQuestion={isLoadingQuestion} />}
 
         {/* Streaming text */}
-        {isStreaming &&
+        {isStreamText &&
           message.words.map((word, index) => (
             <WordComponent
               key={index}

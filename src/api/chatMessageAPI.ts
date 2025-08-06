@@ -41,6 +41,7 @@ export const sendStreamMessage = ({
   let wordLength = 0;
   let isQuestionJson = false;
   let startReceiveMessage = false;
+  let hasError = false;
 
   const now = convertDateToDDMMYYYY(new Date());
 
@@ -48,7 +49,8 @@ export const sendStreamMessage = ({
   if (examDate == 0) {
     examDateString = "User hasn't decided exam date yet";
   } else if (examDate) {
-    examDateString = `Current date is ${now} and user JLPT exam date is ${convertDateToDDMMYYYY(new Date(examDate))}`;
+    const formattedExamDate = convertDateToDDMMYYYY(new Date(examDate));
+    examDateString = `Current date is ${now} (d/m/y format) and user JLPT exam date is ${formattedExamDate}`;
   }
 
   // Original stream
@@ -94,7 +96,7 @@ export const sendStreamMessage = ({
       } else if (type === "message_end") {
         const usage = data["metadata"]["usage"];
         console.log(
-          `Tokens: ${usage["total_tokens"]} (${usage["prompt_tokens"]} input, ${usage["completion_tokens"]} completion) => ${usage["total_price"]} ${usage["currency"]}`,
+          `Tokens: ${usage["total_tokens"]} (${usage["prompt_tokens"]} input, ${usage["completion_tokens"]} completion) => ${usage["total_price"]} ${usage["currency"]}`
         );
       }
     },
@@ -106,7 +108,10 @@ export const sendStreamMessage = ({
         dispatch(updateLastMessageData({ questions, summary, status: MessageStatus.DONE }));
       }
     },
-    onError: (error) => console.log("SSE error", error),
+    onError: (error) => {
+      console.log("SSE error", error);
+      dispatch(updateLastMessageData({ hasError: true }));
+    },
   });
 
   const waitCondition = setInterval(() => {
