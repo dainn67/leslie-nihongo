@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import { useTheme } from "../../../theme";
+import { useAppTheme } from "../../../theme";
 
 interface ChatbotIconProps {
   shape?: "circle" | "square" | "rounded";
@@ -10,13 +10,7 @@ interface ChatbotIconProps {
   children: React.ReactNode;
 }
 
-export const ChatbotIcon = ({
-  shape,
-  backgroundColor,
-  primaryColor,
-  size,
-  children,
-}: ChatbotIconProps) => {
+export const ChatbotIcon = ({ shape, backgroundColor, primaryColor, size, children }: ChatbotIconProps) => {
   const getShapeStyle = () => {
     switch (shape) {
       case "circle":
@@ -30,7 +24,7 @@ export const ChatbotIcon = ({
     }
   };
 
-  const { colors } = useTheme();
+  const { colors } = useAppTheme();
 
   return (
     <View

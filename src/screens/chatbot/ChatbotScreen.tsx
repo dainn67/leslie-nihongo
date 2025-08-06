@@ -26,6 +26,9 @@ import { convertDateToDDMMYYYY } from "../../utils/utils";
 import ChatInput from "./components/ChatInput";
 import ClearChatDialog from "./components/ClearChatDialog";
 import * as FileSystem from "expo-file-system";
+import { loadFromAsyncStorage } from "../../storage/asyncStorage/asyncStorage";
+import { AsyncStorageConstants } from "../../storage/asyncStorage/asyncStorateConstant";
+import { setTheme } from "../../features/theme/themeSlice";
 
 export type DrawerParamList = {
   ChatbotScreen: undefined;
@@ -71,6 +74,10 @@ export const ChatbotScreen = () => {
           conversationId,
           dispatch,
         });
+      });
+
+      loadFromAsyncStorage(AsyncStorageConstants.THEME_MODE).then((scheme) => {
+        dispatch(setTheme(scheme));
       });
     } else {
       if (messages.length === 0) {
