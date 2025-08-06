@@ -36,7 +36,7 @@ export const LoadingMessage = ({ isQuestion, style }: LoadingMessageProps) => {
           duration: 1000,
           useNativeDriver: true,
         }),
-      ]),
+      ])
     );
     pulseAnimation.start();
 
@@ -72,7 +72,7 @@ export const LoadingMessage = ({ isQuestion, style }: LoadingMessageProps) => {
           duration: 400,
           useNativeDriver: true,
         }),
-      ]),
+      ])
     );
 
     animation.start();
@@ -94,7 +94,9 @@ export const LoadingMessage = ({ isQuestion, style }: LoadingMessageProps) => {
     >
       <View style={[styles.loadingContainer, { backgroundColor: isDarkMode ? "#222222" : "#f0f0f0" }]}>
         <View style={styles.contentContainer}>
-          {isQuestion && <CustomText style={styles.loadingText}>Đang tạo câu hỏi</CustomText>}
+          {isQuestion && (
+            <CustomText style={[styles.loadingText, { color: isDarkMode ? "white" : "#65676B" }]}>Đang tạo câu hỏi</CustomText>
+          )}
           <View style={[styles.dotsContainer, { marginLeft: isQuestion ? 8 : 0 }]}>
             {Array.from({ length: 3 }).map((_, index) => (
               <Animated.View
@@ -127,7 +129,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   loadingText: {
-    color: "#65676B",
     fontSize: 16,
     fontWeight: "600",
     textAlign: "center",
