@@ -28,7 +28,7 @@ export const createQuestionTable = () => {
           ${QuestionTable.columnQuestionId} INTEGER,
           ${QuestionTable.columnQuestion} TEXT,
           ${QuestionTable.columnExplanation} TEXT,
-          ${QuestionTable.columnType} TEXT)`,
+          ${QuestionTable.columnType} TEXT)`
     );
 
     db.execSync(
@@ -38,7 +38,7 @@ export const createQuestionTable = () => {
           ${AnswerTable.columnQuestionId} INTEGER,
           ${AnswerTable.columnAnswer} TEXT,
           ${AnswerTable.columnIsCorrect} INTEGER,
-          FOREIGN KEY (${AnswerTable.columnQuestionId}) REFERENCES ${QuestionTable.tableName}(${QuestionTable.columnQuestionId}))`,
+          FOREIGN KEY (${AnswerTable.columnQuestionId}) REFERENCES ${QuestionTable.tableName}(${QuestionTable.columnQuestionId}))`
     );
   });
 };
@@ -50,8 +50,7 @@ export const updateTables = () => {
       if (column !== QuestionTable.tableName) {
         if (!questionColumns.includes(column)) {
           // Add the column
-          let columnType =
-            column === QuestionTable.columnId || column === QuestionTable.columnQuestionId ? "INTEGER" : "TEXT";
+          let columnType = column === QuestionTable.columnId || column === QuestionTable.columnQuestionId ? "INTEGER" : "TEXT";
           db.execSync(`ALTER TABLE ${QuestionTable.tableName} ADD COLUMN ${column} ${columnType}`);
         }
       }
@@ -92,7 +91,7 @@ export const getAllQuestions = (): Question[] => {
       answers: [],
       bookmarked: row.bookmarked,
       type: row.type,
-    }),
+    })
   );
 
   const answerRows = db.getAllSync(`SELECT * FROM ${AnswerTable.tableName}`);
@@ -106,7 +105,7 @@ export const getAllQuestions = (): Question[] => {
           questionId: row.questionId,
           text: row.answer,
           isCorrect: row.isCorrect,
-        }),
+        })
       );
     }
   });
@@ -124,7 +123,7 @@ export const insertQuestions = (questions: Question[]) => {
       })
       .join(", ");
     db.execSync(
-      `INSERT INTO ${QuestionTable.tableName} (${QuestionTable.columnQuestionId}, ${QuestionTable.columnQuestion}, ${QuestionTable.columnExplanation}, ${QuestionTable.columnType}) VALUES ${questionValues}`,
+      `INSERT INTO ${QuestionTable.tableName} (${QuestionTable.columnQuestionId}, ${QuestionTable.columnQuestion}, ${QuestionTable.columnExplanation}, ${QuestionTable.columnType}) VALUES ${questionValues}`
     );
 
     const answerValues = questions
@@ -132,19 +131,17 @@ export const insertQuestions = (questions: Question[]) => {
         question.answers.map((answer) => {
           const answerString = answer.text.replaceAll('"', "'");
           return `(${question.questionId}, ${answer.answerId}, "${answerString}", "${answer.isCorrect ? 1 : 0}")`;
-        }),
+        })
       )
       .join(", ");
     db.execSync(
-      `INSERT INTO ${AnswerTable.tableName} (${AnswerTable.columnQuestionId}, ${AnswerTable.columnAnswerId}, ${AnswerTable.columnAnswer}, ${AnswerTable.columnIsCorrect}) VALUES ${answerValues}`,
+      `INSERT INTO ${AnswerTable.tableName} (${AnswerTable.columnQuestionId}, ${AnswerTable.columnAnswerId}, ${AnswerTable.columnAnswer}, ${AnswerTable.columnIsCorrect}) VALUES ${answerValues}`
     );
   });
 };
 
 export const getQuestionsByType = (type: QuestionType) => {
-  const questionRows = db.getAllSync(
-    `SELECT * FROM ${QuestionTable.tableName} WHERE ${QuestionTable.columnType} = "${type}"`,
-  );
+  const questionRows = db.getAllSync(`SELECT * FROM ${QuestionTable.tableName} WHERE ${QuestionTable.columnType} = "${type}"`);
 
   const questions: Question[] = questionRows.map((row: any) =>
     createQuestion({
@@ -154,11 +151,13 @@ export const getQuestionsByType = (type: QuestionType) => {
       answers: [],
       bookmarked: row.bookmarked,
       type: row.type,
-    }),
+    })
   );
 
   const answerRows = db.getAllSync(
-    `SELECT * FROM ${AnswerTable.tableName} WHERE ${AnswerTable.columnQuestionId} IN (${questions.map((question) => question.questionId).join(", ")})`,
+    `SELECT * FROM ${AnswerTable.tableName} WHERE ${AnswerTable.columnQuestionId} IN (${questions
+      .map((question) => question.questionId)
+      .join(", ")})`
   );
 
   answerRows.forEach((row: any) => {
@@ -170,7 +169,7 @@ export const getQuestionsByType = (type: QuestionType) => {
           questionId: row.questionId,
           text: row.answer,
           isCorrect: row.isCorrect,
-        }),
+        })
       );
     }
   });
