@@ -29,6 +29,7 @@ import * as FileSystem from "expo-file-system";
 import { loadFromAsyncStorage } from "../../storage/asyncStorage/asyncStorage";
 import { AsyncStorageConstants } from "../../storage/asyncStorage/asyncStorateConstant";
 import { setTheme } from "../../features/theme/themeSlice";
+import TTSService from "../../service/ttsService";
 
 export type DrawerParamList = {
   ChatbotScreen: undefined;
@@ -60,6 +61,7 @@ export const ChatbotScreen = () => {
     if (!initialized) {
       createQuestionTable();
       updateTables();
+      TTSService.init();
       getUserProgressFromStorage().then((userProgress) => {
         // Set user progress
         dispatch(setUserProgress(userProgress));
