@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { CustomText } from "../../../../components/text/customText";
 import { Question } from "../../../../models/question";
@@ -44,15 +44,11 @@ export const QuestionView = ({
     onAudioPlay?.(newState);
     setPlayAudio(newState);
 
-    Tts.setDefaultRate(0.5);
-    Tts.setDefaultPitch(1.0);
-    Tts.setDefaultLanguage("en-US");
-
-    // Get available voices
-    Tts.voices().then((voices) => console.log(voices));
-
     Tts.stop();
-    if (newState) Tts.speak("HELLO THERE");
+    if (newState) {
+      Tts.addEventListener("tts-finish", () => setPlayAudio(false));
+      Tts.speak(question.audio);
+    }
   };
 
   return (

@@ -6,6 +6,7 @@ import { QuestionView } from "./QuestionView";
 import { AnimatedProgressBar } from "../../../../components/AnimatedProgressBar";
 import { deleteQuestion, insertQuestions } from "../../../../storage/database/tables/questionTable";
 import { createResultSummary } from "../../../../service/questionService";
+import Tts from "react-native-tts";
 
 interface QuestionsMessageProps {
   questions: Question[];
@@ -19,6 +20,18 @@ export const QuestionsMessage = ({ questions, onAnalyze }: QuestionsMessageProps
   const [mapBookmark, setMapBookmark] = useState<{ [key: number]: boolean }>({});
 
   useEffect(() => {
+    // Setup audio
+    Tts.voices().then((voices) => {
+      const jpVoices = voices.filter((voice) => voice.language.includes("ja")).map((voice) => voice.name);
+
+      
+
+      // 0: female, 3: male
+      const selectedVoice = jpVoices[0];
+      Tts.setDefaultVoice(selectedVoice);
+    });
+
+    // Analyze when all questions are answered
     if (Object.keys(mapAnswer).length === questions.length) {
       const summary = createResultSummary(questions, mapAnswer);
       onAnalyze(summary);
@@ -40,8 +53,6 @@ export const QuestionsMessage = ({ questions, onAnalyze }: QuestionsMessageProps
       delete newMap[question.questionId];
       setMapBookmark(newMap);
     }
-
-    console.log(isBookmarked);
 
     // Update database
     if (isBookmarked) {
