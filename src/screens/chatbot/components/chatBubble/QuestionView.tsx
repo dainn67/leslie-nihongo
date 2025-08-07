@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { CustomText } from "../../../../components/text/customText";
 import { Question } from "../../../../models/question";
@@ -6,6 +6,7 @@ import { IconButton } from "../../../../components/buttons";
 import { AppIcons } from "../../../../constants/appIcons";
 import { Answer } from "../../../../models/answer";
 import { useAppTheme } from "../../../../theme";
+import Tts from "react-native-tts";
 
 interface QuestionViewProps {
   question: Question;
@@ -39,8 +40,15 @@ export const QuestionView = ({
   const [playAudio, setPlayAudio] = useState(false);
 
   const handleToggleAudio = () => {
-    onAudioPlay?.(!playAudio);
-    setPlayAudio(!playAudio);
+    const newState = !playAudio;
+    onAudioPlay?.(newState);
+    setPlayAudio(newState);
+
+    Tts.stop();
+    if (newState) {
+      Tts.addEventListener("tts-finish", () => setPlayAudio(false));
+      Tts.speak(question.audio);
+    }
   };
 
   return (

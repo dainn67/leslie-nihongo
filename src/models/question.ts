@@ -3,8 +3,8 @@ import { Answer, createAnswer } from "./answer";
 export enum QuestionType {
   Vocabulary = "vocabulary",
   Grammar = "grammar",
-  ReadingComprehension = "reading_comprehension",
-  Listening = "listening_comprehension",
+  ReadingComprehension = "reading",
+  Listening = "listening",
 }
 
 export const QuestionTypeTitles: Record<QuestionType, string> = {
