@@ -39,7 +39,7 @@ export const createConversationHistory = (messages: ChatMessage[]) => {
   return messages
     .slice(-10)
     .map((m) => {
-      const senderString = m.sender == Sender.BOT ? "Chatbot" : "User";
+      const senderString = m.sender == Sender.BOT ? "Bot" : "User";
       let text = `(${senderString}): ${m.sender == Sender.BOT ? m.summary : m.fullText}`;
       if (text.endsWith(".")) text = text.slice(0, -1);
       return text;

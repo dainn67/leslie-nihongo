@@ -18,6 +18,7 @@ export const lightColors = {
   card: "#FFFFFF",
   cardShadow: "rgba(244, 143, 177, 0.15)",
   overlay: "rgba(244, 143, 177, 0.5)",
+  disabled: "#E0E0E0",
 };
 
 export const darkColors = {
@@ -40,4 +41,5 @@ export const darkColors = {
   card: "#303030",
   cardShadow: "rgba(173, 20, 87, 0.3)",
   overlay: "rgba(173, 20, 87, 0.7)",
+  disabled: "#424242",
 };

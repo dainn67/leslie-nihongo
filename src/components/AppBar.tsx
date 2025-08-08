@@ -2,8 +2,6 @@ import React from "react";
 import { View, StyleSheet, TouchableOpacity, SafeAreaView } from "react-native";
 import { useAppTheme } from "../theme";
 import { CustomText } from "./text/customText";
-import { IconButton } from "./buttons";
-import { AppIcons } from "../constants/appIcons";
 
 interface AppBarProps {
   title: string;

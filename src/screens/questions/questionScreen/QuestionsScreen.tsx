@@ -11,9 +11,10 @@ import { RootStackParamList } from "../../../app/DrawerNavigator";
 import { getAllQuestions } from "../../../storage/database/tables";
 import { useAppDispatch } from "../../../hooks/hooks";
 import { setQuestions } from "../../../features/questions/questionSlice";
-import { Dimensions, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Dimensions, Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useAppTheme } from "../../../theme";
 import { CustomText } from "../../../components/text/customText";
+import { AppIcons } from "../../../constants/appIcons";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, "QuestionListScreen">;
 
@@ -41,11 +42,7 @@ export const QuestionsScreen = () => {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <AppBar
-        title={"Câu hỏi"}
-        leftIcon={<Ionicons name="menu" size={24} color="white" />}
-        onLeftPress={openDrawer}
-      />
+      <AppBar title={"Câu hỏi"} leftIcon={<Ionicons name="menu" size={24} color="white" />} onLeftPress={openDrawer} />
       <View style={[styles.gridContainer, { backgroundColor: colors.background }]}>
         {Object.values(QuestionType).map((type, index) => (
           <TouchableOpacity
@@ -53,9 +50,13 @@ export const QuestionsScreen = () => {
             style={[styles.gridItem, { width: gridItemWidth, backgroundColor: colors.backgroundTertiary }]}
             onPress={() => handleNavigateToQuestionType(type)}
           >
-            <CustomText key={index} style={{ textAlign: "center", color: colors.text }}>
-              {QuestionTypeTitles[type]}
+            <CustomText style={styles.icon}>
+              {type === QuestionType.Vocabulary && "📝"}
+              {type === QuestionType.Grammar && "📚"}
+              {type === QuestionType.Reading && "📖"}
+              {type === QuestionType.Listening && "🎧"}
             </CustomText>
+            <CustomText style={{ textAlign: "center", color: colors.text }}>{QuestionTypeTitles[type]}</CustomText>
           </TouchableOpacity>
         ))}
       </View>
@@ -70,6 +71,10 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "space-around",
     padding: 10,
+  },
+  icon: {
+    fontSize: 40,
+    marginBottom: 12,
   },
   gridItem: {
     height: 180,

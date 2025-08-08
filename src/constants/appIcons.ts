@@ -1,4 +1,5 @@
 export const AppIcons = {
+  // Question icons
   bookmark: require("../../assets/icons/bookmark.png"),
   bookmarked: require("../../assets/icons/bookmarked.png"),
   audioOn: require("../../assets/icons/audio_on.png"),

@@ -161,7 +161,7 @@ const getStyles = (isFocused: boolean, message: string, colors: any, isDarkMode:
       elevation: message.length > 0 ? 4 : 0,
     },
     sendButtonDisabled: {
-      backgroundColor: colors.backgroundTertiary,
+      backgroundColor: colors.disabled,
       shadowOpacity: 0,
       elevation: 0,
     },

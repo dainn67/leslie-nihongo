@@ -7,6 +7,7 @@ import { extractQuestionsFromJson, extractSuggestedActions } from "../service/qu
 import { Delimiter, splitCustomWords } from "../service/chatMessageService";
 import { convertDateToDDMMYYYY } from "../utils/utils";
 import { postData } from "./apiClient";
+import { DifyConfig } from "../constants/difyConfig";
 import Constants from "expo-constants";
 
 const { DIFY_API_KEY } = Constants.expoConfig?.extra ?? {};
@@ -79,21 +80,20 @@ export const sendStreamMessage = ({
       const messageId = data["message_id"];
       const text = data["answer"];
       const conversationId = data["conversation_id"];
+      const nodeTitle = data["data"]?.["title"];
+
+      if (!isQuestionJson && nodeTitle && nodeTitle == DifyConfig.titleGenQuestions) {
+        dispatch(updateLastMessageData({ messageType: MessageType.QUESTION_JSON }));
+        isQuestionJson = true;
+      }
 
       if (type === "message") {
-        const jsonPattern = "``";
-
-        if (!isQuestionJson && text.includes(jsonPattern)) {
-          dispatch(updateLastMessageData({ messageType: MessageType.QUESTION_JSON }));
-          isQuestionJson = true;
-        }
-
         fullText += text;
-      } else if (type === "workflow_started") {
+      } else if (type === DifyConfig.typeWorkflowStart) {
         startReceiveMessage = true;
         dispatch(updateLastMessageData({ messageId }));
         dispatch(updateConversationId(conversationId));
-      } else if (type === "message_end") {
+      } else if (type === DifyConfig.typeMessageEnd) {
         const usage = data["metadata"]["usage"];
         console.log(
           `Tokens: ${usage["total_tokens"]} (${usage["prompt_tokens"]} input, ${usage["completion_tokens"]} completion) => ${usage["total_price"]} ${usage["currency"]}`

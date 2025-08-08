@@ -3,14 +3,14 @@ import { Answer, createAnswer } from "./answer";
 export enum QuestionType {
   Vocabulary = "vocabulary",
   Grammar = "grammar",
-  ReadingComprehension = "reading",
+  Reading = "reading",
   Listening = "listening",
 }
 
 export const QuestionTypeTitles: Record<QuestionType, string> = {
   [QuestionType.Vocabulary]: "Từ Vựng",
   [QuestionType.Grammar]: "Ngữ Pháp",
-  [QuestionType.ReadingComprehension]: "Đọc Hiểu",
+  [QuestionType.Reading]: "Đọc Hiểu",
   [QuestionType.Listening]: "Nghe Hiểu",
 };
 
