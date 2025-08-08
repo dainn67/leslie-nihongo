@@ -8,7 +8,7 @@ export enum Sender {
 
 export enum MessageType {
   STREAM_TEXT = "stream_text",
-  QUESTION_JSON = "question_json",
+  QUESTIONS = "questions",
 }
 
 export enum MessageStatus {

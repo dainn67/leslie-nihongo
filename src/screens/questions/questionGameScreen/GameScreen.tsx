@@ -111,12 +111,12 @@ export const QuestionGameScreen = () => {
           <CustomText
             style={[style.navButtonText, style.navButtonTextPrev, currentQuestionIndex === 0 && style.disabledButtonText]}
           >
-            Previous
+            Trước
           </CustomText>
         </TouchableOpacity>
 
         <TouchableOpacity style={[style.navButton, style.nextButton]} onPress={() => handleChangeQuestion("next")}>
-          <CustomText style={[style.navButtonText, style.navButtonTextNext]}>Next</CustomText>
+          <CustomText style={[style.navButtonText, style.navButtonTextNext]}>Tiếp</CustomText>
         </TouchableOpacity>
       </View>
     </View>

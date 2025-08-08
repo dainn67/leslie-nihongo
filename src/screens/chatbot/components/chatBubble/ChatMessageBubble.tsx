@@ -32,8 +32,8 @@ export const ChatMessageBubble = ({
   const isLoading = message.status == MessageStatus.LOADING;
   const hasError = message.hasError;
   const isStreamText = !isLoading && !hasError && message.messageType === MessageType.STREAM_TEXT;
-  const isLoadingQuestion = isLoading && !hasError && message.messageType === MessageType.QUESTION_JSON;
-  const isQuestions = !isLoading && !hasError && message.messageType === MessageType.QUESTION_JSON && message.fullText.length > 0;
+  const isLoadingQuestion = isLoading && !hasError && message.messageType === MessageType.QUESTIONS;
+  const isQuestions = !isLoading && !hasError && message.messageType === MessageType.QUESTIONS && message.fullText.length > 0;
   const showButtons = isStreamText && message.suggestedActions.length > 0;
 
   return (

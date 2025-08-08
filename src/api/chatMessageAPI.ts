@@ -83,7 +83,7 @@ export const sendStreamMessage = ({
       const nodeTitle = data["data"]?.["title"];
 
       if (!isQuestionJson && nodeTitle && nodeTitle == DifyConfig.titleGenQuestions) {
-        dispatch(updateLastMessageData({ messageType: MessageType.QUESTION_JSON }));
+        dispatch(updateLastMessageData({ messageType: MessageType.QUESTIONS }));
         isQuestionJson = true;
       }
 
