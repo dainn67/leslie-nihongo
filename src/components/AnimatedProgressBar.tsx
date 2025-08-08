@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { View, StyleSheet, Animated, StyleProp, ViewStyle } from "react-native";
+import { useAppTheme } from "../theme";
 
 interface AnimatedProgressBarProps {
   progress: number; // 0-100
@@ -14,12 +15,15 @@ interface AnimatedProgressBarProps {
 export const AnimatedProgressBar = ({
   progress,
   height = 6,
-  backgroundColor = "#E8E8E8",
-  fillColor = "#4A90E2",
+  backgroundColor,
+  fillColor,
   borderRadius = 3,
   duration = 500,
   style,
 }: AnimatedProgressBarProps) => {
+  const { colors, isDarkMode } = useAppTheme();
+  const bgColor = backgroundColor || (isDarkMode ? colors.backgroundTertiary : "#FCE4EC");
+  const fColor = fillColor || (isDarkMode ? colors.secondary : colors.secondary);
   const animatedWidth = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -37,7 +41,7 @@ export const AnimatedProgressBar = ({
         style,
         {
           height,
-          backgroundColor,
+          backgroundColor: bgColor,
           borderRadius,
         },
       ]}
@@ -51,7 +55,7 @@ export const AnimatedProgressBar = ({
               inputRange: [0, 100],
               outputRange: ["0%", "100%"],
             }),
-            backgroundColor: fillColor,
+            backgroundColor: fColor,
             borderRadius,
           },
         ]}

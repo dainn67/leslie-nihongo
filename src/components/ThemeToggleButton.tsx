@@ -31,10 +31,26 @@ export const ThemeToggleButton = () => {
 
   return (
     <TouchableOpacity
-      style={[styles.button, { backgroundColor: colors.background, borderColor: colors.border }]}
+      style={[
+        styles.button, 
+        { 
+          backgroundColor: isDarkMode ? colors.backgroundSecondary : colors.backgroundSecondary,
+          borderColor: colors.border,
+          shadowColor: colors.primary,
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 4,
+          elevation: 2
+        }
+      ]}
       onPress={handleToggle}
     >
-      <Ionicons name={getIconName()} size={24} color={colors.primary} style={styles.icon} />
+      <Ionicons 
+        name={getIconName()} 
+        size={24} 
+        color={colors.primary} 
+        style={styles.icon} 
+      />
       <Text style={[styles.label, { color: colors.text }]}>{getLabel()}</Text>
     </TouchableOpacity>
   );

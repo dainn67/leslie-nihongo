@@ -29,7 +29,7 @@ const MainButton = ({ title, onPress, disabled = false, loading = false, style, 
   const buttonStyles = [
     styles.button,
     {
-      backgroundColor: disabled ? "#E5E7EB" : "#3B82F6",
+      backgroundColor: disabled ? "#E5E7EB" : "#F48FB1",
       opacity: isPressed ? 0.9 : 1,
       transform: isPressed ? [{ scale: 0.98 }] : [],
       borderRadius,
@@ -37,7 +37,7 @@ const MainButton = ({ title, onPress, disabled = false, loading = false, style, 
     style,
   ];
 
-  const labelStyles = [styles.text, { color: disabled ? "#9CA3AF" : "#FFFFFF" }, textStyle];
+  const labelStyles = [styles.text, { color: disabled ? "#9CA3AF" : "#4A4A4A" }, textStyle];
 
   return (
     <View style={containerStyles}>
@@ -49,7 +49,7 @@ const MainButton = ({ title, onPress, disabled = false, loading = false, style, 
         style={buttonStyles}
         activeOpacity={0.8}
       >
-        {loading ? <ActivityIndicator color="#FFFFFF" /> : <CustomText style={labelStyles}>{text}</CustomText>}
+        {loading ? <ActivityIndicator color="#4A4A4A" /> : <CustomText style={labelStyles}>{text}</CustomText>}
       </TouchableOpacity>
     </View>
   );

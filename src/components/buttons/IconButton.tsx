@@ -16,7 +16,7 @@ export const IconButton = ({ icon, iconWidth, iconHeight, style, onPress }: Icon
 
   return (
     <TouchableOpacity
-      style={[styles.button, { backgroundColor: isDarkMode ? colors.backgroundTertiary : "#F0F8FF" }, style]}
+      style={[styles.button, { backgroundColor: isDarkMode ? colors.backgroundSecondary : "rgba(248, 187, 208, 0.2)" }, style]}
       onPress={onPress}
     >
       <Image source={icon} style={styles.icon} />

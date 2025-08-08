@@ -15,9 +15,9 @@ interface ChatInputProps {
 const ChatInput = ({ disable, placeHolderText, onSend }: ChatInputProps) => {
   const [message, setMessage] = useState("");
   const [isFocused, setIsFocused] = useState(false);
-  const { colors } = useAppTheme();
+  const { colors, isDarkMode } = useAppTheme();
 
-  const styles = getStyles(isFocused, message, colors, disable);
+  const styles = getStyles(isFocused, message, colors, isDarkMode, disable);
 
   const handleSend = () => {
     if (message.trim() && !disable) {
@@ -73,7 +73,7 @@ const ChatInput = ({ disable, placeHolderText, onSend }: ChatInputProps) => {
   );
 };
 
-const getStyles = (isFocused: boolean, message: string, colors: any, disable?: boolean) =>
+const getStyles = (isFocused: boolean, message: string, colors: any, isDarkMode: boolean, disable?: boolean) =>
   StyleSheet.create({
     inputContainer: {
       flexDirection: "row",
@@ -118,7 +118,7 @@ const getStyles = (isFocused: boolean, message: string, colors: any, disable?: b
       width: 36,
       height: 36,
       borderRadius: 18,
-      backgroundColor: colors.backgroundTertiary,
+      backgroundColor: isDarkMode ? colors.backgroundTertiary : "rgba(248, 187, 208, 0.3)",
       justifyContent: "center",
       alignItems: "center",
       marginLeft: 4,
@@ -145,13 +145,13 @@ const getStyles = (isFocused: boolean, message: string, colors: any, disable?: b
     },
     sendButton: {
       marginLeft: 12,
-      backgroundColor: message.length > 0 ? colors.primary : colors.backgroundTertiary,
+      backgroundColor: message.length > 0 ? (isDarkMode ? colors.secondary : colors.secondary) : colors.backgroundTertiary,
       width: 48,
       height: 48,
       borderRadius: 24,
       justifyContent: "center",
       alignItems: "center",
-      shadowColor: colors.primary,
+      shadowColor: colors.secondary,
       shadowOffset: {
         width: 0,
         height: 3,

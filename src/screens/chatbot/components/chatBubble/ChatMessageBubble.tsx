@@ -37,7 +37,7 @@ export const ChatMessageBubble = ({
   const showButtons = isStreamText && message.suggestedActions.length > 0;
 
   return (
-    <View id={message.id} style={[styles.container]}>
+    <View id={message.id} style={styles.container}>
       <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
         {hasError && <CustomText>Vcui lòng thử lại sau</CustomText>}
 
@@ -77,7 +77,7 @@ const getStyle = (colors: any, isUser: boolean, componentHeight: number, isLastM
       paddingHorizontal: 16,
       ...(isUser
         ? {
-            backgroundColor: colors.primary,
+            backgroundColor: colors.secondary,
             paddingVertical: 12,
             alignItems: "flex-end",
             alignSelf: "flex-end",
@@ -86,6 +86,9 @@ const getStyle = (colors: any, isUser: boolean, componentHeight: number, isLastM
           }
         : {
             alignItems: "flex-start",
+            paddingVertical: 12,
+            borderTopLeftRadius: 6,
+            marginRight: 32,
           }),
     },
     text: {

@@ -15,31 +15,47 @@ interface AppBarProps {
 }
 
 export const AppBar: React.FC<AppBarProps> = ({ title, leftIcon, rightIcon, onLeftPress, onRightPress, onDevClick }) => {
-  const { colors } = useAppTheme();
+  const { colors, isDarkMode } = useAppTheme();
 
   return (
     <SafeAreaView style={{ backgroundColor: colors.primary }}>
-      <View style={styles.container}>
-        {leftIcon && (
-          <TouchableOpacity style={[styles.iconContainer, styles.iconButton]} onPress={onLeftPress} activeOpacity={0.7}>
+      <View style={[styles.container, { backgroundColor: colors.primary }]}>
+        {leftIcon ? (
+          <TouchableOpacity
+            style={[
+              styles.iconContainer,
+              styles.iconButton,
+              { backgroundColor: isDarkMode ? "rgba(255, 255, 255, 0.15)" : "rgba(255, 255, 255, 0.3)" },
+            ]}
+            onPress={onLeftPress}
+            activeOpacity={0.7}
+          >
             {leftIcon}
           </TouchableOpacity>
+        ) : (
+          <View style={styles.iconContainer} />
         )}
 
         <View style={styles.titleContainer}>
-          <CustomText weight="Bold" style={styles.title}>
+          <CustomText weight="Bold" style={[styles.title, { color: isDarkMode ? colors.text : "#4A4A4A" }]}>
             {title}
           </CustomText>
         </View>
 
-        {rightIcon && (
-          <TouchableOpacity style={[styles.iconContainer, styles.iconButton]} onPress={onRightPress} activeOpacity={0.7}>
+        {rightIcon ? (
+          <TouchableOpacity
+            style={[
+              styles.iconContainer,
+              styles.iconButton,
+              { backgroundColor: isDarkMode ? "rgba(255, 255, 255, 0.15)" : "rgba(255, 255, 255, 0.3)" },
+            ]}
+            onPress={onRightPress}
+            activeOpacity={0.7}
+          >
             {rightIcon}
           </TouchableOpacity>
-        )}
-
-        {__DEV__ && onDevClick && (
-          <IconButton icon={AppIcons.dev} onPress={onDevClick} style={{ marginLeft: 10, backgroundColor: "white" }} />
+        ) : (
+          <View style={styles.iconContainer} />
         )}
       </View>
     </SafeAreaView>

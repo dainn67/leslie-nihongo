@@ -230,8 +230,6 @@ export const ChatbotScreen = () => {
 
     deleteAllTables();
     dispatch(clearUserProgress());
-
-    // console.log(userProgress);
   };
 
   return (

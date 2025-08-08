@@ -1,5 +1,5 @@
 export const AppConfig = {
   devMode: __DEV__,
-  name: "Test",
+  name: "Leslie",
   fontFamily: "Inter-Regular",
 };

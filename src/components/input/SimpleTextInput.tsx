@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { View, TextInput, StyleSheet } from "react-native";
+import { useAppTheme } from "../../theme";
 
 export const SimpleTextInput = ({
   value,
@@ -13,14 +14,21 @@ export const SimpleTextInput = ({
   onChangeText?: (text: string) => void;
 }) => {
   const [isFocused, setIsFocused] = useState(false);
+  const { colors, isDarkMode } = useAppTheme();
 
   return (
     <View style={styles.container}>
       <TextInput
         ref={inputRef}
-        style={[styles.input, isFocused && styles.inputFocused]}
+        style={[
+          styles.input, 
+          { 
+            borderBottomColor: isFocused ? colors.primary : isDarkMode ? colors.borderLight : "#ccc",
+            color: colors.text
+          }
+        ]}
         placeholder={placeholder}
-        placeholderTextColor="#aaa"
+        placeholderTextColor={isDarkMode ? colors.textTertiary : "#aaa"}
         value={value}
         onChangeText={onChangeText}
         secureTextEntry={false}
@@ -33,19 +41,14 @@ export const SimpleTextInput = ({
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 10, // Space between text inputs
+    marginVertical: 10,
   },
   input: {
     height: 40,
     borderBottomWidth: 1,
-    borderBottomColor: "#ccc", // Light gray border
     paddingLeft: 10,
     fontSize: 16,
-    color: "#333", // Dark text color
     backgroundColor: "transparent",
-    fontFamily: "Arial", // Clean font for minimalism
-  },
-  inputFocused: {
-    borderBottomColor: "#007BFF", // Blue color when focused
+    fontFamily: "Inter-Regular",
   },
 });
