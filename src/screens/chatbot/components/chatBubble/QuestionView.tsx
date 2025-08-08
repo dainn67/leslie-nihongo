@@ -127,7 +127,7 @@ export const QuestionView = ({
         <View style={styles.explanationContainer}>
           <View style={styles.explanationHeader}>
             <CustomText style={styles.explanationIcon}>💡</CustomText>
-            <CustomText style={styles.explanationTitle}>Explanation</CustomText>
+            <CustomText style={styles.explanationTitle}>Giải thích</CustomText>
           </View>
           <CustomText style={styles.explanationText}>{question.explanation}</CustomText>
         </View>

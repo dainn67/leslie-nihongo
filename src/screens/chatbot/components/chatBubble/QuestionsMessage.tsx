@@ -24,8 +24,6 @@ export const QuestionsMessage = ({ questions, onAnalyze }: QuestionsMessageProps
     Tts.voices().then((voices) => {
       const jpVoices = voices.filter((voice) => voice.language.includes("ja")).map((voice) => voice.name);
 
-      
-
       // 0: female, 3: male
       const selectedVoice = jpVoices[0];
       Tts.setDefaultVoice(selectedVoice);
@@ -92,7 +90,7 @@ export const QuestionsMessage = ({ questions, onAnalyze }: QuestionsMessageProps
           <CustomText
             style={[styles.navButtonText, styles.navButtonTextPrev, currentQuestionIndex === 0 && styles.disabledButtonText]}
           >
-            Previous
+            Trước
           </CustomText>
         </TouchableOpacity>
 
@@ -108,7 +106,7 @@ export const QuestionsMessage = ({ questions, onAnalyze }: QuestionsMessageProps
               currentQuestionIndex === questions.length - 1 && styles.disabledButtonText,
             ]}
           >
-            Next
+            Tiếp
           </CustomText>
         </TouchableOpacity>
       </View>
