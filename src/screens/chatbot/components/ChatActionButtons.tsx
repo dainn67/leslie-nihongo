@@ -39,9 +39,7 @@ export const ChatActionButtons = ({ suggestedActions, onClickAction }: ChatActio
     animation.start();
     scaleAnimation.start();
 
-    return () => {
-      animation.stop();
-    };
+    return () => animation.stop();
   };
 
   const handleClickAction = (title: string, actionId?: string) => {

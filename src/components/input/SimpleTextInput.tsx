@@ -21,11 +21,10 @@ export const SimpleTextInput = ({
       <TextInput
         ref={inputRef}
         style={[
-          styles.input, 
-          { 
+          styles.input,
+          {
             borderBottomColor: isFocused ? colors.primary : isDarkMode ? colors.borderLight : "#ccc",
-            color: colors.text
-          }
+          },
         ]}
         placeholder={placeholder}
         placeholderTextColor={isDarkMode ? colors.textTertiary : "#aaa"}
