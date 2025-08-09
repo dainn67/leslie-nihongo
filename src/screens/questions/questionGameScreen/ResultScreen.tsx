@@ -8,8 +8,8 @@ import { RootStackParamList } from "../../../app/DrawerNavigator";
 import { useAppTheme } from "../../../theme";
 import { CustomText } from "../../../components/text/customText";
 import { createResultSummary } from "../../../service/questionService";
-import { sendMessage } from "../../../api/chatMessageAPI";
 import MainButton from "../../../components/buttons/MainButton";
+import { sendMessage } from "../../../service/chatbotService";
 
 type ResultScreenRouteProp = RouteProp<RootStackParamList, "ResultScreen">;
 type ResultScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "ResultScreen">;

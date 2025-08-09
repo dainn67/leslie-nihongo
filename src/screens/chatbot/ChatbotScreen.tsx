@@ -18,20 +18,17 @@ import {
 } from "../../features/userProgress/userProgressSlice";
 import { createQuestionTable, deleteAllTables, updateTables } from "../../storage/database/tables";
 import { createChatMessage, MessageStatus } from "../../models/chatMessage";
-import { sendStreamMessage } from "../../api/chatMessageAPI";
 import { getUserProgressFromStorage } from "../../service/userProgressSerivice";
 import { createConversationHistory } from "../../service/questionService";
 import { MyDatePicker } from "../../components/datePicker/MyDatePicker";
 import { convertDateToDDMMYYYY } from "../../utils/utils";
 import ChatInput from "./components/ChatInput";
 import ClearChatDialog from "./components/ClearChatDialog";
-import * as FileSystem from "expo-file-system";
 import { loadFromAsyncStorage } from "../../storage/asyncStorage/asyncStorage";
 import { AsyncStorageConstants } from "../../storage/asyncStorage/asyncStorateConstant";
 import { setTheme } from "../../features/theme/themeSlice";
 import TTSService from "../../service/ttsService";
-import Toast from "react-native-toast-message";
-import { ToastService } from "../../service/toastService";
+import { sendStreamMessage } from "../../service/chatbotService";
 
 export type DrawerParamList = {
   ChatbotScreen: undefined;
