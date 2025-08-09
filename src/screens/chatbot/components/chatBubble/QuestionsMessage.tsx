@@ -7,6 +7,7 @@ import { AnimatedProgressBar } from "../../../../components/AnimatedProgressBar"
 import { deleteQuestion, insertQuestions } from "../../../../storage/database/tables/questionTable";
 import { createResultSummary } from "../../../../service/questionService";
 import Tts from "react-native-tts";
+import { ToastService } from "../../../../service/toastService";
 
 interface QuestionsMessageProps {
   questions: Question[];
@@ -46,16 +47,12 @@ export const QuestionsMessage = ({ questions, onAnalyze }: QuestionsMessageProps
   const handleBookmarkPress = (isBookmarked: boolean) => {
     if (isBookmarked) {
       setMapBookmark({ ...mapBookmark, [question.questionId]: isBookmarked });
+      insertQuestions([question]);
+      ToastService.show({ message: "Đã lưu", type: "success" });
     } else {
       const newMap = { ...mapBookmark };
       delete newMap[question.questionId];
       setMapBookmark(newMap);
-    }
-
-    // Update database
-    if (isBookmarked) {
-      insertQuestions([question]);
-    } else {
       deleteQuestion(question.questionId);
     }
   };
