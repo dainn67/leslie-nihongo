@@ -131,9 +131,7 @@ export const ResultScreen = () => {
 
           <View style={styles.aiInsightContent}>
             <View style={styles.aiInsightItem}>
-              <CustomText style={[styles.aiInsightText, { color: colors.text }]} size={14}>
-                <CustomText style={{ fontWeight: "bold" }}>{aiInsight}</CustomText>
-              </CustomText>
+              <CustomText style={[styles.aiInsightText, { color: colors.text }]}>{aiInsight.replace(/<[^>]*>?/g, "")}</CustomText>
             </View>
           </View>
         </View>

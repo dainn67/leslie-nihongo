@@ -11,22 +11,18 @@ import { RootStackParamList } from "../../../app/DrawerNavigator";
 import { getAllQuestions } from "../../../storage/database/tables";
 import { useAppDispatch } from "../../../hooks/hooks";
 import { setQuestions } from "../../../features/questions/questionSlice";
-import { Dimensions, Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Dimensions, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useAppTheme } from "../../../theme";
 import { CustomText } from "../../../components/text/customText";
-import { AppIcons } from "../../../constants/appIcons";
+import MainButton from "../../../components/buttons/MainButton";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, "QuestionListScreen">;
 
 export const QuestionsScreen = () => {
   // Drawer & navigation
   const drawerNavigation = useNavigation<DrawerNavigationProp<DrawerParamList, "QuestionsScreen">>();
-  const openDrawer = () => drawerNavigation.openDrawer();
-
   const navigation = useNavigation<NavigationProp>();
-  const handleNavigateToQuestionType = (type: QuestionType) => {
-    navigation.navigate("QuestionListScreen", { type });
-  };
+  const openDrawer = () => drawerNavigation.openDrawer();
 
   // UI
   const { colors } = useAppTheme();
@@ -40,31 +36,50 @@ export const QuestionsScreen = () => {
     dispatch(setQuestions(allQuestions));
   });
 
+  const handleNavigateToQuestionType = (type: QuestionType) => {
+    navigation.navigate("QuestionListScreen", { type });
+  };
+
+  const handleReviewAll = () => {
+    // TODO: Implement review all logic
+  };
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <AppBar title={"Câu hỏi"} leftIcon={<Ionicons name="menu" size={24} color="white" />} onLeftPress={openDrawer} />
-      <View style={[styles.gridContainer, { backgroundColor: colors.background }]}>
-        {Object.values(QuestionType).map((type, index) => (
-          <TouchableOpacity
-            key={index}
-            style={[styles.gridItem, { width: gridItemWidth, backgroundColor: colors.backgroundTertiary }]}
-            onPress={() => handleNavigateToQuestionType(type)}
-          >
-            <CustomText style={styles.icon}>
-              {type === QuestionType.Vocabulary && "📝"}
-              {type === QuestionType.Grammar && "📚"}
-              {type === QuestionType.Reading && "📖"}
-              {type === QuestionType.Listening && "🎧"}
-            </CustomText>
-            <CustomText style={{ textAlign: "center", color: colors.text }}>{QuestionTypeTitles[type]}</CustomText>
-          </TouchableOpacity>
-        ))}
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
+        <View style={styles.gridContainer}>
+          {Object.values(QuestionType).map((type, index) => (
+            <TouchableOpacity
+              key={index}
+              style={[styles.gridItem, { width: gridItemWidth, backgroundColor: colors.backgroundTertiary }]}
+              onPress={() => handleNavigateToQuestionType(type)}
+            >
+              <CustomText style={styles.icon}>
+                {type === QuestionType.Vocabulary && "📝"}
+                {type === QuestionType.Grammar && "📚"}
+                {type === QuestionType.Reading && "📖"}
+                {type === QuestionType.Listening && "🎧"}
+              </CustomText>
+              <CustomText style={{ textAlign: "center", color: colors.text }}>{QuestionTypeTitles[type]}</CustomText>
+            </TouchableOpacity>
+          ))}
+        </View>
+        <MainButton
+          title={"Ôn tập tổng hợp"}
+          style={styles.buttonContainer}
+          textStyle={styles.buttonText}
+          onPress={handleReviewAll}
+        />
       </View>
     </GestureHandlerRootView>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   gridContainer: {
     flex: 1,
     flexDirection: "row",
@@ -75,6 +90,14 @@ const styles = StyleSheet.create({
   icon: {
     fontSize: 40,
     marginBottom: 12,
+  },
+  buttonContainer: {
+    marginHorizontal: 16,
+    marginBottom: 16,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "white",
   },
   gridItem: {
     height: 180,
