@@ -77,7 +77,7 @@ export const QuestionView = ({
         <View>
           <IconButton
             icon={bookmarked ? AppIcons.bookmarked : AppIcons.bookmark}
-            style={{ ...styles.saveButton, backgroundColor: isDarkMode ? colors.backgroundTertiary : undefined }}
+            style={styles.saveButton}
             onPress={() => handleBookmarkPress(!bookmarked)}
           />
           {question.audio && <IconButton icon={playAudio ? AppIcons.audioOn : AppIcons.audioOff} onPress={handleToggleAudio} />}

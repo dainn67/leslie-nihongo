@@ -43,7 +43,6 @@ type ChatbotScreenNavigationProp = DrawerNavigationProp<DrawerParamList, "Chatbo
 export const ChatbotScreen = () => {
   // Drawer
   const navigation = useNavigation<ChatbotScreenNavigationProp>();
-  const openDrawer = () => navigation.openDrawer();
 
   // Clear chat dialog
   const [clearDialogVisible, setClearDialogVisible] = useState(false);
@@ -99,13 +98,6 @@ export const ChatbotScreen = () => {
       }
     }
   }, [initialized, messages.length]);
-
-  const openClearChatDialog = () => setClearDialogVisible(true);
-
-  const clearConversation = () => {
-    dispatch(clearChat());
-    ToastService.show({ message: "Xoá hội thoại thành công!", type: "success" });
-  };
 
   const handleSend = (message: string) => {
     const data = message.trim();
@@ -230,6 +222,8 @@ export const ChatbotScreen = () => {
     }, 1000);
   };
 
+  const clearConversation = () => dispatch(clearChat());
+
   const handleDevClick = () => {
     // const dbPath = `${FileSystem.documentDirectory}/SQLite/`;
     // console.log(dbPath);
@@ -245,8 +239,8 @@ export const ChatbotScreen = () => {
           title={AppConfig.name}
           leftIcon={<Ionicons name="menu" size={24} color="white" />}
           rightIcon={<Ionicons name="trash" size={24} color="white" />}
-          onLeftPress={openDrawer}
-          onRightPress={openClearChatDialog}
+          onLeftPress={() => navigation.openDrawer()}
+          onRightPress={() => setClearDialogVisible(true)}
           onDevClick={handleDevClick}
         />
         <ChatMessageList messages={messages} onClickAction={handleClickAction} onAnalyze={handleAnalyze} />
