@@ -22,50 +22,20 @@ export const QuestionNumberSelector = ({
 }: QuestionNumberSelectorProps) => {
   const { colors } = useAppTheme();
 
-  // Tính toán các tùy chọn số lượng câu hỏi được làm tròn
   const questionOptions = useMemo(() => {
     const options: number[] = [];
-    const maxOptions = 6;
 
-    // Đảm bảo luôn có ít nhất 1 tùy chọn
-    if (totalQuestions <= 0) {
-      return [10];
-    }
+    if (totalQuestions <= 0) return [10];
 
-    // Trường hợp totalQuestions nhỏ hơn hoặc bằng 10
-    if (totalQuestions <= 10) {
-      return [totalQuestions];
-    }
+    if (totalQuestions <= 10) return [totalQuestions];
 
-    // Tạo các tùy chọn từ 10 đến totalQuestions với bước nhảy 10
-    for (let i = 10; i <= Math.min(totalQuestions, 60); i += 10) {
-      options.push(i);
-    }
+    const roundedTotal = Math.floor(totalQuestions / 10) * 10;
 
-    // Nếu totalQuestions không chia hết cho 10, thêm totalQuestions vào cuối
-    if (totalQuestions % 10 !== 0 && totalQuestions > options[options.length - 1]) {
-      options.push(totalQuestions);
-    }
+    for (let i = 10; i <= roundedTotal && options.length < 5; i += 10) options.push(i);
 
-    // Nếu vẫn chưa đủ tùy chọn và totalQuestions lớn hơn 60, thêm các giá trị trung gian
-    if (options.length < maxOptions && totalQuestions > 60) {
-      const remainingSlots = maxOptions - options.length;
-      const step = Math.ceil((totalQuestions - 60) / remainingSlots);
+    options.push(totalQuestions);
 
-      for (let i = 70; i <= totalQuestions; i += step) {
-        if (options.length >= maxOptions) break;
-        if (!options.includes(i)) {
-          options.push(i);
-        }
-      }
-    }
-
-    // Đảm bảo luôn có ít nhất 1 tùy chọn
-    if (options.length === 0) {
-      options.push(Math.min(totalQuestions, 10));
-    }
-
-    return options.sort((a, b) => a - b);
+    return options;
   }, [totalQuestions]);
 
   const handleSelectQuestion = (amount: number) => {
@@ -90,9 +60,9 @@ export const QuestionNumberSelector = ({
           {/* Question Options */}
           <View style={styles.optionsContainer}>
             {questionOptions.length > 0 ? (
-              questionOptions.map((option) => (
+              questionOptions.map((option, index) => (
                 <TouchableOpacity
-                  key={option}
+                  key={index}
                   style={[
                     styles.optionButton,
                     {
@@ -124,7 +94,11 @@ export const QuestionNumberSelector = ({
 
           {/* Footer */}
           <View style={styles.footer}>
-            <TouchableOpacity style={[styles.cancelButton, { borderColor: colors.border }]} onPress={() => setVisible(false)} activeOpacity={0.7}>
+            <TouchableOpacity
+              style={[styles.cancelButton, { borderColor: colors.border }]}
+              onPress={() => setVisible(false)}
+              activeOpacity={0.7}
+            >
               <CustomText weight="SemiBold" size={16} style={[styles.cancelText, { color: colors.text }]}>
                 Hủy
               </CustomText>
