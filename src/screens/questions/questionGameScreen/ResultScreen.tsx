@@ -52,8 +52,7 @@ export const ResultScreen = () => {
   }, []);
 
   const handleTryAgain = () => {
-    // TODO: Implement try again logic
-    navigation.pop();
+    navigation.replace("QuestionGameScreen", { questions: questions });
   };
 
   return (

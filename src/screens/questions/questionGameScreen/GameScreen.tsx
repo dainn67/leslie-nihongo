@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { RootStackParamList } from "../../../app/DrawerNavigator";
@@ -35,6 +35,8 @@ export const QuestionGameScreen = () => {
 
   const navigation = useNavigation<QuestionGameScreenNavigationProp>();
 
+  const [autoMode, setAutoMode] = useState(false);
+
   const dispatch = useAppDispatch();
 
   const handleAnswerSelect = (answerId: number) => {
@@ -44,6 +46,27 @@ export const QuestionGameScreen = () => {
   useEffect(() => {
     dispatch(initGame(questions));
   }, []);
+
+  // Auto mode
+  useEffect(() => {
+    if (autoMode) {
+      const randomAnswerId = Math.floor(Math.random() * question.answers.length);
+      setTimeout(() => {
+        dispatch(setSelectedAnswer(randomAnswerId));
+      }, 250);
+
+      if (currentQuestionIndex < questionList.length - 1) {
+        setTimeout(() => {
+          handleChangeQuestion("next");
+        }, 500);
+      } else {
+        navigation.replace("ResultScreen", {
+          questions,
+          mapAnswerIds,
+        });
+      }
+    }
+  }, [autoMode, currentQuestionIndex]);
 
   const handleBookmarkPress = (isBookmarked: boolean) => {
     dispatch(updateBookmark({ questionId: question.questionId, isBookmarked }));
@@ -74,6 +97,8 @@ export const QuestionGameScreen = () => {
     }
   };
 
+  const handleDevClick = () => setAutoMode(true);
+
   if (!question)
     return (
       <View style={[style.container, { backgroundColor: colors.background }]}>
@@ -87,6 +112,7 @@ export const QuestionGameScreen = () => {
         title={"Câu hỏi"}
         leftIcon={<Ionicons name="arrow-back" size={24} color="white" />}
         onLeftPress={() => navigation.pop()}
+        onDevClick={handleDevClick}
       />
       <View style={style.progressBar}>
         <AnimatedProgressBar progress={progress} />

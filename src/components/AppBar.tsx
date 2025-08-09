@@ -2,6 +2,7 @@ import React from "react";
 import { View, StyleSheet, TouchableOpacity, SafeAreaView } from "react-native";
 import { useAppTheme } from "../theme";
 import { CustomText } from "./text/customText";
+import { AppConfig } from "../constants/appConfig";
 
 interface AppBarProps {
   title: string;
@@ -34,7 +35,7 @@ export const AppBar: React.FC<AppBarProps> = ({ title, leftIcon, rightIcon, onLe
           <View style={styles.iconContainer} />
         )}
 
-        <TouchableOpacity style={styles.titleContainer} disabled={!onDevClick} onPress={onDevClick}>
+        <TouchableOpacity style={styles.titleContainer} disabled={!AppConfig.devMode && !onDevClick} onPress={onDevClick}>
           <CustomText weight="Bold" style={[styles.title, { color: isDarkMode ? colors.text : "#4A4A4A" }]}>
             {title}
           </CustomText>
