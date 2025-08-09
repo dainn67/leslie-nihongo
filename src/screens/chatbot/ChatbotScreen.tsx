@@ -30,6 +30,8 @@ import { loadFromAsyncStorage } from "../../storage/asyncStorage/asyncStorage";
 import { AsyncStorageConstants } from "../../storage/asyncStorage/asyncStorateConstant";
 import { setTheme } from "../../features/theme/themeSlice";
 import TTSService from "../../service/ttsService";
+import Toast from "react-native-toast-message";
+import { ToastService } from "../../service/toastService";
 
 export type DrawerParamList = {
   ChatbotScreen: undefined;
@@ -99,7 +101,11 @@ export const ChatbotScreen = () => {
   }, [initialized, messages.length]);
 
   const openClearChatDialog = () => setClearDialogVisible(true);
-  const clearConversation = () => dispatch(clearChat());
+
+  const clearConversation = () => {
+    dispatch(clearChat());
+    ToastService.show({ message: "Xoá hội thoại thành công!", type: "success" });
+  };
 
   const handleSend = (message: string) => {
     const data = message.trim();
@@ -225,11 +231,10 @@ export const ChatbotScreen = () => {
   };
 
   const handleDevClick = () => {
-    const dbPath = `${FileSystem.documentDirectory}/SQLite/`;
-    console.log(dbPath);
-
-    deleteAllTables();
-    dispatch(clearUserProgress());
+    // const dbPath = `${FileSystem.documentDirectory}/SQLite/`;
+    // console.log(dbPath);
+    // deleteAllTables();
+    // dispatch(clearUserProgress());
   };
 
   return (

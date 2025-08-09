@@ -5,6 +5,7 @@ import { RootNavigator } from "./src/app/RootNavigator";
 import { useFonts } from "expo-font";
 import { ActivityIndicator } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -21,6 +22,7 @@ export default function App() {
     <SafeAreaProvider>
       <Provider store={store}>
         <RootNavigator />
+        <Toast />
       </Provider>
     </SafeAreaProvider>
   );
