@@ -10,11 +10,7 @@ interface ChatActionButtonsProps {
 }
 
 export const ChatActionButtons = ({ suggestedActions, onClickAction }: ChatActionButtonsProps) => {
-  const { colors } = useAppTheme();
-
-  const handleClickAction = (title: string, actionId?: string) => {
-    if (onClickAction) onClickAction(title, actionId);
-  };
+  const { colors, isDarkMode } = useAppTheme();
 
   const fadeInAnim = Array.from({ length: suggestedActions.length }, () => useRef(new Animated.Value(0)).current);
   const scaleAnim = Array.from({ length: suggestedActions.length }, () => useRef(new Animated.Value(0.8)).current);
@@ -48,6 +44,10 @@ export const ChatActionButtons = ({ suggestedActions, onClickAction }: ChatActio
     };
   };
 
+  const handleClickAction = (title: string, actionId?: string) => {
+    if (onClickAction) onClickAction(title, actionId);
+  };
+
   return (
     <View style={{ flexDirection: "column" }}>
       {suggestedActions.map((e, i) => {
@@ -64,6 +64,7 @@ export const ChatActionButtons = ({ suggestedActions, onClickAction }: ChatActio
                 marginVertical: 4,
                 backgroundColor: colors.primary,
               }}
+              textStyle={{ color: isDarkMode ? "white" : "black" }}
               onPress={() => handleClickAction(e.title, e.id)}
             />
           </Animated.View>

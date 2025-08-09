@@ -48,7 +48,6 @@ export const QuestionsMessage = ({ questions, onAnalyze }: QuestionsMessageProps
     if (isBookmarked) {
       setMapBookmark({ ...mapBookmark, [question.questionId]: isBookmarked });
       insertQuestions([question]);
-      ToastService.show({ message: "Đã lưu", type: "success" });
     } else {
       const newMap = { ...mapBookmark };
       delete newMap[question.questionId];

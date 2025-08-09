@@ -132,7 +132,12 @@ export const QuestionListScreen = () => {
           ))}
         </ScrollView>
 
-        <MainButton title="Ôn tập" style={styles.buttonContainer} onPress={() => setAmountSelectorVisible(true)} />
+        <MainButton
+          title="Ôn tập"
+          style={styles.buttonContainer}
+          textStyle={{ color: "white" }}
+          onPress={() => setAmountSelectorVisible(true)}
+        />
 
         {/* Animated Search input */}
         {isSearchVisible && (

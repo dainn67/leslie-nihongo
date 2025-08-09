@@ -7,6 +7,7 @@ import { AppIcons } from "../../../../constants/appIcons";
 import { Answer } from "../../../../models/answer";
 import { useAppTheme } from "../../../../theme";
 import Tts from "react-native-tts";
+import { ToastService } from "../../../../service/toastService";
 
 interface QuestionViewProps {
   question: Question;
@@ -32,6 +33,7 @@ export const QuestionView = ({
   onAudioPlay,
 }: QuestionViewProps) => {
   const { colors, isDarkMode } = useAppTheme();
+
   const getAnswerLabel = (index: number) => {
     const labels = ["A", "B", "C", "D"];
     return (labels[index] || "A") + ".";
@@ -49,6 +51,11 @@ export const QuestionView = ({
       Tts.addEventListener("tts-finish", () => setPlayAudio(false));
       Tts.speak(question.audio);
     }
+  };
+
+  const handleBookmarkPress = (bookmarked: boolean) => {
+    if (bookmarked) ToastService.show({ message: "Đã lưu", type: "success" });
+    onBookmarkPress?.(bookmarked);
   };
 
   return (
@@ -70,8 +77,8 @@ export const QuestionView = ({
         <View>
           <IconButton
             icon={bookmarked ? AppIcons.bookmarked : AppIcons.bookmark}
-            style={styles.saveButton}
-            onPress={() => onBookmarkPress?.(!bookmarked)}
+            style={{ ...styles.saveButton, backgroundColor: isDarkMode ? colors.backgroundTertiary : undefined }}
+            onPress={() => handleBookmarkPress(!bookmarked)}
           />
           {question.audio && <IconButton icon={playAudio ? AppIcons.audioOn : AppIcons.audioOff} onPress={handleToggleAudio} />}
         </View>
