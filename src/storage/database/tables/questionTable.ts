@@ -144,7 +144,8 @@ export const insertQuestions = (questions: Question[]) => {
 };
 
 export const getQuestionsByType = (type: QuestionType) => {
-  const questionRows = db.getAllSync(`SELECT * FROM ${QuestionTable.tableName} WHERE ${QuestionTable.columnType} = "${type}"`);
+  const sql = `SELECT * FROM ${QuestionTable.tableName} WHERE ${QuestionTable.columnType} = "${type}"`;
+  const questionRows = db.getAllSync(sql);
 
   const questions: Question[] = questionRows.map((row: any) =>
     createQuestion({

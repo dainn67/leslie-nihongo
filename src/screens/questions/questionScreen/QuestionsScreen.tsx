@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { AppBar } from "../../../components/AppBar";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { DrawerParamList } from "../../chatbot/ChatbotScreen";
-import { QuestionType, QuestionTypeTitles } from "../../../models/question";
+import { Question, QuestionType, QuestionTypeTitles } from "../../../models/question";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../../app/DrawerNavigator";
 import { getAllQuestions } from "../../../storage/database/tables";
@@ -14,9 +14,10 @@ import { setQuestions } from "../../../features/questions/questionSlice";
 import { Dimensions, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useAppTheme } from "../../../theme";
 import { CustomText } from "../../../components/text/customText";
+import { QuestionNumberSelector } from "../questinCategoryScreen/components/QuestionNumberSelector";
 import MainButton from "../../../components/buttons/MainButton";
 
-type NavigationProp = NativeStackNavigationProp<RootStackParamList, "QuestionListScreen">;
+type NavigationProp = NativeStackNavigationProp<RootStackParamList, "QuestionsScreen">;
 
 export const QuestionsScreen = () => {
   // Drawer & navigation
@@ -25,23 +26,33 @@ export const QuestionsScreen = () => {
   const openDrawer = () => drawerNavigation.openDrawer();
 
   // UI
+  const [amountSelectorVisible, setAmountSelectorVisible] = useState(false);
   const { colors } = useAppTheme();
   const { width } = Dimensions.get("window");
   const gridItemWidth = (width - 60) / 2;
+
+  // Data
+  const [allQuestions, setAllQuestions] = useState<Question[]>([]);
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     const allQuestions = getAllQuestions();
     dispatch(setQuestions(allQuestions));
-  });
+    setAllQuestions(allQuestions);
+  }, []);
 
   const handleNavigateToQuestionType = (type: QuestionType) => {
     navigation.navigate("QuestionListScreen", { type });
   };
 
   const handleReviewAll = () => {
-    // TODO: Implement review all logic
+    setAmountSelectorVisible(true);
+  };
+
+  const handleSelectQuestion = (amount: number) => {
+    const questions = allQuestions.slice(0, amount);
+    navigation.navigate("QuestionGameScreen", { questions });
   };
 
   return (
@@ -70,6 +81,13 @@ export const QuestionsScreen = () => {
           style={styles.buttonContainer}
           textStyle={styles.buttonText}
           onPress={handleReviewAll}
+        />
+        {/* Question number selector */}
+        <QuestionNumberSelector
+          totalQuestions={allQuestions.length}
+          visible={amountSelectorVisible}
+          setVisible={setAmountSelectorVisible}
+          onSelectQuestion={(amount) => handleSelectQuestion(amount)}
         />
       </View>
     </GestureHandlerRootView>
