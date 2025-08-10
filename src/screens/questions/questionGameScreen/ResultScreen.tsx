@@ -8,8 +8,8 @@ import { RootStackParamList } from "../../../app/DrawerNavigator";
 import { useAppTheme } from "../../../theme";
 import { CustomText } from "../../../components/text/customText";
 import { createResultSummary } from "../../../service/questionService";
+import { ChatbotService } from "../../../service/chatbotService";
 import MainButton from "../../../components/buttons/MainButton";
-import { sendMessage } from "../../../service/chatbotService";
 
 type ResultScreenRouteProp = RouteProp<RootStackParamList, "ResultScreen">;
 type ResultScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "ResultScreen">;
@@ -46,7 +46,7 @@ export const ResultScreen = () => {
 
     const summary = createResultSummary(questions, mapAnswerIds);
 
-    sendMessage({ message: summary, data: { analyze_result_game: 1 }, conversationId: "" }).then((result) => {
+    ChatbotService.sendMessage({ message: summary, data: { analyze_result_game: 1 } }).then((result) => {
       setAiInsight(result);
     });
   }, []);

@@ -28,7 +28,7 @@ import { loadFromAsyncStorage } from "../../storage/asyncStorage/asyncStorage";
 import { AsyncStorageConstants } from "../../storage/asyncStorage/asyncStorateConstant";
 import { setTheme } from "../../features/theme/themeSlice";
 import TTSService from "../../service/ttsService";
-import { sendStreamMessage } from "../../service/chatbotService";
+import { ChatbotService } from "../../service/chatbotService";
 
 export type DrawerParamList = {
   ChatbotScreen: undefined;
@@ -67,7 +67,7 @@ export const ChatbotScreen = () => {
 
         // Add loading message
         dispatch(addLoading());
-        sendStreamMessage({
+        ChatbotService.sendStreamMessage({
           level: userProgress.level,
           target: userProgress.target,
           examDate: userProgress.examDate,
@@ -84,7 +84,7 @@ export const ChatbotScreen = () => {
       if (messages.length === 0) {
         // Add loading message when clear
         dispatch(addLoading());
-        sendStreamMessage({
+        ChatbotService.sendStreamMessage({
           level: userProgress.level,
           target: userProgress.target,
           examDate: userProgress.examDate,
@@ -104,7 +104,7 @@ export const ChatbotScreen = () => {
     dispatch(addMessage(userMessage));
     dispatch(addLoading());
 
-    sendStreamMessage({
+    ChatbotService.sendStreamMessage({
       message: data,
       conversationHistory,
       level: userProgress.level,
@@ -137,7 +137,7 @@ export const ChatbotScreen = () => {
         dispatch(addMessage(userMessage));
         dispatch(addLoading());
 
-        sendStreamMessage({
+        ChatbotService.sendStreamMessage({
           conversationHistory: createConversationHistory(messages),
           actionId: actionId,
           level: userLevel,
@@ -164,7 +164,7 @@ export const ChatbotScreen = () => {
     dispatch(addMessage(userMessage));
     dispatch(addLoading());
 
-    sendStreamMessage({
+    ChatbotService.sendStreamMessage({
       message: title,
       conversationHistory,
       actionId: actionId,
@@ -190,7 +190,7 @@ export const ChatbotScreen = () => {
     dispatch(addMessage(userMessage));
     dispatch(addLoading());
 
-    sendStreamMessage({
+    ChatbotService.sendStreamMessage({
       conversationHistory: createConversationHistory(messages),
       level: userProgress.level,
       target: userProgress.target,
@@ -205,7 +205,7 @@ export const ChatbotScreen = () => {
     setTimeout(() => {
       dispatch(addLoading());
 
-      sendStreamMessage({
+      ChatbotService.sendStreamMessage({
         message: summary,
         conversationHistory: createConversationHistory(messages),
         level: userProgress.level,

@@ -5,7 +5,7 @@ import { ApiConfig } from "../../constants/apiConfig";
 import { postData } from "../../api/apiClient";
 import Constants from "expo-constants";
 
-const { DIFY_API_KEY } = Constants.expoConfig?.extra ?? {};
+const { DIFY_CHAT_API_KEY, DIFY_ANALYZE_GAME_RESULT_API_KEY } = Constants.expoConfig?.extra ?? {};
 const user = "dainn";
 
 export const extractInformation = createAsyncThunk(
@@ -13,7 +13,7 @@ export const extractInformation = createAsyncThunk(
   async ({ message, previous_information }: { message: string; previous_information: string }) => {
     const result = await postData({
       url: ApiConfig.difyServerUrl,
-      token: DIFY_API_KEY,
+      token: DIFY_CHAT_API_KEY,
       body: {
         query: message,
         inputs: {

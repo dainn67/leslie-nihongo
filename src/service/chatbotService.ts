@@ -11,304 +11,320 @@ import Constants from "expo-constants";
 
 export const Delimiter = "--//--";
 
-export const splitCustomWords = (input: string) => {
-  let splittedText: string[] = [];
-
-  const largeChunk = input.split("\n");
-
-  for (const chunk of largeChunk) {
-    if (chunk.length === 0) continue;
-    let text = chunk;
-
-    // Remove incomplete special characters while streaming
-    if (text[text.length - 1] == "\\") {
-      text = text.substring(0, text.length - 1);
-    }
-
-    // Check incomplete special characters string
-    const openBracketCount = (chunk.match(/\(/g) || []).length;
-    const closeBracketCount = (chunk.match(/\)/g) || []).length;
-
-    // Cut from incomplete special characters
-    if (openBracketCount != closeBracketCount) {
-      const lastIndex = chunk.lastIndexOf("\\(");
-      if (lastIndex != -1) {
-        text = text.substring(0, lastIndex);
-      }
-    }
-
-    // Check and remove incomplete embedded actions
-    const leftActionBracketCount = (chunk.match(/⟦⟦/g) || []).length;
-    const rightActionBracketCount = (chunk.match(/⟧⟧/g) || []).length;
-
-    if (leftActionBracketCount != rightActionBracketCount) {
-      const lastIndex = chunk.lastIndexOf("⟦⟦");
-      if (lastIndex != -1) {
-        text = text.substring(0, lastIndex);
-      }
-    }
-
-    // Process text character by character
-    const words: string[] = [];
-    let currentWord: string = "";
-    let isBold = false;
-
-    // First split into words, treating expressions and action brackets as single words
-    let i = 0;
-    while (i < text.length) {
-      // Check for action brackets start
-      if (i + 1 < text.length && text[i] == "⟦" && text[i + 1] == "⟦") {
-        // If we had started a word, add it to words
-        if (currentWord.length != 0) {
-          words.push(currentWord);
-          currentWord = "";
-        }
-
-        // Collect the entire action text as one word
-        let actionText = "⟦⟦";
-        i += 2; // Skip '⟦⟦'
-
-        while (i < text.length) {
-          if (i + 1 < text.length && text[i] == "⟧" && text[i + 1] == "⟧") {
-            actionText += "⟧⟧";
-            i += 2; // Skip '⟧⟧'
-            break;
-          } else {
-            actionText += text[i];
-            i++;
-          }
-        }
-
-        words.push(actionText);
-      }
-      // Check for expression start
-      else if (i + 1 < text.length && text[i] == "\\" && text[i + 1] == "(") {
-        // If we had started a word, add it to words
-        if (currentWord.length != 0) {
-          words.push(currentWord);
-          currentWord = "";
-        }
-
-        // Collect the entire expression as one word
-        let expression = "\\(";
-        i += 2; // Skip '\('
-
-        while (i < text.length) {
-          if (i + 1 < text.length && text[i] == "\\" && text[i + 1] == ")") {
-            expression += "\\)";
-            i += 2; // Skip '\)'
-            break;
-          } else {
-            expression += text[i];
-            i++;
-          }
-        }
-
-        words.push(expression);
-      } else if (text[i] == " ") {
-        // Space character - finish current word if any
-        if (currentWord.length != 0) {
-          words.push(currentWord);
-          currentWord = "";
-        }
-        i++;
-      } else {
-        // Regular character - add to current word
-        currentWord += text[i];
-        i++;
-      }
-    }
-
-    // Add any remaining word
-    if (currentWord.length != 0) {
-      words.push(currentWord);
-    }
-
-    // Process bold formatting
-    isBold = false;
-    for (const word of words) {
-      if (word.includes("**")) {
-        const numberOfBold = (word.match(/\*\*/g) || []).length;
-        if (numberOfBold % 2 == 1) isBold = !isBold;
-        if (word == "**") continue;
-
-        splittedText.push(`**${word.replaceAll("**", "")}**`);
-      } else {
-        if (isBold) {
-          splittedText.push(`**${word}**`);
-        } else {
-          splittedText.push(word);
-        }
-      }
-    }
-
-    splittedText.push("\n");
-  }
-
-  // Trim text
-  while (splittedText[splittedText.length - 1] == "\n") splittedText.pop();
-  while (splittedText[0] == "\n") splittedText.shift();
-
-  splittedText = splittedText.filter((e) => e.length > 0 && e != "**");
-
-  const suggestionIndex = splittedText.findIndex((element) => element.includes(Delimiter));
-
-  if (suggestionIndex !== -1) {
-    const delimiterWord = splittedText[suggestionIndex];
-
-    // Get index of word chunk that contains the delimiter
-    const indexOfDelimiter = delimiterWord.indexOf(Delimiter);
-
-    // Cut off the rest
-    splittedText.splice(suggestionIndex, splittedText.length - suggestionIndex);
-
-    // Check if the delimiter word chunk contains previous words of the response
-    if (indexOfDelimiter > 0) {
-      const previousWords = delimiterWord.slice(0, indexOfDelimiter).split(" ");
-
-      splittedText.push(...previousWords);
-    }
-  }
-
-  return splittedText;
-};
-
-const { DIFY_API_KEY } = Constants.expoConfig?.extra ?? {};
+const { DIFY_CHAT_API_KEY, DIFY_ANALYZE_GAME_RESULT_API_KEY } = Constants.expoConfig?.extra ?? {};
 
 const user = "dainn";
 
-export const sendStreamMessage = ({
-  message,
-  conversationHistory,
-  actionId,
-  level,
-  target,
-  examDate,
-  analyzeChatGame,
-  conversationSummary,
-  conversationId,
-  dispatch,
-}: {
-  message?: string;
-  conversationHistory?: string;
-  conversationSummary?: string;
-  actionId?: string;
-  level?: string;
-  target?: string;
-  examDate?: number;
-  analyzeChatGame?: boolean;
-  conversationId?: string;
-  dispatch: AppDispatch;
-}) => {
-  let fullText = "";
-  let wordIndex = 0;
-  let wordLength = 0;
-  let isQuestionJson = false;
-  let startReceiveMessage = false;
-  let hasError = false;
+export class ChatbotService {
+  static splitCustomWords = (input: string) => {
+    let splittedText: string[] = [];
 
-  const now = convertDateToDDMMYYYY(new Date());
+    const largeChunk = input.split("\n");
 
-  let examDateString = "";
-  if (examDate == 0) {
-    examDateString = "User hasn't decided exam date yet";
-  } else if (examDate) {
-    const formattedExamDate = convertDateToDDMMYYYY(new Date(examDate));
-    examDateString = `Current date is ${now} (d/m/y format) and user JLPT exam date is ${formattedExamDate}`;
-  }
+    for (const chunk of largeChunk) {
+      if (chunk.length === 0) continue;
+      let text = chunk;
 
-  // Original stream
-  connectSSE({
-    url: ApiConfig.difyServerUrl,
-    token: DIFY_API_KEY,
-    body: {
-      query: message ?? "<init>",
-      inputs: {
-        level: level,
-        target: target,
-        action_id: actionId,
-        conversation_history: conversationHistory,
-        conversation_summary: conversationSummary,
-        current_date: now,
-        exam_date: examDateString,
-        analyze_chat_game: analyzeChatGame ? 1 : 0,
-      },
-      conversation_id: conversationId,
-      response_mode: "streaming",
-      user: user,
-      auto_generate_name: false,
-    },
-    onMessage: (data) => {
-      const type = data["event"];
-      const messageId = data["message_id"];
-      const text = data["answer"];
-      const conversationId = data["conversation_id"];
-      const nodeTitle = data["data"]?.["title"];
-
-      if (!isQuestionJson && nodeTitle && nodeTitle == DifyConfig.titleGenQuestions) {
-        dispatch(updateLastMessageData({ messageType: MessageType.QUESTIONS }));
-        isQuestionJson = true;
+      // Remove incomplete special characters while streaming
+      if (text[text.length - 1] == "\\") {
+        text = text.substring(0, text.length - 1);
       }
 
-      if (type === "message") {
-        fullText += text;
-      } else if (type === DifyConfig.typeWorkflowStart) {
-        startReceiveMessage = true;
-        dispatch(updateLastMessageData({ messageId }));
-        dispatch(updateConversationId(conversationId));
-      } else if (type === DifyConfig.typeMessageEnd) {
-        const usage = data["metadata"]["usage"];
-        console.log(
-          `Tokens: ${usage["total_tokens"]} (${usage["prompt_tokens"]} input, ${usage["completion_tokens"]} completion) => ${usage["total_price"]} ${usage["currency"]}`,
-        );
+      // Check incomplete special characters string
+      const openBracketCount = (chunk.match(/\(/g) || []).length;
+      const closeBracketCount = (chunk.match(/\)/g) || []).length;
+
+      // Cut from incomplete special characters
+      if (openBracketCount != closeBracketCount) {
+        const lastIndex = chunk.lastIndexOf("\\(");
+        if (lastIndex != -1) {
+          text = text.substring(0, lastIndex);
+        }
       }
-    },
-    onDone: () => {
-      wordLength = splitCustomWords(fullText).length;
-      dispatch(updateLastMessageData({ fullText: fullText }));
-      if (isQuestionJson) {
-        const { questions, summary } = extractQuestionsFromJson(fullText);
-        dispatch(updateLastMessageData({ questions, summary, status: MessageStatus.DONE }));
+
+      // Check and remove incomplete embedded actions
+      const leftActionBracketCount = (chunk.match(/⟦⟦/g) || []).length;
+      const rightActionBracketCount = (chunk.match(/⟧⟧/g) || []).length;
+
+      if (leftActionBracketCount != rightActionBracketCount) {
+        const lastIndex = chunk.lastIndexOf("⟦⟦");
+        if (lastIndex != -1) {
+          text = text.substring(0, lastIndex);
+        }
       }
-    },
-    onError: (error) => {
-      console.log("SSE error", error);
-      if (!hasError) {
-        hasError = true;
-        dispatch(updateLastMessageData({ hasError: true }));
-      }
-    },
-  });
 
-  const waitCondition = setInterval(() => {
-    if (startReceiveMessage) {
-      clearInterval(waitCondition);
+      // Process text character by character
+      const words: string[] = [];
+      let currentWord: string = "";
+      let isBold = false;
 
-      let startStreaming = false;
-      const interval = setInterval(() => {
-        if (isQuestionJson) clearInterval(interval);
-
-        // Split word every time update to find latest words
-        const words = splitCustomWords(fullText);
-
-        // Skip if new text haven't arrived yet
-        if (words.length >= wordIndex + 1) {
-          // Start streaming
-          if (!startStreaming) {
-            if (!isQuestionJson) dispatch(updateLastMessageData({ status: MessageStatus.STREAMING }));
-            startStreaming = true;
+      // First split into words, treating expressions and action brackets as single words
+      let i = 0;
+      while (i < text.length) {
+        // Check for action brackets start
+        if (i + 1 < text.length && text[i] == "⟦" && text[i + 1] == "⟦") {
+          // If we had started a word, add it to words
+          if (currentWord.length != 0) {
+            words.push(currentWord);
+            currentWord = "";
           }
 
-          const nextWord = words[wordIndex];
-          dispatch(updateLastMessageData({ nextWord }));
+          // Collect the entire action text as one word
+          let actionText = "⟦⟦";
+          i += 2; // Skip '⟦⟦'
 
-          wordIndex++;
+          while (i < text.length) {
+            if (i + 1 < text.length && text[i] == "⟧" && text[i + 1] == "⟧") {
+              actionText += "⟧⟧";
+              i += 2; // Skip '⟧⟧'
+              break;
+            } else {
+              actionText += text[i];
+              i++;
+            }
+          }
 
-          // Stop interval at lastword, after original stream is done
-          if (wordLength > 0 && wordIndex == wordLength - 1) {
-            const lastWord = words[wordIndex];
-            dispatch(updateLastMessageData({ nextWord: lastWord }));
+          words.push(actionText);
+        }
+        // Check for expression start
+        else if (i + 1 < text.length && text[i] == "\\" && text[i + 1] == "(") {
+          // If we had started a word, add it to words
+          if (currentWord.length != 0) {
+            words.push(currentWord);
+            currentWord = "";
+          }
 
+          // Collect the entire expression as one word
+          let expression = "\\(";
+          i += 2; // Skip '\('
+
+          while (i < text.length) {
+            if (i + 1 < text.length && text[i] == "\\" && text[i + 1] == ")") {
+              expression += "\\)";
+              i += 2; // Skip '\)'
+              break;
+            } else {
+              expression += text[i];
+              i++;
+            }
+          }
+
+          words.push(expression);
+        } else if (text[i] == " ") {
+          // Space character - finish current word if any
+          if (currentWord.length != 0) {
+            words.push(currentWord);
+            currentWord = "";
+          }
+          i++;
+        } else {
+          // Regular character - add to current word
+          currentWord += text[i];
+          i++;
+        }
+      }
+
+      // Add any remaining word
+      if (currentWord.length != 0) {
+        words.push(currentWord);
+      }
+
+      // Process bold formatting
+      isBold = false;
+      for (const word of words) {
+        if (word.includes("**")) {
+          const numberOfBold = (word.match(/\*\*/g) || []).length;
+          if (numberOfBold % 2 == 1) isBold = !isBold;
+          if (word == "**") continue;
+
+          splittedText.push(`**${word.replaceAll("**", "")}**`);
+        } else {
+          if (isBold) {
+            splittedText.push(`**${word}**`);
+          } else {
+            splittedText.push(word);
+          }
+        }
+      }
+
+      splittedText.push("\n");
+    }
+
+    // Trim text
+    while (splittedText[splittedText.length - 1] == "\n") splittedText.pop();
+    while (splittedText[0] == "\n") splittedText.shift();
+
+    splittedText = splittedText.filter((e) => e.length > 0 && e != "**");
+
+    const suggestionIndex = splittedText.findIndex((element) => element.includes(Delimiter));
+
+    if (suggestionIndex !== -1) {
+      const delimiterWord = splittedText[suggestionIndex];
+
+      // Get index of word chunk that contains the delimiter
+      const indexOfDelimiter = delimiterWord.indexOf(Delimiter);
+
+      // Cut off the rest
+      splittedText.splice(suggestionIndex, splittedText.length - suggestionIndex);
+
+      // Check if the delimiter word chunk contains previous words of the response
+      if (indexOfDelimiter > 0) {
+        const previousWords = delimiterWord.slice(0, indexOfDelimiter).split(" ");
+
+        splittedText.push(...previousWords);
+      }
+    }
+
+    return splittedText;
+  };
+
+  static sendStreamMessage = ({
+    message,
+    conversationHistory,
+    actionId,
+    level,
+    target,
+    examDate,
+    analyzeChatGame,
+    conversationSummary,
+    conversationId,
+    dispatch,
+  }: {
+    message?: string;
+    conversationHistory?: string;
+    conversationSummary?: string;
+    actionId?: string;
+    level?: string;
+    target?: string;
+    examDate?: number;
+    analyzeChatGame?: boolean;
+    conversationId?: string;
+    dispatch: AppDispatch;
+  }) => {
+    let fullText = "";
+    let wordIndex = 0;
+    let wordLength = 0;
+    let isQuestionJson = false;
+    let startReceiveMessage = false;
+    let hasError = false;
+
+    const now = convertDateToDDMMYYYY(new Date());
+
+    let examDateString = "";
+    if (examDate == 0) {
+      examDateString = "User hasn't decided exam date yet";
+    } else if (examDate) {
+      const formattedExamDate = convertDateToDDMMYYYY(new Date(examDate));
+      examDateString = `Current date is ${now} (d/m/y format) and user JLPT exam date is ${formattedExamDate}`;
+    }
+
+    // Original stream
+    connectSSE({
+      url: ApiConfig.difyServerUrl,
+      token: DIFY_CHAT_API_KEY,
+      body: {
+        query: message ?? "<init>",
+        inputs: {
+          level: level,
+          target: target,
+          action_id: actionId,
+          conversation_history: conversationHistory,
+          conversation_summary: conversationSummary,
+          current_date: now,
+          exam_date: examDateString,
+          analyze_chat_game: analyzeChatGame ? 1 : 0,
+        },
+        conversation_id: conversationId,
+        response_mode: "streaming",
+        user: user,
+        auto_generate_name: false,
+      },
+      onMessage: (data) => {
+        const type = data["event"];
+        const messageId = data["message_id"];
+        const text = data["answer"];
+        const conversationId = data["conversation_id"];
+        const nodeTitle = data["data"]?.["title"];
+
+        if (!isQuestionJson && nodeTitle && nodeTitle == DifyConfig.titleGenQuestions) {
+          dispatch(updateLastMessageData({ messageType: MessageType.QUESTIONS }));
+          isQuestionJson = true;
+        }
+
+        if (type === "message") {
+          fullText += text;
+        } else if (type === DifyConfig.typeWorkflowStart) {
+          startReceiveMessage = true;
+          dispatch(updateLastMessageData({ messageId }));
+          dispatch(updateConversationId(conversationId));
+        } else if (type === DifyConfig.typeMessageEnd) {
+          const usage = data["metadata"]["usage"];
+          console.log(
+            `Tokens: ${usage["total_tokens"]} (${usage["prompt_tokens"]} input, ${usage["completion_tokens"]} completion) => ${usage["total_price"]} ${usage["currency"]}`,
+          );
+        }
+      },
+      onDone: () => {
+        wordLength = ChatbotService.splitCustomWords(fullText).length;
+        dispatch(updateLastMessageData({ fullText: fullText }));
+        if (isQuestionJson) {
+          const { questions, summary } = extractQuestionsFromJson(fullText);
+          dispatch(updateLastMessageData({ questions, summary, status: MessageStatus.DONE }));
+        }
+      },
+      onError: (error) => {
+        console.log("SSE error", error);
+        if (!hasError) {
+          hasError = true;
+          dispatch(updateLastMessageData({ hasError: true }));
+        }
+      },
+    });
+
+    const waitCondition = setInterval(() => {
+      if (startReceiveMessage) {
+        clearInterval(waitCondition);
+
+        let startStreaming = false;
+        const interval = setInterval(() => {
+          if (isQuestionJson) clearInterval(interval);
+
+          // Split word every time update to find latest words
+          const words = ChatbotService.splitCustomWords(fullText);
+
+          // Skip if new text haven't arrived yet
+          if (words.length >= wordIndex + 1) {
+            // Start streaming
+            if (!startStreaming) {
+              if (!isQuestionJson) dispatch(updateLastMessageData({ status: MessageStatus.STREAMING }));
+              startStreaming = true;
+            }
+
+            const nextWord = words[wordIndex];
+            dispatch(updateLastMessageData({ nextWord }));
+
+            wordIndex++;
+
+            // Stop interval at lastword, after original stream is done
+            if (wordLength > 0 && wordIndex == wordLength - 1) {
+              const lastWord = words[wordIndex];
+              dispatch(updateLastMessageData({ nextWord: lastWord }));
+
+              const splittedText = fullText.split(Delimiter);
+              // Extract the suggested actions here to wait for the stream to finish
+              const suggestedActions = extractSuggestedActions(fullText);
+              dispatch(updateLastMessageData({ suggestedActions }));
+
+              // Extract the summary when finished
+              const summary = splittedText[splittedText.length - 1].trim();
+              dispatch(updateLastMessageData({ summary }));
+              dispatch(updateLastMessageData({ status: MessageStatus.DONE }));
+
+              clearInterval(interval);
+            }
+          }
+
+          if (wordLength > 0 && wordIndex + 1 > wordLength) {
             const splittedText = fullText.split(Delimiter);
             // Extract the suggested actions here to wait for the stream to finish
             const suggestedActions = extractSuggestedActions(fullText);
@@ -321,45 +337,108 @@ export const sendStreamMessage = ({
 
             clearInterval(interval);
           }
+        }, 20);
+      }
+    }, 200);
+  };
+
+  static sendResultAnalytic({
+    message,
+    data,
+    onYieldWord,
+  }: {
+    message: string;
+    data?: { [key: string]: any };
+    onYieldWord: (word: string) => void;
+  }) {
+    let fullText = "";
+    let wordIndex = 0;
+    let wordLength = 0;
+    let startReceiveMessage = false;
+    let hasError = false;
+
+    // Original stream
+    connectSSE({
+      url: ApiConfig.difyServerUrl,
+      token: DIFY_ANALYZE_GAME_RESULT_API_KEY,
+      body: {
+        query: message,
+        inputs: data ?? {},
+        response_mode: "streaming",
+        user: user,
+        auto_generate_name: false,
+      },
+      onMessage: (data) => {
+        const type = data["event"];
+        const messageId = data["message_id"];
+        const text = data["answer"];
+        const conversationId = data["conversation_id"];
+        const nodeTitle = data["data"]?.["title"];
+
+        if (type === "message") {
+          fullText += text;
+        } else if (type === DifyConfig.typeWorkflowStart) {
+          startReceiveMessage = true;
+        } else if (type === DifyConfig.typeMessageEnd) {
+          const usage = data["metadata"]["usage"];
+          console.log(
+            `Tokens: ${usage["total_tokens"]} (${usage["prompt_tokens"]} input, ${usage["completion_tokens"]} completion) => ${usage["total_price"]} ${usage["currency"]}`,
+          );
         }
+      },
+      onDone: () => {
+        wordLength = ChatbotService.splitCustomWords(fullText).length;
+      },
+      onError: (error) => {
+        console.log("SSE error", error);
+        if (!hasError) hasError = true;
+      },
+    });
 
-        if (wordLength > 0 && wordIndex + 1 > wordLength) {
-          const splittedText = fullText.split(Delimiter);
-          // Extract the suggested actions here to wait for the stream to finish
-          const suggestedActions = extractSuggestedActions(fullText);
-          dispatch(updateLastMessageData({ suggestedActions }));
+    const waitCondition = setInterval(() => {
+      if (startReceiveMessage) {
+        clearInterval(waitCondition);
 
-          // Extract the summary when finished
-          const summary = splittedText[splittedText.length - 1].trim();
-          dispatch(updateLastMessageData({ summary }));
-          dispatch(updateLastMessageData({ status: MessageStatus.DONE }));
+        const interval = setInterval(() => {
+          // Split word every time update to find latest words
+          const words = ChatbotService.splitCustomWords(fullText);
 
-          clearInterval(interval);
-        }
-      }, 20);
-    }
-  }, 200);
-};
+          // Skip if new text haven't arrived yet
+          if (words.length >= wordIndex + 1) {
+            const nextWord = words[wordIndex];
+            onYieldWord(nextWord);
 
-export const sendMessage = async ({
-  message,
-  data,
-}: {
-  message: string;
-  data?: { [key: string]: any };
-  conversationId: string;
-}) => {
-  const result = await postData({
-    url: ApiConfig.difyServerUrl,
-    token: DIFY_API_KEY,
-    body: {
-      query: message,
-      inputs: data ?? {},
-      response_mode: "blocking",
-      user: user,
-      auto_generate_name: false,
-    },
-  });
+            wordIndex++;
 
-  return result["answer"];
-};
+            // Stop interval at lastword, after original stream is done
+            if (wordLength > 0 && wordIndex == wordLength - 1) {
+              const lastWord = words[wordIndex];
+              onYieldWord(lastWord);
+              clearInterval(interval);
+            }
+          }
+
+          if (wordLength > 0 && wordIndex + 1 > wordLength) {
+            clearInterval(interval);
+          }
+        }, 20);
+      }
+    }, 200);
+  }
+
+  static sendMessage = async ({ message, data }: { message: string; data?: { [key: string]: any } }) => {
+    const result = await postData({
+      url: ApiConfig.difyServerUrl,
+      token: DIFY_CHAT_API_KEY,
+      body: {
+        query: message,
+        inputs: data ?? {},
+        response_mode: "blocking",
+        user: user,
+        auto_generate_name: false,
+      },
+    });
+
+    return result["answer"];
+  };
+}
