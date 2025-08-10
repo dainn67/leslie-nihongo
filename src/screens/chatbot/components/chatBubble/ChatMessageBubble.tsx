@@ -71,8 +71,7 @@ export const ChatMessageBubble = ({
 const getStyle = (colors: any, isUser: boolean, componentHeight: number, isLastMessage?: boolean) => {
   return StyleSheet.create({
     container: {
-      marginTop: 16,
-      minHeight: isUser || !isLastMessage ? 0 : componentHeight * 0.86,
+      minHeight: isUser || !isLastMessage ? 0 : componentHeight * 0.88,
       borderRadius: 16,
       paddingHorizontal: 16,
       ...(isUser
@@ -88,7 +87,7 @@ const getStyle = (colors: any, isUser: boolean, componentHeight: number, isLastM
             alignItems: "flex-start",
             paddingVertical: 12,
             borderTopLeftRadius: 6,
-            marginRight: 32,
+            marginRight: 0,
           }),
     },
     text: {

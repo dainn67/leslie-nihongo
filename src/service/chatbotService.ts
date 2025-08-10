@@ -4,9 +4,10 @@ import { DifyConfig } from "../constants/difyConfig";
 import { convertDateToDDMMYYYY } from "../utils/utils";
 import { connectSSE } from "../api/sseClient";
 import { updateConversationId, updateLastMessageData } from "../features/chatbot/chatbotSlice";
-import { MessageStatus, MessageType } from "../models/chatMessage";
-import { extractQuestionsFromJson, extractSuggestedActions } from "./questionService";
+import { ChatMessage, MessageStatus, MessageType, Sender } from "../models/chatMessage";
 import { postData } from "../api/apiClient";
+import { Question } from "../models/question";
+import { createQuestion } from "../models/question";
 import Constants from "expo-constants";
 
 export const Delimiter = "--//--";
@@ -180,7 +181,7 @@ export class ChatbotService {
 
   static sendStreamMessage = ({
     message,
-    conversationHistory,
+    messages,
     actionId,
     level,
     target,
@@ -191,6 +192,7 @@ export class ChatbotService {
     dispatch,
   }: {
     message?: string;
+    messages: ChatMessage[];
     conversationHistory?: string;
     conversationSummary?: string;
     actionId?: string;
@@ -217,6 +219,8 @@ export class ChatbotService {
       const formattedExamDate = convertDateToDDMMYYYY(new Date(examDate));
       examDateString = `Current date is ${now} (d/m/y format) and user JLPT exam date is ${formattedExamDate}`;
     }
+
+    const conversationHistory = ChatbotService.createConversationHistory(messages);
 
     // Original stream
     connectSSE({
@@ -268,7 +272,7 @@ export class ChatbotService {
         wordLength = ChatbotService.splitCustomWords(fullText).length;
         dispatch(updateLastMessageData({ fullText: fullText }));
         if (isQuestionJson) {
-          const { questions, summary } = extractQuestionsFromJson(fullText);
+          const { questions, summary } = ChatbotService.extractQuestionsFromJson(fullText);
           dispatch(updateLastMessageData({ questions, summary, status: MessageStatus.DONE }));
         }
       },
@@ -312,7 +316,7 @@ export class ChatbotService {
 
               const splittedText = fullText.split(Delimiter);
               // Extract the suggested actions here to wait for the stream to finish
-              const suggestedActions = extractSuggestedActions(fullText);
+              const suggestedActions = ChatbotService.extractSuggestedActions(fullText);
               dispatch(updateLastMessageData({ suggestedActions }));
 
               // Extract the summary when finished
@@ -327,7 +331,7 @@ export class ChatbotService {
           if (wordLength > 0 && wordIndex + 1 > wordLength) {
             const splittedText = fullText.split(Delimiter);
             // Extract the suggested actions here to wait for the stream to finish
-            const suggestedActions = extractSuggestedActions(fullText);
+            const suggestedActions = ChatbotService.extractSuggestedActions(fullText);
             dispatch(updateLastMessageData({ suggestedActions }));
 
             // Extract the summary when finished
@@ -369,10 +373,7 @@ export class ChatbotService {
       },
       onMessage: (data) => {
         const type = data["event"];
-        const messageId = data["message_id"];
         const text = data["answer"];
-        const conversationId = data["conversation_id"];
-        const nodeTitle = data["data"]?.["title"];
 
         if (type === "message") {
           fullText += text;
@@ -385,9 +386,7 @@ export class ChatbotService {
           );
         }
       },
-      onDone: () => {
-        wordLength = ChatbotService.splitCustomWords(fullText).length;
-      },
+      onDone: () => (wordLength = ChatbotService.splitCustomWords(fullText).length),
       onError: (error) => {
         console.log("SSE error", error);
         if (!hasError) hasError = true;
@@ -425,10 +424,10 @@ export class ChatbotService {
     }, 200);
   }
 
-  static sendMessage = async ({ message, data }: { message: string; data?: { [key: string]: any } }) => {
+  static sendMessage = async ({ message, token, data }: { message: string; token: string; data?: { [key: string]: any } }) => {
     const result = await postData({
       url: ApiConfig.difyServerUrl,
-      token: DIFY_CHAT_API_KEY,
+      token: token,
       body: {
         query: message,
         inputs: data ?? {},
@@ -439,5 +438,50 @@ export class ChatbotService {
     });
 
     return result["answer"];
+  };
+
+  static createConversationHistory = (messages: ChatMessage[]) => {
+    return messages
+      .slice(-10)
+      .map((m) => {
+        const senderString = m.sender == Sender.BOT ? "Bot" : "User";
+        let text = `(${senderString}): ${m.sender == Sender.BOT ? m.summary : m.fullText}`;
+        if (text.endsWith(".")) text = text.slice(0, -1);
+        return text;
+      })
+      .join(". ");
+  };
+
+  static extractQuestionsFromJson = (json: string): { questions: Question[]; summary: string } => {
+    const dataString = json.replaceAll("```json", "").replaceAll("```", "").trim();
+    const data = JSON.parse(dataString);
+    const questions: Question[] = data["questions"].map((question: any, index: number) =>
+      createQuestion({ ...question, questionId: Date.now() + index }),
+    );
+    const summary = data["summary"];
+
+    return { questions, summary };
+  };
+
+  static extractSuggestedActions = (fullText: string) => {
+    const splittedText = fullText.split(Delimiter);
+    if (splittedText.length > 2) {
+      const suggestedActions = splittedText
+        .slice(1, -1) // Remove the response and the summary
+        .map((text) => {
+          // Split by "-" or ":"
+          let data = text.split("-");
+          if (data.length < 2) data = text.split(":");
+          if (data.length < 2) return { title: text };
+
+          const [id, title] = data;
+          return { id: id.trim(), title: title.trim() };
+        })
+        .filter((action) => action.title !== undefined && action.title !== null);
+
+      return suggestedActions;
+    }
+
+    return [];
   };
 }

@@ -8,7 +8,7 @@ import { useNavigation } from "@react-navigation/native";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { AppConfig } from "../../constants/appConfig";
-import { addLoading, addMessage, clearChat, extractInformation } from "../../features/chatbot/chatbotSlice";
+import { addLoading, addMessage, clearChat, extractContext } from "../../features/chatbot/chatbotSlice";
 import {
   clearUserProgress,
   setUserExamDate,
@@ -19,16 +19,15 @@ import {
 import { createQuestionTable, deleteAllTables, updateTables } from "../../storage/database/tables";
 import { createChatMessage, MessageStatus } from "../../models/chatMessage";
 import { getUserProgressFromStorage } from "../../service/userProgressSerivice";
-import { createConversationHistory } from "../../service/questionService";
 import { MyDatePicker } from "../../components/datePicker/MyDatePicker";
 import { convertDateToDDMMYYYY } from "../../utils/utils";
-import ChatInput from "./components/ChatInput";
-import ClearChatDialog from "./components/ClearChatDialog";
 import { loadFromAsyncStorage } from "../../storage/asyncStorage/asyncStorage";
 import { AsyncStorageConstants } from "../../storage/asyncStorage/asyncStorateConstant";
 import { setTheme } from "../../features/theme/themeSlice";
-import TTSService from "../../service/ttsService";
 import { ChatbotService } from "../../service/chatbotService";
+import ChatInput from "./components/ChatInput";
+import ClearChatDialog from "./components/ClearChatDialog";
+import TTSService from "../../service/ttsService";
 
 export type DrawerParamList = {
   ChatbotScreen: undefined;
@@ -68,6 +67,7 @@ export const ChatbotScreen = () => {
         // Add loading message
         dispatch(addLoading());
         ChatbotService.sendStreamMessage({
+          messages: messages,
           level: userProgress.level,
           target: userProgress.target,
           examDate: userProgress.examDate,
@@ -80,33 +80,31 @@ export const ChatbotScreen = () => {
       loadFromAsyncStorage(AsyncStorageConstants.THEME_MODE).then((scheme) => {
         dispatch(setTheme(scheme));
       });
-    } else {
-      if (messages.length === 0) {
-        // Add loading message when clear
-        dispatch(addLoading());
-        ChatbotService.sendStreamMessage({
-          level: userProgress.level,
-          target: userProgress.target,
-          examDate: userProgress.examDate,
-          conversationSummary,
-          conversationId,
-          dispatch,
-        });
-      }
+    } else if (messages.length === 0) {
+      // Add loading message when clear
+      dispatch(addLoading());
+      ChatbotService.sendStreamMessage({
+        messages: messages,
+        level: userProgress.level,
+        target: userProgress.target,
+        examDate: userProgress.examDate,
+        conversationSummary,
+        conversationId,
+        dispatch,
+      });
     }
   }, [initialized, messages.length]);
 
   const handleSend = (message: string) => {
     const data = message.trim();
     const userMessage = createChatMessage({ fullText: data });
-    const conversationHistory = createConversationHistory(messages);
 
     dispatch(addMessage(userMessage));
     dispatch(addLoading());
 
     ChatbotService.sendStreamMessage({
       message: data,
-      conversationHistory,
+      messages: messages,
       level: userProgress.level,
       target: userProgress.target,
       examDate: userProgress.examDate,
@@ -115,7 +113,7 @@ export const ChatbotScreen = () => {
       dispatch,
     });
 
-    dispatch(extractInformation({ message, previous_information: conversationSummary }));
+    dispatch(extractContext({ message, conversationSummary }));
   };
 
   const handleClickAction = async (title: string, actionId?: string) => {
@@ -138,7 +136,7 @@ export const ChatbotScreen = () => {
         dispatch(addLoading());
 
         ChatbotService.sendStreamMessage({
-          conversationHistory: createConversationHistory(messages),
+          messages: messages,
           actionId: actionId,
           level: userLevel,
           target: userTarget,
@@ -159,14 +157,13 @@ export const ChatbotScreen = () => {
     }
 
     const userMessage = createChatMessage({ fullText: title });
-    const conversationHistory = createConversationHistory(messages);
 
     dispatch(addMessage(userMessage));
     dispatch(addLoading());
 
     ChatbotService.sendStreamMessage({
       message: title,
-      conversationHistory,
+      messages: messages,
       actionId: actionId,
       level: userLevel.length > 0 ? userLevel : userProgress.level,
       target: userTarget.length > 0 ? userTarget : userProgress.target,
@@ -176,7 +173,7 @@ export const ChatbotScreen = () => {
       dispatch,
     });
 
-    dispatch(extractInformation({ message: title, previous_information: conversationSummary }));
+    dispatch(extractContext({ message: title, conversationSummary }));
   };
 
   const handleSelectExamDate = (selectedDate: Date | undefined) => {
@@ -191,7 +188,7 @@ export const ChatbotScreen = () => {
     dispatch(addLoading());
 
     ChatbotService.sendStreamMessage({
-      conversationHistory: createConversationHistory(messages),
+      messages: messages,
       level: userProgress.level,
       target: userProgress.target,
       examDate: selectedDate.getTime(),
@@ -207,7 +204,7 @@ export const ChatbotScreen = () => {
 
       ChatbotService.sendStreamMessage({
         message: summary,
-        conversationHistory: createConversationHistory(messages),
+        messages: messages,
         level: userProgress.level,
         target: userProgress.target,
         examDate: userProgress.examDate,

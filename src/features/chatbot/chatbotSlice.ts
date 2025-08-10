@@ -2,31 +2,23 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ChatMessage, createChatMessage, MessageStatus, MessageType, Sender, SuggestedAction } from "../../models/chatMessage";
 import { Question } from "../../models/question";
 import { ApiConfig } from "../../constants/apiConfig";
-import { postData } from "../../api/apiClient";
+import { ChatbotService } from "../../service/chatbotService";
 import Constants from "expo-constants";
 
-const { DIFY_CHAT_API_KEY } = Constants.expoConfig?.extra ?? {};
-const user = "dainn";
+const { DIFY_EXTRACT_CONTEXT_API_KEY } = Constants.expoConfig?.extra ?? {};
 
-export const extractInformation = createAsyncThunk(
+export const extractContext = createAsyncThunk(
   ApiConfig.difyServerUrl,
-  async ({ message, previous_information }: { message: string; previous_information: string }) => {
-    const result = await postData({
-      url: ApiConfig.difyServerUrl,
-      token: DIFY_CHAT_API_KEY,
-      body: {
-        query: message,
-        inputs: {
-          extract_information: 1,
-          previous_information: previous_information,
-        },
-        response_mode: "blocking",
-        user: user,
-        auto_generate_name: false,
+  async ({ message, conversationSummary }: { message: string; conversationSummary: string }) => {
+    const result = await ChatbotService.sendMessage({
+      message,
+      token: DIFY_EXTRACT_CONTEXT_API_KEY,
+      data: {
+        conversation_summary: conversationSummary,
       },
     });
 
-    return result["answer"].trim();
+    return result.trim();
   },
 );
 
@@ -70,7 +62,7 @@ const chatbotSlice = createSlice({
     updateConversationId: (state, action: PayloadAction<string>) => {
       state.conversationId = action.payload;
     },
-    updateSummary: (state, action: PayloadAction<string>) => {
+    updateConversationSummary: (state, action: PayloadAction<string>) => {
       if (action.payload.trim().length != 0) {
         state.conversationSummary = action.payload;
       }
@@ -108,7 +100,7 @@ const chatbotSlice = createSlice({
     clearChat: () => initialState,
   },
   extraReducers: (builder) => {
-    builder.addCase(extractInformation.fulfilled, (state, action) => {
+    builder.addCase(extractContext.fulfilled, (state, action) => {
       if (action.payload) {
         state.conversationSummary = action.payload;
       }
@@ -116,7 +108,7 @@ const chatbotSlice = createSlice({
   },
 });
 
-export const { clearChat, addMessage, addLoading, updateLastMessageData, updateConversationId, updateSummary } =
+export const { clearChat, addMessage, addLoading, updateLastMessageData, updateConversationId, updateConversationSummary } =
   chatbotSlice.actions;
 
 export default chatbotSlice.reducer;

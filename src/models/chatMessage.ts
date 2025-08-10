@@ -1,4 +1,4 @@
-import { splitCustomWords } from "../service/chatMessageService";
+import { ChatbotService } from "../service/chatbotService";
 import { Question } from "./question";
 
 export enum Sender {
@@ -46,7 +46,7 @@ export type ChatMessage = {
 
 export const createChatMessage = (partial?: Partial<ChatMessage>): ChatMessage => {
   const fullText = partial?.fullText ?? "";
-  const words = partial?.words ?? splitCustomWords(fullText);
+  const words = partial?.words ?? ChatbotService.splitCustomWords(fullText);
   const timestamp = new Date().toISOString();
   return {
     id: partial?.id ?? timestamp,

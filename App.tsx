@@ -3,9 +3,11 @@ import { Provider } from "react-redux";
 import { store } from "./src/app/store";
 import { RootNavigator } from "./src/app/RootNavigator";
 import { useFonts } from "expo-font";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, LogBox } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
+
+LogBox.ignoreLogs(["Require cycle:"]);
 
 export default function App() {
   const [fontsLoaded] = useFonts({

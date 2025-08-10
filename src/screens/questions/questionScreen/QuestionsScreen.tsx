@@ -57,7 +57,7 @@ export const QuestionsScreen = () => {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <AppBar title={"Câu hỏi"} leftIcon={<Ionicons name="menu" size={24} color="white" />} onLeftPress={openDrawer} />
+      <AppBar title={"Câu hỏi đã lưu"} leftIcon={<Ionicons name="menu" size={24} color="white" />} onLeftPress={openDrawer} />
       <View style={[styles.container, { backgroundColor: colors.background }]}>
         <View style={styles.gridContainer}>
           {Object.values(QuestionType).map((type, index) => (
