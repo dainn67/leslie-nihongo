@@ -1,3 +1,3 @@
 export const ApiConfig = {
-  difyServerUrl: "https://test-practice-test.abc-elearning.org/v1/chat-messages",
+  difyServerUrl: "https://29f758d7a5c8.ngrok-free.app/v1/chat-messages",
 };
