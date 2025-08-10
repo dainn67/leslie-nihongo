@@ -53,12 +53,12 @@ export const QuestionGameScreen = () => {
       const randomAnswerId = Math.floor(Math.random() * question.answers.length);
       setTimeout(() => {
         dispatch(setSelectedAnswer(randomAnswerId));
-      }, 100);
+      }, 50);
 
       if (currentQuestionIndex < questionList.length - 1) {
         setTimeout(() => {
           handleChangeQuestion("next");
-        }, 200);
+        }, 100);
       } else {
         navigation.replace("ResultScreen", {
           questions,

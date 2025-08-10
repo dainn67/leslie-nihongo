@@ -344,7 +344,6 @@ export class ChatbotService {
 
   static sendResultAnalytic({
     message,
-    data,
     onYieldWord,
   }: {
     message: string;
@@ -363,7 +362,7 @@ export class ChatbotService {
       token: DIFY_ANALYZE_GAME_RESULT_API_KEY,
       body: {
         query: message,
-        inputs: data ?? {},
+        inputs: {},
         response_mode: "streaming",
         user: user,
         auto_generate_name: false,

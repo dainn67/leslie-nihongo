@@ -5,7 +5,7 @@ import { ApiConfig } from "../../constants/apiConfig";
 import { postData } from "../../api/apiClient";
 import Constants from "expo-constants";
 
-const { DIFY_CHAT_API_KEY, DIFY_ANALYZE_GAME_RESULT_API_KEY } = Constants.expoConfig?.extra ?? {};
+const { DIFY_CHAT_API_KEY } = Constants.expoConfig?.extra ?? {};
 const user = "dainn";
 
 export const extractInformation = createAsyncThunk(
@@ -27,7 +27,7 @@ export const extractInformation = createAsyncThunk(
     });
 
     return result["answer"].trim();
-  }
+  },
 );
 
 type ChatState = {
@@ -64,7 +64,7 @@ const chatbotSlice = createSlice({
         createChatMessage({
           status: MessageStatus.LOADING,
           sender: Sender.BOT,
-        })
+        }),
       );
     },
     updateConversationId: (state, action: PayloadAction<string>) => {
@@ -87,7 +87,7 @@ const chatbotSlice = createSlice({
         suggestedActions?: SuggestedAction[];
         summary?: string;
         hasError?: boolean;
-      }>
+      }>,
     ) => {
       const message = getLatestMessage(state);
       if (message) {

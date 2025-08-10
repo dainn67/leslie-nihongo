@@ -10,6 +10,7 @@ import { CustomText } from "../../../components/text/customText";
 import { createResultSummary } from "../../../service/questionService";
 import { ChatbotService } from "../../../service/chatbotService";
 import MainButton from "../../../components/buttons/MainButton";
+import { WordComponent } from "../../../components/streamingText/WordComponent";
 
 type ResultScreenRouteProp = RouteProp<RootStackParamList, "ResultScreen">;
 type ResultScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "ResultScreen">;
@@ -24,7 +25,7 @@ export const ResultScreen = () => {
   const [incorrectQuestions, setIncorrectQuestions] = useState(0);
   const [totalQuestions, setTotalQuestions] = useState(0);
 
-  const [aiInsight, setAiInsight] = useState("");
+  const [aiInsightWords, setAiInsightWords] = useState<string[]>([]);
 
   useEffect(() => {
     let correctQuestions = 0;
@@ -46,8 +47,13 @@ export const ResultScreen = () => {
 
     const summary = createResultSummary(questions, mapAnswerIds);
 
-    ChatbotService.sendMessage({ message: summary, data: { analyze_result_game: 1 } }).then((result) => {
-      setAiInsight(result);
+    setAiInsightWords([]);
+
+    ChatbotService.sendResultAnalytic({
+      message: summary,
+      onYieldWord: (word) => {
+        setAiInsightWords((prev) => [...prev, word]);
+      },
     });
   }, []);
 
@@ -129,10 +135,10 @@ export const ResultScreen = () => {
             </CustomText>
           </View>
 
-          <View style={styles.aiInsightContent}>
-            <View style={styles.aiInsightItem}>
-              <CustomText style={[styles.aiInsightText, { color: colors.text }]}>{aiInsight.replace(/<[^>]*>?/g, "")}</CustomText>
-            </View>
+          <View style={styles.aiInsightItem}>
+            {aiInsightWords.map((word, index) => (
+              <WordComponent key={index} fontSize={16} word={word} color={colors.text} />
+            ))}
           </View>
         </View>
       </ScrollView>
@@ -255,16 +261,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginRight: 12,
   },
-  aiInsightContent: {
-    gap: 12,
-  },
   aiInsightItem: {
     flexDirection: "row",
-    alignItems: "flex-start",
-  },
-  aiInsightText: {
-    flex: 1,
-    marginLeft: 8,
-    lineHeight: 20,
+    flexWrap: "wrap",
   },
 });
