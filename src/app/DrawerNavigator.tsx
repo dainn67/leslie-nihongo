@@ -12,9 +12,13 @@ import { QuestionListScreen } from "../screens/questions/questinCategoryScreen/Q
 import { Question, QuestionType } from "../models/question";
 import { QuestionGameScreen } from "../screens/questions/questionGameScreen/GameScreen";
 import { ResultScreen } from "../screens/questions/questionGameScreen/ResultScreen";
-import { FeedbackButton } from "../components/buttons/FeedbackButton";
-import { DrawerActions, useNavigation } from "@react-navigation/native";
 import { FeedbackScreen } from "../screens/feedback/FeedbackScreen";
+
+export type DrawerParamList = {
+  ChatbotScreen: undefined;
+  QuestionsScreen: undefined;
+  FeedbackScreen: undefined;
+};
 
 export type RootStackParamList = {
   ChatbotScreen: undefined;
@@ -33,7 +37,6 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export const DrawerNavigator = () => {
   const { colors } = useAppTheme();
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   return (
     <Drawer.Navigator
