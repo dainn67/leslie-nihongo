@@ -28,6 +28,7 @@ export const darkColors = {
   background: "#212121",
   backgroundSecondary: "#303030",
   backgroundTertiary: "#424242",
+  backgroundGrey: "#F5F5F5",
   botChatMessageText: "#F5F5F5",
   userChatMessageText: "white",
   text: "#F5F5F5",
