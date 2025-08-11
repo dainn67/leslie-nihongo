@@ -13,6 +13,7 @@ import { deleteQuestion, getQuestionsByType, insertQuestions } from "../../../st
 import { SimpleTextInput } from "../../../components/input/SimpleTextInput";
 import { useAppTheme } from "../../../theme";
 import MainButton from "../../../components/buttons/MainButton";
+import { CustomText } from "../../../components/text/customText";
 
 type QuestionListScreenRouteProp = RouteProp<RootStackParamList, "QuestionListScreen">;
 type QuestionListScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "QuestionListScreen">;
@@ -43,7 +44,7 @@ export const QuestionListScreen = () => {
       setQuestions(questions);
       setFilteredQuestions(questions);
       setListBookmarked(questions.map((q) => q.questionId));
-    }, []),
+    }, [])
   );
 
   const handleSelectQuestion = (amount: number) => {
@@ -116,26 +117,32 @@ export const QuestionListScreen = () => {
       />
 
       <View style={[styles.stackContainer, { backgroundColor: colors.background }]}>
-        {/* Main content (scrollable list of questions) */}
-        <ScrollView style={styles.questionListContainer}>
-          {filteredQuestions.map((question, index) => (
-            <View key={question.questionId} style={styles.questionContainer}>
-              <QuestionView
-                question={question}
-                questionIndex={index}
-                totalQuestions={questions.length}
-                bookmarked={listBookmarked.includes(question.questionId)}
-                showCorrectAnswer={true}
-                onBookmarkPress={(isBookmarked) => handleBookmarkPress(isBookmarked, question)}
-              />
-            </View>
-          ))}
-        </ScrollView>
+        {filteredQuestions.length > 0 ? (
+          <ScrollView style={styles.questionListContainer}>
+            {filteredQuestions.map((question, index) => (
+              <View key={question.questionId} style={styles.questionContainer}>
+                <QuestionView
+                  question={question}
+                  questionIndex={index}
+                  totalQuestions={questions.length}
+                  bookmarked={listBookmarked.includes(question.questionId)}
+                  showCorrectAnswer={true}
+                  onBookmarkPress={(isBookmarked) => handleBookmarkPress(isBookmarked, question)}
+                />
+              </View>
+            ))}
+          </ScrollView>
+        ) : (
+          <View style={styles.emptyContainer}>
+            <CustomText>Bạn chưa lưu lại câu hỏi nào</CustomText>
+          </View>
+        )}
 
         <MainButton
           title="Ôn tập"
           style={styles.buttonContainer}
           textStyle={{ color: "white" }}
+          disabled={filteredQuestions.length === 0}
           onPress={() => setAmountSelectorVisible(true)}
         />
 
@@ -194,6 +201,11 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingHorizontal: 24,
     paddingTop: 12,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   questionListContainer: {
     flex: 1,
