@@ -1,5 +1,6 @@
 export default {
   expo: {
+    owner: "dainn283",
     name: "Leslie AI",
     slug: "leslieai",
     icon: "./assets/images/torii-logo.png",

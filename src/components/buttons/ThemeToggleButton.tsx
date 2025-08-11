@@ -2,9 +2,10 @@ import React from "react";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
-import { RootState } from "../app/store";
-import { toggleTheme } from "../features/theme/themeSlice";
-import { useAppTheme } from "../theme";
+import { RootState } from "../../app/store";
+import { toggleTheme } from "../../features/theme/themeSlice";
+import { useAppTheme } from "../../theme";
+import { CustomText } from "../text/customText";
 
 export const ThemeToggleButton = () => {
   const dispatch = useDispatch();
@@ -30,28 +31,9 @@ export const ThemeToggleButton = () => {
   };
 
   return (
-    <TouchableOpacity
-      style={[
-        styles.button, 
-        { 
-          backgroundColor: isDarkMode ? colors.backgroundSecondary : colors.backgroundSecondary,
-          borderColor: colors.border,
-          shadowColor: colors.primary,
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.1,
-          shadowRadius: 4,
-          elevation: 2
-        }
-      ]}
-      onPress={handleToggle}
-    >
-      <Ionicons 
-        name={getIconName()} 
-        size={24} 
-        color={colors.primary} 
-        style={styles.icon} 
-      />
-      <Text style={[styles.label, { color: colors.text }]}>{getLabel()}</Text>
+    <TouchableOpacity style={styles.button} onPress={handleToggle}>
+      <Ionicons name={getIconName()} size={24} color={colors.primary} style={styles.icon} />
+      <CustomText style={[styles.label, { color: colors.text }]}>{getLabel()}</CustomText>
     </TouchableOpacity>
   );
 };
@@ -66,7 +48,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: "#e0e0e0",
+    borderColor: "grey",
   },
   icon: {
     marginRight: 12,

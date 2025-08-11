@@ -3,7 +3,7 @@ import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from "
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View } from "react-native";
 import { ChatbotScreen } from "../screens/chatbot/ChatbotScreen";
-import { ThemeToggleButton } from "../components/ThemeToggleButton";
+import { ThemeToggleButton } from "../components/buttons/ThemeToggleButton";
 import { useAppTheme } from "../theme";
 import { Ionicons } from "@expo/vector-icons";
 import { CustomText } from "../components/text/customText";
@@ -12,6 +12,7 @@ import { QuestionListScreen } from "../screens/questions/questinCategoryScreen/Q
 import { Question, QuestionType } from "../models/question";
 import { QuestionGameScreen } from "../screens/questions/questionGameScreen/GameScreen";
 import { ResultScreen } from "../screens/questions/questionGameScreen/ResultScreen";
+import { FeedbackButton } from "../components/buttons/FeedbackButton";
 
 export type RootStackParamList = {
   ChatbotScreen: undefined;
@@ -47,6 +48,7 @@ export const DrawerNavigator = () => {
           <DrawerContentScrollView {...props}>
             <DrawerItemList {...props} />
           </DrawerContentScrollView>
+          <FeedbackButton />
           <ThemeToggleButton />
         </View>
       )}
