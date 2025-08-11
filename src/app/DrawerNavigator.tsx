@@ -14,6 +14,7 @@ import { QuestionGameScreen } from "../screens/questions/questionGameScreen/Game
 import { ResultScreen } from "../screens/questions/questionGameScreen/ResultScreen";
 import { FeedbackButton } from "../components/buttons/FeedbackButton";
 import { DrawerActions, useNavigation } from "@react-navigation/native";
+import { FeedbackScreen } from "../screens/feedback/FeedbackScreen";
 
 export type RootStackParamList = {
   ChatbotScreen: undefined;
@@ -24,6 +25,7 @@ export type RootStackParamList = {
     questions: Question[];
     mapAnswerIds: { [key: number]: number };
   };
+  FeedbackScreen: undefined;
 };
 
 const Drawer = createDrawerNavigator();
@@ -32,10 +34,6 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export const DrawerNavigator = () => {
   const { colors } = useAppTheme();
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-
-  const handleOpenFeedback = () => {
-    navigation.dispatch(DrawerActions.closeDrawer());
-  };
 
   return (
     <Drawer.Navigator
@@ -54,7 +52,6 @@ export const DrawerNavigator = () => {
           <DrawerContentScrollView {...props}>
             <DrawerItemList {...props} />
           </DrawerContentScrollView>
-          <FeedbackButton onPress={handleOpenFeedback} />
           <ThemeToggleButton />
         </View>
       )}
@@ -68,7 +65,7 @@ export const DrawerNavigator = () => {
               Chatbot
             </CustomText>
           ),
-          drawerIcon: ({ color, size }) => <Ionicons name="chatbubbles" size={size} color={color} />,
+          drawerIcon: ({ color, size }) => <Ionicons name="chatbubbles-outline" size={size} color={color} />,
         }}
       />
       <Drawer.Screen
@@ -80,7 +77,19 @@ export const DrawerNavigator = () => {
               Câu hỏi đã lưu
             </CustomText>
           ),
-          drawerIcon: ({ color, size }) => <Ionicons name="list" size={size} color={color} />,
+          drawerIcon: ({ color, size }) => <Ionicons name="list-outline" size={size} color={color} />,
+        }}
+      />
+      <Drawer.Screen
+        name="FeedbackScreen"
+        component={FeedbackScreen}
+        options={{
+          drawerLabel: ({ color }) => (
+            <CustomText weight="Regular" style={{ color }}>
+              Feedback
+            </CustomText>
+          ),
+          drawerIcon: ({ color, size }) => <Ionicons name="mail-outline" size={size} color={color} />,
         }}
       />
     </Drawer.Navigator>
