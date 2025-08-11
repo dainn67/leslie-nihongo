@@ -3,12 +3,12 @@ import Toast from "react-native-toast-message";
 export class ToastService {
   static show({
     message,
-    type,
+    type = "success",
     position = "top",
     duration = 2000,
   }: {
     message: string;
-    type: "success" | "error" | "info" | "warning";
+    type?: "success" | "error" | "info" | "warning";
     position?: "top" | "bottom";
     duration?: number;
   }) {

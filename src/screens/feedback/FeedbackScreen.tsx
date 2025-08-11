@@ -1,17 +1,18 @@
 import React, { useState } from "react";
-import { SafeAreaView, View, Text, Pressable, TextInput, ScrollView, Alert } from "react-native";
+import { SafeAreaView, View, Text, Pressable, TextInput, ScrollView } from "react-native";
 import { useColorScheme } from "react-native";
 import { AppBar } from "../../components/AppBar";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { DrawerParamList } from "../../app/DrawerNavigator";
-
-type Category = "Bug" | "Feature" | "UX" | "Content" | "Other";
+import { ToastService } from "../../service/toastService";
 
 export const FeedbackScreen = () => {
   const scheme = useColorScheme();
   const isDark = scheme === "dark";
+
+  const categories = ["Bug", "Feature", "UX", "Content", "Other"];
 
   const colors = {
     bg: isDark ? "#0B0F14" : "#FFFFFF",
@@ -25,17 +26,25 @@ export const FeedbackScreen = () => {
     placeholder: isDark ? "#6B7280" : "#9AA6B2",
   };
 
-  const [category, setCategory] = useState<Category | null>(null);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [message, setMessage] = useState("");
 
-  const canSubmit = category && message.trim().length > 0;
+  const canSubmit = selectedCategories.length > 0 && message.trim().length > 0;
 
   const drawerNavigation = useNavigation<DrawerNavigationProp<DrawerParamList, "FeedbackScreen">>();
 
+  const toggleCategory = (c: string) =>
+    setSelectedCategories((prev) => (prev.includes(c) ? prev.filter((x) => x !== c) : [...prev, c]));
+
   const handleSubmit = () => {
     if (!canSubmit) return;
-    Alert.alert("Thank you!", `Category: ${category}\nMessage: ${message}`);
-    setCategory(null);
+
+    // TODO: send to your backend
+    // payload example:
+    // { categories: selectedCategories, message: message.trim() }
+
+    ToastService.show({ message: "Phản hồi đã được gửi thành công" });
+    setSelectedCategories([]);
     setMessage("");
   };
 
@@ -49,20 +58,20 @@ export const FeedbackScreen = () => {
       <ScrollView contentContainerStyle={{ padding: 20, gap: 20 }}>
         <Text style={{ color: colors.text, fontSize: 22, fontWeight: "700" }}>Feedback</Text>
 
-        {/* Category */}
+        {/* Category (multi-select) */}
         <View style={{ gap: 8 }}>
           <Text style={{ color: colors.text, fontSize: 16, fontWeight: "600" }}>Category</Text>
           <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
-            {(["Bug", "Feature", "UX", "Content", "Other"] as Category[]).map((c) => {
-              const selected = category === c;
+            {categories.map((c) => {
+              const selected = selectedCategories.includes(c);
               return (
                 <Pressable
                   key={c}
-                  onPress={() => setCategory(selected ? null : c)}
+                  onPress={() => toggleCategory(c)}
                   style={{
                     paddingHorizontal: 14,
                     paddingVertical: 8,
-                    borderRadius: 999,
+                    borderRadius: 100,
                     backgroundColor: selected ? colors.primary : colors.chipBg,
                   }}
                 >
@@ -108,7 +117,7 @@ export const FeedbackScreen = () => {
           </View>
         </View>
 
-        {/* Submit Button */}
+        {/* Submit */}
         <Pressable
           disabled={!canSubmit}
           onPress={handleSubmit}

@@ -1,6 +1,6 @@
 import React from "react";
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from "@react-navigation/drawer";
-import { createNativeStackNavigator, NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View } from "react-native";
 import { ChatbotScreen } from "../screens/chatbot/ChatbotScreen";
 import { ThemeToggleButton } from "../components/buttons/ThemeToggleButton";
@@ -89,7 +89,7 @@ export const DrawerNavigator = () => {
         options={{
           drawerLabel: ({ color }) => (
             <CustomText weight="Regular" style={{ color }}>
-              Feedback
+              Phản hồi & góp ý
             </CustomText>
           ),
           drawerIcon: ({ color, size }) => <Ionicons name="mail-outline" size={size} color={color} />,
