@@ -4,11 +4,15 @@ import { CustomText } from "../text/customText";
 import { Ionicons } from "@expo/vector-icons";
 import { useAppTheme } from "../../theme";
 
-export const FeedbackButton = () => {
+interface FeedbackButtonProps {
+  onPress: () => void;
+}
+
+export const FeedbackButton = ({ onPress }: FeedbackButtonProps) => {
   const { colors } = useAppTheme();
 
   return (
-    <TouchableOpacity style={styles.button}>
+    <TouchableOpacity style={styles.button} onPress={onPress}>
       <Ionicons name="chatbubbles" size={24} style={styles.icon} color={colors.primary} />
       <CustomText style={[styles.label, { color: colors.text }]}>Feedback</CustomText>
     </TouchableOpacity>

@@ -1,6 +1,6 @@
 import React from "react";
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from "@react-navigation/drawer";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createNativeStackNavigator, NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { View } from "react-native";
 import { ChatbotScreen } from "../screens/chatbot/ChatbotScreen";
 import { ThemeToggleButton } from "../components/buttons/ThemeToggleButton";
@@ -13,6 +13,7 @@ import { Question, QuestionType } from "../models/question";
 import { QuestionGameScreen } from "../screens/questions/questionGameScreen/GameScreen";
 import { ResultScreen } from "../screens/questions/questionGameScreen/ResultScreen";
 import { FeedbackButton } from "../components/buttons/FeedbackButton";
+import { DrawerActions, useNavigation } from "@react-navigation/native";
 
 export type RootStackParamList = {
   ChatbotScreen: undefined;
@@ -30,6 +31,11 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export const DrawerNavigator = () => {
   const { colors } = useAppTheme();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  const handleOpenFeedback = () => {
+    navigation.dispatch(DrawerActions.closeDrawer());
+  };
 
   return (
     <Drawer.Navigator
@@ -48,7 +54,7 @@ export const DrawerNavigator = () => {
           <DrawerContentScrollView {...props}>
             <DrawerItemList {...props} />
           </DrawerContentScrollView>
-          <FeedbackButton />
+          <FeedbackButton onPress={handleOpenFeedback} />
           <ThemeToggleButton />
         </View>
       )}
