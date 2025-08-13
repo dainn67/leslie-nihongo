@@ -7,18 +7,21 @@ import { ChatMessageList } from "../../screens/chatbot/components/ChatMessageLis
 import { useAppSelector } from "../../hooks/hooks";
 import { MessageStatus } from "../../models/chatMessage";
 import ChatInput from "../../screens/chatbot/components/ChatInput";
+import { getLatestMessageByQuestionId, getMessagesByQuestionId } from "../../features/chatbot/chatbotAssistantSlice";
 
 interface ChatbotBottomSheetProps {
   visible: boolean;
+  questionId: number;
   onClose: () => void;
 }
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
-export const ChatbotBottomSheet: React.FC<ChatbotBottomSheetProps> = ({ visible, onClose }) => {
-  const messages = useAppSelector((state) => state.chatbotAssistant.messages);
+export const ChatbotBottomSheet: React.FC<ChatbotBottomSheetProps> = ({ visible, questionId, onClose }) => {
+  const messages = useAppSelector((state) => getMessagesByQuestionId(state.chatbotAssistant, questionId.toString()));
+  const latestMessage = useAppSelector((state) => getLatestMessageByQuestionId(state.chatbotAssistant, questionId.toString()));
 
-  const isGenerating = ![MessageStatus.DONE, MessageStatus.ERROR].includes(messages[messages.length - 1]?.status);
+  const isGenerating = latestMessage ? ![MessageStatus.DONE, MessageStatus.ERROR].includes(latestMessage.status) : false;
 
   const onClickAction = (title: string, actionId?: string) => {
     console.log(title, actionId);
@@ -37,24 +40,26 @@ export const ChatbotBottomSheet: React.FC<ChatbotBottomSheetProps> = ({ visible,
       <TouchableWithoutFeedback onPress={onClose}>
         <View style={styles.overlay}>
           {/* Main Content */}
-          <View style={styles.bottomSheet}>
-            {/* Header */}
-            <View style={styles.header}>
-              <View style={styles.closeButton}>
-                <TouchableOpacity onPress={onClose}>
-                  <Ionicons name="close" size={24} color="black" />
-                </TouchableOpacity>
+          <TouchableWithoutFeedback>
+            <View style={styles.bottomSheet}>
+              {/* Header */}
+              <View style={styles.header}>
+                <View style={styles.closeButton}>
+                  <TouchableOpacity onPress={onClose}>
+                    <Ionicons name="close" size={24} color="black" />
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.titleContainer}>
+                  <CustomText style={styles.headerText}>Trợ lý {AppConfig.name}</CustomText>
+                </View>
               </View>
-              <View style={styles.titleContainer}>
-                <CustomText style={styles.headerText}>Trợ lí {AppConfig.name}</CustomText>
-              </View>
+
+              {/* Message List */}
+              <ChatMessageList messages={messages} onClickAction={onClickAction} onAnalyze={onAnalyze} />
+
+              <ChatInput disable={isGenerating} onSend={handleSend} />
             </View>
-
-            {/* Message List */}
-            <ChatMessageList messages={messages} onClickAction={onClickAction} onAnalyze={onAnalyze} />
-
-            <ChatInput disable={isGenerating} onSend={handleSend} />
-          </View>
+          </TouchableWithoutFeedback>
         </View>
       </TouchableWithoutFeedback>
     </Modal>
@@ -72,12 +77,10 @@ const styles = StyleSheet.create({
     height: SCREEN_HEIGHT * 0.9,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    padding: 16,
   },
   header: {
     flexDirection: "row",
-    height: 40,
-    borderBottomColor: "red",
+    height: 50,
     borderBottomWidth: 0.5,
     position: "relative",
   },
@@ -87,6 +90,8 @@ const styles = StyleSheet.create({
     zIndex: 1,
     height: "100%",
     justifyContent: "center",
+    paddingHorizontal: 16,
+    paddingVertical: 16,
   },
   titleContainer: {
     flex: 1,
@@ -96,6 +101,5 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 10,
   },
 });

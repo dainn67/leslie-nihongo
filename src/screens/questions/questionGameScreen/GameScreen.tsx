@@ -153,7 +153,11 @@ export const QuestionGameScreen = () => {
         </TouchableOpacity>
       </View>
 
-      <ChatbotBottomSheet visible={isChatbotVisible} onClose={() => setIsChatbotVisible(false)} />
+      <ChatbotBottomSheet
+        visible={isChatbotVisible}
+        questionId={question.questionId}
+        onClose={() => setIsChatbotVisible(false)}
+      />
     </View>
   );
 };
