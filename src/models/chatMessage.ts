@@ -16,6 +16,7 @@ export enum MessageStatus {
   LOADING,
   STREAMING,
   DONE,
+  ERROR,
 }
 
 export type ChatMessage = {
@@ -39,8 +40,6 @@ export type ChatMessage = {
   actionId: number;
   summary: string;
 
-  hasError: boolean;
-
   createdAt: string;
 };
 
@@ -60,7 +59,6 @@ export const createChatMessage = (partial?: Partial<ChatMessage>): ChatMessage =
     summary: partial?.summary ?? "",
     messageType: partial?.messageType ?? MessageType.STREAM_TEXT,
     status: partial?.status ?? MessageStatus.USER,
-    hasError: partial?.hasError ?? false,
     createdAt: partial?.createdAt ?? timestamp,
   };
 };

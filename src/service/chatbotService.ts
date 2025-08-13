@@ -280,7 +280,7 @@ export class ChatbotService {
         console.log("SSE error", error);
         if (!hasError) {
           hasError = true;
-          dispatch(updateLastMessageData({ hasError: true }));
+          dispatch(updateLastMessageData({ status: MessageStatus.ERROR }));
         }
       },
     });

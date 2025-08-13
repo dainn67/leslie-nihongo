@@ -78,7 +78,6 @@ const chatbotSlice = createSlice({
         questions?: Question[];
         suggestedActions?: SuggestedAction[];
         summary?: string;
-        hasError?: boolean;
       }>,
     ) => {
       const message = getLatestMessage(state);

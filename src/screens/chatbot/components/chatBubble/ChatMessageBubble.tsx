@@ -30,7 +30,7 @@ export const ChatMessageBubble = ({
   const styles = getStyle(colors, isUser, componentHeight, isLastMessage);
 
   const isLoading = message.status == MessageStatus.LOADING;
-  const hasError = message.hasError;
+  const hasError = message.status == MessageStatus.ERROR;
   const isStreamText = !isLoading && !hasError && message.messageType === MessageType.STREAM_TEXT;
   const isLoadingQuestion = isLoading && !hasError && message.messageType === MessageType.QUESTIONS;
   const isQuestions = !isLoading && !hasError && message.messageType === MessageType.QUESTIONS && message.fullText.length > 0;
@@ -39,9 +39,9 @@ export const ChatMessageBubble = ({
   return (
     <View id={message.id} style={styles.container}>
       <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-        {hasError && <CustomText>Vcui lòng thử lại sau</CustomText>}
+        {hasError && <CustomText>Vui lòng thử lại sau...</CustomText>}
 
-        {isLoading && <LoadingMessage isQuestion={isLoadingQuestion} />}
+        {!hasError && isLoading && <LoadingMessage isQuestion={isLoadingQuestion} />}
 
         {/* Streaming text */}
         {isStreamText &&
