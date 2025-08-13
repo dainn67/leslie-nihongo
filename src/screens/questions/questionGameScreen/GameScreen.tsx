@@ -14,6 +14,7 @@ import { RootState } from "../../../app/store";
 import { setIndex, initGame, setSelectedAnswer, updateBookmark } from "../../../features/game/gameSlice";
 import { CustomText } from "../../../components/text/customText";
 import { insertQuestions, deleteQuestion } from "../../../storage/database/tables";
+import { ChatbotBottomSheet } from "../../../components/bottomsheets/ChatbotBottomSheet";
 
 type QuestionGameScreenRouteProp = RouteProp<RootStackParamList, "QuestionGameScreen">;
 type QuestionGameScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "QuestionGameScreen">;
@@ -36,6 +37,7 @@ export const QuestionGameScreen = () => {
   const navigation = useNavigation<QuestionGameScreenNavigationProp>();
 
   const [autoMode, setAutoMode] = useState(false);
+  const [isChatbotVisible, setIsChatbotVisible] = useState(false);
 
   const dispatch = useAppDispatch();
 
@@ -128,6 +130,11 @@ export const QuestionGameScreen = () => {
           onBookmarkPress={handleBookmarkPress}
         />
       </ScrollView>
+
+      <TouchableOpacity style={style.floatingButton} onPress={() => setIsChatbotVisible(true)}>
+        <Ionicons name="chatbubble-ellipses" size={24} color="white" />
+      </TouchableOpacity>
+
       <View style={style.buttonContainer}>
         <TouchableOpacity
           style={[style.navButton, style.prevButton, currentQuestionIndex === 0 && style.disabledButton]}
@@ -145,6 +152,8 @@ export const QuestionGameScreen = () => {
           <CustomText style={[style.navButtonText, style.navButtonTextNext]}>Tiếp</CustomText>
         </TouchableOpacity>
       </View>
+
+      <ChatbotBottomSheet visible={isChatbotVisible} onClose={() => setIsChatbotVisible(false)} />
     </View>
   );
 };
@@ -201,5 +210,24 @@ const style = StyleSheet.create({
   },
   disabledButtonText: {
     color: "#BDBDBD",
+  },
+  floatingButton: {
+    position: "absolute",
+    right: 16,
+    bottom: 100,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: "#4A90E2",
+    justifyContent: "center",
+    alignItems: "center",
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
 });
