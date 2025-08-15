@@ -265,4 +265,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
   },
+  aiInsightText: {
+    flex: 1,
+    marginLeft: 8,
+    lineHeight: 20,
+  },
 });

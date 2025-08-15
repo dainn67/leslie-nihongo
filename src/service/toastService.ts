@@ -8,7 +8,7 @@ export class ToastService {
     duration = 2000,
   }: {
     message: string;
-    type?: "success" | "error" | "info" | "warning";
+    type?: "success" | "error" | "info";
     position?: "top" | "bottom";
     duration?: number;
   }) {

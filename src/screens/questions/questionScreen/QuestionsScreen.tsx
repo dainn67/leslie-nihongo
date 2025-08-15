@@ -15,6 +15,7 @@ import { useAppTheme } from "../../../theme";
 import { CustomText } from "../../../components/text/customText";
 import { QuestionNumberSelector } from "../questinCategoryScreen/components/QuestionNumberSelector";
 import MainButton from "../../../components/buttons/MainButton";
+import { ToastService } from "../../../service/toastService";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, "QuestionsScreen">;
 
@@ -46,7 +47,11 @@ export const QuestionsScreen = () => {
   };
 
   const handleReviewAll = () => {
-    setAmountSelectorVisible(true);
+    if (allQuestions.length > 0) {
+      setAmountSelectorVisible(true);
+    } else {
+      ToastService.show({ message: "Bạn chưa lưu câu hỏi nào", type: "error" });
+    }
   };
 
   const handleSelectQuestion = (amount: number) => {
