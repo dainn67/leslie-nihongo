@@ -29,14 +29,16 @@ export const ChatbotBottomSheet: React.FC<ChatbotBottomSheetProps> = ({ visible,
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(addLoading({ cid: questionId }));
-    ChatbotService.sendStreamMessage({
-      message: "Give a hint",
-      messages,
-      question,
-      dispatch,
-    });
-  }, [dispatch, questionId, question]);
+    if (visible && messages.length === 0) {
+      dispatch(addLoading({ cid: questionId }));
+      ChatbotService.sendStreamMessage({
+        message: "Give a hint",
+        messages,
+        question,
+        dispatch,
+      });
+    }
+  }, [visible, messages.length]);
 
   const onClickAction = (title: string, actionId?: string) => {
     const userMessage = createChatMessage({ fullText: title });
