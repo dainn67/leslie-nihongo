@@ -31,7 +31,10 @@ export const createResultSummary = (questions: Question[], mapAnswers: { [key: n
 };
 
 export const shuffleQuestionAnswers = (questions: Question[]) =>
-  questions.map((q) => ({
-    ...q,
-    answers: q.answers.sort(() => Math.random() - 0.5),
-  }));
+  questions.map((q) => {
+    const shuffledAnswers = [...q.answers].sort(() => Math.random() - 0.5);
+    return {
+      ...q,
+      answers: shuffledAnswers,
+    };
+  });
