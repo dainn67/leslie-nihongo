@@ -39,3 +39,7 @@ export const createQuestion = (partial?: Partial<Question>): Question => {
       : [],
   };
 };
+
+export const createQuestionString = (question: Question) => {
+  return `Question: ${question.question}. Answers: ${question.answers.map((a) => `${a.text}${a.isCorrect ? " (Correct)" : ""}`).join(". ")}. Explanation: ${question.explanation}`;
+};

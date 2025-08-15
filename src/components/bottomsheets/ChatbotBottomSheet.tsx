@@ -1,45 +1,70 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, StyleSheet, Modal, TouchableWithoutFeedback, Dimensions, TouchableOpacity } from "react-native";
 import { AppConfig } from "../../constants/appConfig";
 import { CustomText } from "../text/customText";
 import { Ionicons } from "@expo/vector-icons";
 import { ChatMessageList } from "../../screens/chatbot/components/ChatMessageList";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
-import { MessageStatus } from "../../models/chatMessage";
-import {
-  addLoadingMessage,
-  getLatestMessageByQuestionId,
-  getMessagesByQuestionId,
-} from "../../features/chatbot/chatbotAssistantSlice";
+import { createChatMessage, MessageStatus } from "../../models/chatMessage";
+import { addLoading, addMessage, getLatestMessageByCID, getMessagesByCID } from "../../features/chatbot/chatbotSlice";
+import { ChatbotService } from "../../service/chatbotService";
+import { Question } from "../../models/question";
 import { ChatInput } from "../../screens/chatbot/components/ChatInput";
 
 interface ChatbotBottomSheetProps {
   visible: boolean;
-  questionId: number;
+  question: Question;
   onClose: () => void;
 }
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
-export const ChatbotBottomSheet: React.FC<ChatbotBottomSheetProps> = ({ visible, questionId, onClose }) => {
-  const messages = useAppSelector((state) => getMessagesByQuestionId(state.chatbotAssistant, questionId.toString()));
-  const latestMessage = useAppSelector((state) => getLatestMessageByQuestionId(state.chatbotAssistant, questionId.toString()));
+export const ChatbotBottomSheet: React.FC<ChatbotBottomSheetProps> = ({ visible, question, onClose }) => {
+  const messages = useAppSelector((state) => getMessagesByCID(state.chatbot, question.questionId.toString()));
+  const latestMessage = useAppSelector((state) => getLatestMessageByCID(state.chatbot, question.questionId.toString()));
 
   const isGenerating = latestMessage ? ![MessageStatus.DONE, MessageStatus.ERROR].includes(latestMessage.status) : false;
+  const questionId = question.questionId.toString();
 
   const dispatch = useAppDispatch();
 
-  const onClickAction = (title: string, actionId?: string) => {
-    console.log(title, actionId);
-  };
+  useEffect(() => {
+    dispatch(addLoading({ cid: questionId }));
+    ChatbotService.sendStreamMessage({
+      message: "Give a hint",
+      messages,
+      question,
+      dispatch,
+    });
+  }, [dispatch, questionId, question]);
 
-  const onAnalyze = (summary: string) => {
-    console.log(summary);
+  const onClickAction = (title: string, actionId?: string) => {
+    const userMessage = createChatMessage({ fullText: title });
+
+    dispatch(addMessage({ cid: questionId, message: userMessage }));
+    dispatch(addLoading({ cid: questionId }));
+
+    ChatbotService.sendStreamMessage({
+      message: title,
+      messages,
+      question,
+      dispatch,
+    });
   };
 
   const handleSend = (message: string) => {
-    dispatch(addLoadingMessage({ questionId: questionId.toString() }));
-    console.log(message);
+    const data = message.trim();
+    const userMessage = createChatMessage({ fullText: data });
+
+    dispatch(addMessage({ cid: questionId, message: userMessage }));
+    dispatch(addLoading({ cid: questionId }));
+
+    ChatbotService.sendStreamMessage({
+      message: data,
+      messages,
+      question,
+      dispatch,
+    });
   };
 
   return (
@@ -62,7 +87,7 @@ export const ChatbotBottomSheet: React.FC<ChatbotBottomSheetProps> = ({ visible,
               </View>
 
               {/* Message List */}
-              <ChatMessageList messages={messages} onClickAction={onClickAction} onAnalyze={onAnalyze} />
+              <ChatMessageList messages={messages} onClickAction={onClickAction} />
 
               <ChatInput disable={isGenerating} onSend={handleSend} />
             </View>

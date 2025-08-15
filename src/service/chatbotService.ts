@@ -3,16 +3,16 @@ import { ApiConfig } from "../constants/apiConfig";
 import { DifyConfig } from "../constants/difyConfig";
 import { convertDateToDDMMYYYY } from "../utils/utils";
 import { connectSSE } from "../api/sseClient";
-import { updateConversationId, updateLastMessageData } from "../features/chatbot/chatbotSlice";
 import { ChatMessage, MessageStatus, MessageType, Sender } from "../models/chatMessage";
 import { postData } from "../api/apiClient";
-import { Question } from "../models/question";
+import { createQuestionString, Question } from "../models/question";
 import { createQuestion } from "../models/question";
 import Constants from "expo-constants";
+import { updateConversationId, updateLastMessageData } from "../features/chatbot/chatbotSlice";
 
 export const Delimiter = "--//--";
 
-const { DIFY_CHAT_API_KEY, DIFY_ANALYZE_GAME_RESULT_API_KEY } = Constants.expoConfig?.extra ?? {};
+const { DIFY_CHAT_API_KEY, DIFY_ANALYZE_GAME_RESULT_API_KEY, DIFY_ASSISTANT_API_KEY } = Constants.expoConfig?.extra ?? {};
 
 const user = "dainn";
 
@@ -189,9 +189,11 @@ export class ChatbotService {
     analyzeChatGame,
     conversationSummary,
     conversationId,
+    question,
     dispatch,
   }: {
     message?: string;
+    messageType?: MessageType;
     messages: ChatMessage[];
     conversationHistory?: string;
     conversationSummary?: string;
@@ -201,8 +203,14 @@ export class ChatbotService {
     examDate?: number;
     analyzeChatGame?: boolean;
     conversationId?: string;
+    question?: Question;
     dispatch: AppDispatch;
   }) => {
+    // Called at 2 places: Main chatbot and question chatbot assistant
+    // Differentiate by passed in question
+
+    const token = question ? DIFY_ASSISTANT_API_KEY : DIFY_CHAT_API_KEY;
+
     let fullText = "";
     let wordIndex = 0;
     let wordLength = 0;
@@ -222,10 +230,13 @@ export class ChatbotService {
 
     const conversationHistory = ChatbotService.createConversationHistory(messages);
 
+    const questionString = question ? createQuestionString(question) : "";
+    const cid = question?.questionId.toString() ?? DifyConfig.mainChatbotConversationId;
+
     // Original stream
     connectSSE({
       url: ApiConfig.difyServerUrl,
-      token: DIFY_CHAT_API_KEY,
+      token: token,
       body: {
         query: message ?? "<init>",
         inputs: {
@@ -237,6 +248,7 @@ export class ChatbotService {
           current_date: now,
           exam_date: examDateString,
           analyze_chat_game: analyzeChatGame ? 1 : 0,
+          question_string: questionString,
         },
         conversation_id: conversationId,
         response_mode: "streaming",
@@ -251,7 +263,7 @@ export class ChatbotService {
         const nodeTitle = data["data"]?.["title"];
 
         if (!isQuestionJson && nodeTitle && nodeTitle == DifyConfig.titleGenQuestions) {
-          dispatch(updateLastMessageData({ messageType: MessageType.QUESTIONS }));
+          dispatch(updateLastMessageData({ messageType: MessageType.QUESTIONS, cid: cid }));
           isQuestionJson = true;
         }
 
@@ -259,8 +271,8 @@ export class ChatbotService {
           fullText += text;
         } else if (type === DifyConfig.typeWorkflowStart) {
           startReceiveMessage = true;
-          dispatch(updateLastMessageData({ messageId }));
-          dispatch(updateConversationId(conversationId));
+          dispatch(updateLastMessageData({ messageId, cid: cid }));
+          dispatch(updateConversationId({ conversationId, cid: cid }));
         } else if (type === DifyConfig.typeMessageEnd) {
           const usage = data["metadata"]["usage"];
           console.log(
@@ -270,17 +282,17 @@ export class ChatbotService {
       },
       onDone: () => {
         wordLength = ChatbotService.splitCustomWords(fullText).length;
-        dispatch(updateLastMessageData({ fullText: fullText }));
+        dispatch(updateLastMessageData({ fullText: fullText, cid: cid }));
         if (isQuestionJson) {
           const { questions, summary } = ChatbotService.extractQuestionsFromJson(fullText);
-          dispatch(updateLastMessageData({ questions, summary, status: MessageStatus.DONE }));
+          dispatch(updateLastMessageData({ questions, summary, status: MessageStatus.DONE, cid: cid }));
         }
       },
       onError: (error) => {
         console.log("SSE error", error);
         if (!hasError) {
           hasError = true;
-          dispatch(updateLastMessageData({ status: MessageStatus.ERROR }));
+          dispatch(updateLastMessageData({ status: MessageStatus.ERROR, cid: cid }));
         }
       },
     });
@@ -300,29 +312,29 @@ export class ChatbotService {
           if (words.length >= wordIndex + 1) {
             // Start streaming
             if (!startStreaming) {
-              if (!isQuestionJson) dispatch(updateLastMessageData({ status: MessageStatus.STREAMING }));
+              if (!isQuestionJson) dispatch(updateLastMessageData({ status: MessageStatus.STREAMING, cid: cid }));
               startStreaming = true;
             }
 
             const nextWord = words[wordIndex];
-            dispatch(updateLastMessageData({ nextWord }));
+            dispatch(updateLastMessageData({ nextWord, cid: cid }));
 
             wordIndex++;
 
             // Stop interval at lastword, after original stream is done
             if (wordLength > 0 && wordIndex == wordLength - 1) {
               const lastWord = words[wordIndex];
-              dispatch(updateLastMessageData({ nextWord: lastWord }));
+              dispatch(updateLastMessageData({ nextWord: lastWord, cid: cid }));
 
               const splittedText = fullText.split(Delimiter);
               // Extract the suggested actions here to wait for the stream to finish
               const suggestedActions = ChatbotService.extractSuggestedActions(fullText);
-              dispatch(updateLastMessageData({ suggestedActions }));
+              dispatch(updateLastMessageData({ suggestedActions, cid: cid }));
 
               // Extract the summary when finished
               const summary = splittedText[splittedText.length - 1].trim();
-              dispatch(updateLastMessageData({ summary }));
-              dispatch(updateLastMessageData({ status: MessageStatus.DONE }));
+              dispatch(updateLastMessageData({ summary, cid: cid }));
+              dispatch(updateLastMessageData({ status: MessageStatus.DONE, cid: cid }));
 
               clearInterval(interval);
             }
@@ -332,12 +344,12 @@ export class ChatbotService {
             const splittedText = fullText.split(Delimiter);
             // Extract the suggested actions here to wait for the stream to finish
             const suggestedActions = ChatbotService.extractSuggestedActions(fullText);
-            dispatch(updateLastMessageData({ suggestedActions }));
+            dispatch(updateLastMessageData({ suggestedActions, cid: cid }));
 
             // Extract the summary when finished
             const summary = splittedText[splittedText.length - 1].trim();
-            dispatch(updateLastMessageData({ summary }));
-            dispatch(updateLastMessageData({ status: MessageStatus.DONE }));
+            dispatch(updateLastMessageData({ summary, cid: cid }));
+            dispatch(updateLastMessageData({ status: MessageStatus.DONE, cid: cid }));
 
             clearInterval(interval);
           }

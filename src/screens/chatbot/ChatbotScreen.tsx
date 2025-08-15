@@ -8,7 +8,15 @@ import { useNavigation } from "@react-navigation/native";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { AppConfig } from "../../constants/appConfig";
-import { addLoading, addMessage, clearChat, extractContext } from "../../features/chatbot/chatbotSlice";
+import {
+  addLoading,
+  addMessage,
+  clearChat,
+  extractContext,
+  getConversationIdByCID,
+  getConversationSummaryByCID,
+  getMessagesByCID,
+} from "../../features/chatbot/chatbotSlice";
 import {
   clearUserProgress,
   setUserExamDate,
@@ -40,10 +48,11 @@ export const ChatbotScreen = () => {
   const [clearDialogVisible, setClearDialogVisible] = useState(false);
 
   const dispatch = useAppDispatch();
-  const messages = useAppSelector((state) => state.chatbot.messages);
+  const messages = useAppSelector((state) => getMessagesByCID(state.chatbot));
+  const conversationId = useAppSelector((state) => getConversationIdByCID(state.chatbot));
+  const conversationSummary = useAppSelector((state) => getConversationSummaryByCID(state.chatbot));
+
   const userProgress = useAppSelector((state) => state.userProgress.userProgress);
-  const conversationId = useAppSelector((state) => state.chatbot.conversationId);
-  const conversationSummary = useAppSelector((state) => state.chatbot.conversationSummary);
   const isGenerating = ![MessageStatus.DONE, MessageStatus.ERROR].includes(messages[messages.length - 1]?.status);
 
   const [initialized, setInitialized] = useState(false);
@@ -61,7 +70,7 @@ export const ChatbotScreen = () => {
         setInitialized(true);
 
         // Add loading message
-        dispatch(addLoading());
+        dispatch(addLoading({}));
         ChatbotService.sendStreamMessage({
           messages: messages,
           level: userProgress.level,
@@ -78,7 +87,7 @@ export const ChatbotScreen = () => {
       });
     } else if (messages.length === 0) {
       // Add loading message when clear
-      dispatch(addLoading());
+      dispatch(addLoading({}));
       ChatbotService.sendStreamMessage({
         messages: messages,
         level: userProgress.level,
@@ -95,8 +104,8 @@ export const ChatbotScreen = () => {
     const data = message.trim();
     const userMessage = createChatMessage({ fullText: data });
 
-    dispatch(addMessage(userMessage));
-    dispatch(addLoading());
+    dispatch(addMessage({ message: userMessage }));
+    dispatch(addLoading({}));
 
     ChatbotService.sendStreamMessage({
       message: data,
@@ -128,8 +137,8 @@ export const ChatbotScreen = () => {
       } else if (actionId.startsWith(unknownExamDateActionId)) {
         dispatch(setUserExamDate(0));
         const userMessage = createChatMessage({ fullText: title });
-        dispatch(addMessage(userMessage));
-        dispatch(addLoading());
+        dispatch(addMessage({ message: userMessage }));
+        dispatch(addLoading({}));
 
         ChatbotService.sendStreamMessage({
           messages: messages,
@@ -154,8 +163,8 @@ export const ChatbotScreen = () => {
 
     const userMessage = createChatMessage({ fullText: title });
 
-    dispatch(addMessage(userMessage));
-    dispatch(addLoading());
+    dispatch(addMessage({ message: userMessage }));
+    dispatch(addLoading({}));
 
     ChatbotService.sendStreamMessage({
       message: title,
@@ -180,8 +189,8 @@ export const ChatbotScreen = () => {
     dispatch(setUserExamDate(selectedDate.getTime()));
 
     const userMessage = createChatMessage({ fullText: dateString });
-    dispatch(addMessage(userMessage));
-    dispatch(addLoading());
+    dispatch(addMessage({ message: userMessage }));
+    dispatch(addLoading({}));
 
     ChatbotService.sendStreamMessage({
       messages: messages,
@@ -196,7 +205,7 @@ export const ChatbotScreen = () => {
 
   const handleAnalyze = (summary: string) => {
     setTimeout(() => {
-      dispatch(addLoading());
+      dispatch(addLoading({}));
 
       ChatbotService.sendStreamMessage({
         message: summary,
@@ -212,7 +221,7 @@ export const ChatbotScreen = () => {
     }, 1000);
   };
 
-  const clearConversation = () => dispatch(clearChat());
+  const clearConversation = () => dispatch(clearChat({}));
 
   const handleDevClick = () => {
     // const dbPath = `${FileSystem.documentDirectory}/SQLite/`;

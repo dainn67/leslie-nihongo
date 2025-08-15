@@ -1,11 +1,14 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, createSelector, createAsyncThunk } from "@reduxjs/toolkit";
 import { ChatMessage, createChatMessage, MessageStatus, MessageType, Sender, SuggestedAction } from "../../models/chatMessage";
 import { Question } from "../../models/question";
 import { ApiConfig } from "../../constants/apiConfig";
 import { ChatbotService } from "../../service/chatbotService";
+import { DifyConfig } from "../../constants/difyConfig";
 import Constants from "expo-constants";
 
 const { DIFY_EXTRACT_CONTEXT_API_KEY } = Constants.expoConfig?.extra ?? {};
+
+const mainCID = DifyConfig.mainChatbotConversationId;
 
 export const extractContext = createAsyncThunk(
   ApiConfig.difyServerUrl,
@@ -22,54 +25,75 @@ export const extractContext = createAsyncThunk(
   },
 );
 
-type ChatState = {
-  messages: ChatMessage[];
-  conversationId?: string;
+type ChatbotState = {
+  messages: { [key: string]: ChatMessage[] };
+  conversationId: { [key: string]: string | undefined };
+  conversationSummary: { [key: string]: string | undefined };
   suggestedPropmpt: string[];
-  conversationSummary: string;
 };
 
-const initialState: ChatState = {
-  messages: [],
-  conversationId: undefined,
+const initialState: ChatbotState = {
+  messages: {},
+  conversationId: {},
+  conversationSummary: {},
   suggestedPropmpt: [],
-  conversationSummary: "",
 };
 
-const getLatestMessage = (state: ChatState) => {
-  const index = state.messages.length - 1;
-  if (index !== -1) {
-    return state.messages[index];
-  }
-  return null;
-};
+export const getMessagesByCID = createSelector(
+  [(state: ChatbotState) => state, (state: ChatbotState, cid?: string) => cid],
+  (state, cid) => state.messages[cid ?? mainCID] || [],
+);
+
+export const getLatestMessageByCID = createSelector(
+  [(state: ChatbotState) => state, (state: ChatbotState, cid?: string) => cid],
+  (state, cid) => {
+    const messages = state.messages[cid ?? mainCID] || [];
+    return messages.length > 0 ? messages[messages.length - 1] : null;
+  },
+);
+
+export const getConversationIdByCID = createSelector(
+  [(state: ChatbotState) => state, (state: ChatbotState, cid?: string) => cid],
+  (state, cid) => state.conversationId[cid ?? mainCID] || "",
+);
+
+export const getConversationSummaryByCID = createSelector(
+  [(state: ChatbotState) => state, (state: ChatbotState, cid?: string) => cid],
+  (state, cid) => state.conversationSummary[cid ?? mainCID] || "",
+);
 
 const chatbotSlice = createSlice({
   name: "chatbotState",
   initialState,
   reducers: {
-    addMessage: (state, action: PayloadAction<ChatMessage>) => {
-      state.messages.push(action.payload);
+    addMessage: (state, action: PayloadAction<{ cid?: string; message: ChatMessage }>) => {
+      const cid = action.payload.cid ?? mainCID;
+      state.messages[cid] = [...(state.messages[cid] || []), action.payload.message];
     },
-    addLoading: (state) => {
-      state.messages.push(
+    addLoading: (state, action: PayloadAction<{ cid?: string }>) => {
+      const cid = action.payload.cid ?? mainCID;
+      state.messages[cid] = [
+        ...(state.messages[cid] || []),
         createChatMessage({
           status: MessageStatus.LOADING,
           sender: Sender.BOT,
         }),
-      );
+      ];
     },
-    updateConversationId: (state, action: PayloadAction<string>) => {
-      state.conversationId = action.payload;
+    updateConversationId: (state, action: PayloadAction<{ cid?: string; conversationId: string }>) => {
+      const cid = action.payload.cid ?? mainCID;
+      state.conversationId[cid] = action.payload.conversationId;
     },
-    updateConversationSummary: (state, action: PayloadAction<string>) => {
-      if (action.payload.trim().length != 0) {
-        state.conversationSummary = action.payload;
+    updateConversationSummary: (state, action: PayloadAction<{ cid?: string; conversationSummary: string }>) => {
+      const cid = action.payload.cid ?? mainCID;
+      if (action.payload.conversationSummary.trim().length != 0) {
+        state.conversationSummary[cid] = action.payload.conversationSummary;
       }
     },
     updateLastMessageData: (
       state,
       action: PayloadAction<{
+        cid?: string;
         messageId?: string;
         nextWord?: string;
         status?: MessageStatus;
@@ -80,7 +104,8 @@ const chatbotSlice = createSlice({
         summary?: string;
       }>,
     ) => {
-      const message = getLatestMessage(state);
+      const cid = action.payload.cid ?? mainCID;
+      const message = state.messages[cid]?.at(-1);
       if (message) {
         // Loop through the payload and map to fields if exist
         Object.entries(action.payload).forEach(([key, value]) => {
@@ -95,19 +120,22 @@ const chatbotSlice = createSlice({
         });
       }
     },
-
-    clearChat: () => initialState,
+    clearChat: (state, action: PayloadAction<{ cid?: string }>) => {
+      const cid = action.payload.cid ?? mainCID;
+      state.messages[cid] = [];
+      state.conversationId[cid] = undefined;
+      state.conversationSummary[cid] = undefined;
+    },
   },
   extraReducers: (builder) => {
-    builder.addCase(extractContext.fulfilled, (state, action) => {
+    builder.addCase(extractContext.fulfilled, (state, action: PayloadAction<{ cid: string; conversationSummary: string }>) => {
       if (action.payload) {
-        state.conversationSummary = action.payload;
+        state.conversationSummary[action.payload.cid] = action.payload.conversationSummary;
       }
     });
   },
 });
 
-export const { clearChat, addMessage, addLoading, updateLastMessageData, updateConversationId, updateConversationSummary } =
+export const { addMessage, addLoading, updateConversationId, updateConversationSummary, updateLastMessageData, clearChat } =
   chatbotSlice.actions;
-
 export default chatbotSlice.reducer;

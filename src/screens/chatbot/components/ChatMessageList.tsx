@@ -7,7 +7,7 @@ import { ChatMessage } from "../../../models/chatMessage";
 interface ChatMessageListProps {
   messages: ChatMessage[];
   onClickAction: (title: string, actionId?: string) => void;
-  onAnalyze: (summary: string) => void;
+  onAnalyze?: (summary: string) => void;
 }
 
 export const ChatMessageList = ({ messages, onClickAction, onAnalyze }: ChatMessageListProps) => {

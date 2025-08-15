@@ -13,7 +13,7 @@ interface ChatMessageBubbleProps {
   isLastMessage?: boolean;
   componentHeight: number;
   onClickAction: (title: string, actionId?: string) => void;
-  onAnalyze: (summary: string) => void;
+  onAnalyze?: (summary: string) => void;
 }
 
 export const ChatMessageBubble = ({

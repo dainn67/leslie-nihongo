@@ -11,7 +11,7 @@ import { ToastService } from "../../../../service/toastService";
 
 interface QuestionsMessageProps {
   questions: Question[];
-  onAnalyze: (summary: string) => void;
+  onAnalyze?: (summary: string) => void;
 }
 
 export const QuestionsMessage = ({ questions, onAnalyze }: QuestionsMessageProps) => {
@@ -33,7 +33,7 @@ export const QuestionsMessage = ({ questions, onAnalyze }: QuestionsMessageProps
     // Analyze when all questions are answered
     if (Object.keys(mapAnswer).length === questions.length) {
       const summary = createResultSummary(questions, mapAnswer);
-      onAnalyze(summary);
+      onAnalyze?.(summary);
     }
   }, [mapAnswer, questions]);
 
