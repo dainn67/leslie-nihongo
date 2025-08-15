@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ChatMessage } from "../../models/chatMessage";
+import { ChatMessage, createChatMessage, MessageStatus, Sender } from "../../models/chatMessage";
 
 type ChatAssistantState = {
   messages: { [key: string]: ChatMessage[] };
@@ -30,8 +30,17 @@ const chatbotAssistantSlice = createSlice({
       const { questionId, message } = action.payload;
       state.messages[questionId] = [...getMessagesByQuestionId(state, questionId), message];
     },
+    addLoadingMessage: (state, action: PayloadAction<{ questionId: string }>) => {
+      const { questionId } = action.payload;
+      state.messages[questionId]?.push(
+        createChatMessage({
+          status: MessageStatus.LOADING,
+          sender: Sender.BOT,
+        })
+      );
+    },
   },
 });
 
-export const { addMessage } = chatbotAssistantSlice.actions;
+export const { addMessage, addLoadingMessage } = chatbotAssistantSlice.actions;
 export default chatbotAssistantSlice.reducer;

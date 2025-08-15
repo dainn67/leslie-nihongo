@@ -26,7 +26,7 @@ import { AsyncStorageConstants } from "../../storage/asyncStorage/asyncStorateCo
 import { setTheme } from "../../features/theme/themeSlice";
 import { ChatbotService } from "../../service/chatbotService";
 import { DrawerParamList } from "../../app/DrawerNavigator";
-import ChatInput from "./components/ChatInput";
+import { ChatInput } from "./components/ChatInput";
 import ClearChatDialog from "./components/ClearChatDialog";
 import TTSService from "../../service/ttsService";
 

@@ -12,7 +12,7 @@ interface ChatInputProps {
   onSend: (message: string) => void;
 }
 
-const ChatInput = ({ disable, placeHolderText, onSend }: ChatInputProps) => {
+export const ChatInput = ({ disable, placeHolderText, onSend }: ChatInputProps) => {
   const [message, setMessage] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const { colors, isDarkMode } = useAppTheme();
@@ -40,7 +40,7 @@ const ChatInput = ({ disable, placeHolderText, onSend }: ChatInputProps) => {
             </View>
             <GestureTextInput
               style={[styles.textInput, disable && styles.textInputDisabled]}
-              placeholder={(placeHolderText ?? disable) ? "Đang suy nghĩ ..." : "Nhập câu hỏi"}
+              placeholder={placeHolderText ?? disable ? "Đang suy nghĩ ..." : "Nhập câu hỏi"}
               placeholderTextColor={colors.textTertiary}
               value={message}
               onSubmitEditing={handleSend}
@@ -166,5 +166,3 @@ const getStyles = (isFocused: boolean, message: string, colors: any, isDarkMode:
       elevation: 0,
     },
   });
-
-export default ChatInput;

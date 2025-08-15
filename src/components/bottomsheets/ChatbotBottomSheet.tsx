@@ -4,10 +4,14 @@ import { AppConfig } from "../../constants/appConfig";
 import { CustomText } from "../text/customText";
 import { Ionicons } from "@expo/vector-icons";
 import { ChatMessageList } from "../../screens/chatbot/components/ChatMessageList";
-import { useAppSelector } from "../../hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { MessageStatus } from "../../models/chatMessage";
-import ChatInput from "../../screens/chatbot/components/ChatInput";
-import { getLatestMessageByQuestionId, getMessagesByQuestionId } from "../../features/chatbot/chatbotAssistantSlice";
+import {
+  addLoadingMessage,
+  getLatestMessageByQuestionId,
+  getMessagesByQuestionId,
+} from "../../features/chatbot/chatbotAssistantSlice";
+import { ChatInput } from "../../screens/chatbot/components/ChatInput";
 
 interface ChatbotBottomSheetProps {
   visible: boolean;
@@ -23,6 +27,8 @@ export const ChatbotBottomSheet: React.FC<ChatbotBottomSheetProps> = ({ visible,
 
   const isGenerating = latestMessage ? ![MessageStatus.DONE, MessageStatus.ERROR].includes(latestMessage.status) : false;
 
+  const dispatch = useAppDispatch();
+
   const onClickAction = (title: string, actionId?: string) => {
     console.log(title, actionId);
   };
@@ -32,6 +38,7 @@ export const ChatbotBottomSheet: React.FC<ChatbotBottomSheetProps> = ({ visible,
   };
 
   const handleSend = (message: string) => {
+    dispatch(addLoadingMessage({ questionId: questionId.toString() }));
     console.log(message);
   };
 
