@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Modal, TouchableWithoutFeedback, Dimensions, TouchableOpacity } from "react-native";
 import { AppConfig } from "../../constants/appConfig";
 import { CustomText } from "../text/customText";
@@ -9,6 +9,7 @@ import { createChatMessage, MessageStatus } from "../../models/chatMessage";
 import {
   addLoading,
   addMessage,
+  clearChat,
   getConversationIdByCID,
   getConversationSummaryByCID,
   getLatestMessageByCID,
@@ -17,6 +18,7 @@ import {
 import { ChatbotService } from "../../service/chatbotService";
 import { Question } from "../../models/question";
 import { ChatInput } from "../../screens/chatbot/components/ChatInput";
+import ClearChatDialog from "../../screens/chatbot/components/ClearChatDialog";
 
 interface ChatbotBottomSheetProps {
   visible: boolean;
@@ -37,6 +39,9 @@ export const ChatbotBottomSheet: React.FC<ChatbotBottomSheetProps> = ({ visible,
   const isGenerating = latestMessage ? ![MessageStatus.DONE, MessageStatus.ERROR].includes(latestMessage.status) : false;
 
   const dispatch = useAppDispatch();
+
+  // Clear chat dialog
+  const [clearDialogVisible, setClearDialogVisible] = useState(false);
 
   useEffect(() => {
     if (visible && messages.length === 0) {
@@ -85,6 +90,10 @@ export const ChatbotBottomSheet: React.FC<ChatbotBottomSheetProps> = ({ visible,
     });
   };
 
+  const onClearChat = () => {
+    dispatch(clearChat({ cid: questionId }));
+  };
+
   return (
     <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
       <TouchableWithoutFeedback onPress={onClose}>
@@ -102,6 +111,11 @@ export const ChatbotBottomSheet: React.FC<ChatbotBottomSheetProps> = ({ visible,
                 <View style={styles.titleContainer}>
                   <CustomText style={styles.headerText}>Trợ lý {AppConfig.name}</CustomText>
                 </View>
+                <View style={styles.closeButton}>
+                  <TouchableOpacity onPress={() => setClearDialogVisible(true)}>
+                    <Ionicons name="trash" size={24} color="black" />
+                  </TouchableOpacity>
+                </View>
               </View>
 
               {/* Message List */}
@@ -110,6 +124,16 @@ export const ChatbotBottomSheet: React.FC<ChatbotBottomSheetProps> = ({ visible,
               <ChatInput disable={isGenerating} onSend={handleSend} />
             </View>
           </TouchableWithoutFeedback>
+
+          <ClearChatDialog
+            title="Xoá hội thoại?"
+            message="Bạn có muốn xoá và tạo đoạn hội thoại mới?"
+            cancelText="Huỷ"
+            confirmText="Xác nhận"
+            visible={clearDialogVisible}
+            setVisible={setClearDialogVisible}
+            onClearConversation={onClearChat}
+          />
         </View>
       </TouchableWithoutFeedback>
     </Modal>
@@ -130,15 +154,14 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: "row",
-    height: 50,
     borderBottomWidth: 0.5,
-    position: "relative",
   },
   closeButton: {
-    position: "absolute",
-    left: 0,
-    zIndex: 1,
-    height: "100%",
+    justifyContent: "center",
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+  },
+  clearButton: {
     justifyContent: "center",
     paddingHorizontal: 16,
     paddingVertical: 16,
