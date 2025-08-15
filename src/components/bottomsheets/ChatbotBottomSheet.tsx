@@ -6,7 +6,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { ChatMessageList } from "../../screens/chatbot/components/ChatMessageList";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { createChatMessage, MessageStatus } from "../../models/chatMessage";
-import { addLoading, addMessage, getLatestMessageByCID, getMessagesByCID } from "../../features/chatbot/chatbotSlice";
+import {
+  addLoading,
+  addMessage,
+  getConversationIdByCID,
+  getConversationSummaryByCID,
+  getLatestMessageByCID,
+  getMessagesByCID,
+} from "../../features/chatbot/chatbotSlice";
 import { ChatbotService } from "../../service/chatbotService";
 import { Question } from "../../models/question";
 import { ChatInput } from "../../screens/chatbot/components/ChatInput";
@@ -20,11 +27,14 @@ interface ChatbotBottomSheetProps {
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export const ChatbotBottomSheet: React.FC<ChatbotBottomSheetProps> = ({ visible, question, onClose }) => {
-  const messages = useAppSelector((state) => getMessagesByCID(state.chatbot, question.questionId.toString()));
-  const latestMessage = useAppSelector((state) => getLatestMessageByCID(state.chatbot, question.questionId.toString()));
+  const questionId = question.questionId.toString();
+
+  const messages = useAppSelector((state) => getMessagesByCID(state.chatbot, questionId));
+  const latestMessage = useAppSelector((state) => getLatestMessageByCID(state.chatbot, questionId));
+  const conversationId = useAppSelector((state) => getConversationIdByCID(state.chatbot, questionId));
+  const conversationSummary = useAppSelector((state) => getConversationSummaryByCID(state.chatbot, questionId));
 
   const isGenerating = latestMessage ? ![MessageStatus.DONE, MessageStatus.ERROR].includes(latestMessage.status) : false;
-  const questionId = question.questionId.toString();
 
   const dispatch = useAppDispatch();
 
@@ -35,6 +45,8 @@ export const ChatbotBottomSheet: React.FC<ChatbotBottomSheetProps> = ({ visible,
         message: "Give a hint",
         messages,
         question,
+        conversationId,
+        conversationSummary,
         dispatch,
       });
     }
@@ -50,6 +62,8 @@ export const ChatbotBottomSheet: React.FC<ChatbotBottomSheetProps> = ({ visible,
       message: title,
       messages,
       question,
+      conversationId,
+      conversationSummary,
       dispatch,
     });
   };
@@ -65,6 +79,8 @@ export const ChatbotBottomSheet: React.FC<ChatbotBottomSheetProps> = ({ visible,
       message: data,
       messages,
       question,
+      conversationId,
+      conversationSummary,
       dispatch,
     });
   };
