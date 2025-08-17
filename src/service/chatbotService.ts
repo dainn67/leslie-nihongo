@@ -295,6 +295,8 @@ export class ChatbotService {
         if (!hasError) {
           hasError = true;
           dispatch(updateLastMessageData({ status: MessageStatus.ERROR, cid: cid }));
+
+          // Log errors
           ToastService.show({ message: error, type: "error" });
           DiscordService.sendDiscordMessage({
             message: `SSE error: ${error}`,

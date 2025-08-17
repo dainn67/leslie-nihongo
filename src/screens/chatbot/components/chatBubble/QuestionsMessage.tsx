@@ -7,7 +7,7 @@ import { AnimatedProgressBar } from "../../../../components/AnimatedProgressBar"
 import { deleteQuestion, insertQuestions } from "../../../../storage/database/tables/questionTable";
 import { createResultSummary } from "../../../../service/questionService";
 import Tts from "react-native-tts";
-import { ToastService } from "../../../../service/toastService";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 interface QuestionsMessageProps {
   questions: Question[];
@@ -17,6 +17,7 @@ interface QuestionsMessageProps {
 export const QuestionsMessage = ({ questions, onAnalyze }: QuestionsMessageProps) => {
   // Use local state only for separated question messages
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [analyzed, setAnalyzed] = useState(false);
   const [mapAnswer, setMapAnswer] = useState<{ [key: number]: number }>({});
   const [mapBookmark, setMapBookmark] = useState<{ [key: number]: boolean }>({});
 
@@ -29,11 +30,16 @@ export const QuestionsMessage = ({ questions, onAnalyze }: QuestionsMessageProps
       const selectedVoice = jpVoices[0];
       Tts.setDefaultVoice(selectedVoice);
     });
+  }, []);
 
+  useEffect(() => {
     // Analyze when all questions are answered
-    if (Object.keys(mapAnswer).length === questions.length) {
-      const summary = createResultSummary(questions, mapAnswer);
-      onAnalyze?.(summary);
+    if (!analyzed) {
+      if (Object.keys(mapAnswer).length === questions.length) {
+        const summary = createResultSummary(questions, mapAnswer);
+        onAnalyze?.(summary);
+        setAnalyzed(true);
+      }
     }
   }, [mapAnswer, questions]);
 
@@ -61,10 +67,23 @@ export const QuestionsMessage = ({ questions, onAnalyze }: QuestionsMessageProps
     setCurrentQuestionIndex(newIndex);
   };
 
+  const handleReset = () => {
+    setCurrentQuestionIndex(0);
+    setMapAnswer({});
+    setMapBookmark({});
+  };
+
   return (
     <View style={styles.container}>
-      {/* Progress Bar */}
-      <AnimatedProgressBar progress={progress} />
+      {/* Progress Bar and Reset Button */}
+      <View style={styles.progressContainer}>
+        <View style={styles.progressBarContainer}>
+          <AnimatedProgressBar progress={progress} height={7} />
+        </View>
+        <TouchableOpacity style={styles.resetButton} onPress={handleReset}>
+          <MaterialCommunityIcons name="rotate-left" size={20} color="#4A90E2" />
+        </TouchableOpacity>
+      </View>
 
       <QuestionView
         question={question}
@@ -115,7 +134,25 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     flex: 1,
   },
-
+  progressContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    alignContent: "center",
+    marginBottom: 8,
+  },
+  progressBarContainer: {
+    flex: 1,
+    marginLeft: 8,
+    marginRight: 12,
+  },
+  resetButton: {
+    backgroundColor: "#F8F9FA",
+    padding: 4,
+    borderRadius: 100,
+    borderWidth: 1,
+    borderColor: "#E8E8E8",
+    marginRight: 4,
+  },
   progressTextContainer: {
     minWidth: 50,
   },

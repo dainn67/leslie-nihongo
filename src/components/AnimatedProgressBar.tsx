@@ -67,8 +67,6 @@ export const AnimatedProgressBar = ({
 const styles = StyleSheet.create({
   progressBar: {
     overflow: "hidden",
-    marginHorizontal: 16,
-    marginBottom: 12,
   },
   progressFill: {
     height: "100%",
