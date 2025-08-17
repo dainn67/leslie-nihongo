@@ -9,6 +9,7 @@ import { createQuestionString, Question } from "../models/question";
 import { createQuestion } from "../models/question";
 import { updateConversationId, updateLastMessageData } from "../features/chatbot/chatbotSlice";
 import Constants from "expo-constants";
+import { DiscordService, DiscordWebhookType } from "./discordService";
 
 export const Delimiter = "--//--";
 
@@ -293,6 +294,10 @@ export class ChatbotService {
         if (!hasError) {
           hasError = true;
           dispatch(updateLastMessageData({ status: MessageStatus.ERROR, cid: cid }));
+          DiscordService.sendDiscordMessage({
+            message: `SSE error: ${error}`,
+            type: DiscordWebhookType.ERROR,
+          });
         }
       },
     });
@@ -402,6 +407,10 @@ export class ChatbotService {
       onError: (error) => {
         console.log("SSE error", error);
         if (!hasError) hasError = true;
+        DiscordService.sendDiscordMessage({
+          message: `SSE error: ${error}`,
+          type: DiscordWebhookType.ERROR,
+        });
       },
     });
 

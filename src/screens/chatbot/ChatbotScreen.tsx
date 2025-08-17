@@ -229,7 +229,6 @@ export const ChatbotScreen = () => {
     // console.log(dbPath);
     // deleteAllTables();
     // dispatch(clearUserProgress());
-    DiscordService.sendDiscordMessage("DCMM");
   };
 
   return (

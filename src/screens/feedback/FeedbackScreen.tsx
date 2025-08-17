@@ -8,6 +8,10 @@ import { DrawerParamList } from "../../app/DrawerNavigator";
 import { ToastService } from "../../service/toastService";
 import { useAppTheme } from "../../theme";
 import MainButton from "../../components/buttons/MainButton";
+import { DiscordService, DiscordWebhookType } from "../../service/discordService";
+import Constants from "expo-constants";
+
+const { DISCORD_FEEDBACK_WEBHOOKS } = Constants.expoConfig?.extra ?? {};
 
 export const FeedbackScreen = () => {
   const categories = ["Nội dung", "Trải nghiệm", "Giao diện", "Lỗi", "Tính năng", "Khác"];
@@ -30,6 +34,16 @@ export const FeedbackScreen = () => {
     // TODO: send to your backend
     // payload example:
     // { categories: selectedCategories, message: message.trim() }
+
+    const payload = {
+      categories: selectedCategories,
+      message: message.trim(),
+    };
+
+    DiscordService.sendDiscordMessage({
+      message: `Categories: ${payload.categories.join(", ")}\nMessage: ${payload.message}`,
+      type: DiscordWebhookType.FEEDBACK,
+    });
 
     ToastService.show({ message: "Đã gửi thành công" });
     setSelectedCategories([]);
