@@ -37,6 +37,7 @@ import { DrawerParamList } from "../../app/DrawerNavigator";
 import { ChatInput } from "./components/ChatInput";
 import ClearChatDialog from "./components/ClearChatDialog";
 import TTSService from "../../service/ttsService";
+import { DiscordService } from "../../service/discordService";
 
 type ChatbotScreenNavigationProp = DrawerNavigationProp<DrawerParamList, "ChatbotScreen">;
 
@@ -228,6 +229,7 @@ export const ChatbotScreen = () => {
     // console.log(dbPath);
     // deleteAllTables();
     // dispatch(clearUserProgress());
+    DiscordService.sendDiscordMessage("DCMM");
   };
 
   return (

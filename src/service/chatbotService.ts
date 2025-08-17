@@ -4,11 +4,11 @@ import { DifyConfig } from "../constants/difyConfig";
 import { convertDateToDDMMYYYY } from "../utils/utils";
 import { connectSSE } from "../api/sseClient";
 import { ChatMessage, MessageStatus, MessageType, Sender } from "../models/chatMessage";
-import { postData } from "../api/apiClient";
+import { ApiClient } from "../api/apiClient";
 import { createQuestionString, Question } from "../models/question";
 import { createQuestion } from "../models/question";
-import Constants from "expo-constants";
 import { updateConversationId, updateLastMessageData } from "../features/chatbot/chatbotSlice";
+import Constants from "expo-constants";
 
 export const Delimiter = "--//--";
 
@@ -437,7 +437,7 @@ export class ChatbotService {
   }
 
   static sendMessage = async ({ message, token, data }: { message: string; token: string; data?: { [key: string]: any } }) => {
-    const result = await postData({
+    const result = await ApiClient.postData({
       url: ApiConfig.difyServerUrl,
       token: token,
       body: {
