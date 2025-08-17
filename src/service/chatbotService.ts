@@ -10,6 +10,7 @@ import { createQuestion } from "../models/question";
 import { updateConversationId, updateLastMessageData } from "../features/chatbot/chatbotSlice";
 import Constants from "expo-constants";
 import { DiscordService, DiscordWebhookType } from "./discordService";
+import { ToastService } from "./toastService";
 
 export const Delimiter = "--//--";
 
@@ -294,6 +295,7 @@ export class ChatbotService {
         if (!hasError) {
           hasError = true;
           dispatch(updateLastMessageData({ status: MessageStatus.ERROR, cid: cid }));
+          ToastService.show({ message: error, type: "error" });
           DiscordService.sendDiscordMessage({
             message: `SSE error: ${error}`,
             type: DiscordWebhookType.ERROR,
