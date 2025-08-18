@@ -208,6 +208,8 @@ export const ChatbotScreen = () => {
     setTimeout(() => {
       dispatch(addLoading({}));
 
+      // TODO: add extract progress
+
       ChatbotService.sendStreamMessage({
         message: summary,
         messages: messages,
