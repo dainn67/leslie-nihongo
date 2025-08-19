@@ -27,7 +27,7 @@ import { createChatMessage, MessageStatus } from "../../models/chatMessage";
 import { getUserProgressFromStorage } from "../../service/userProgressSerivice";
 import { MyDatePicker } from "../../components/datePicker/MyDatePicker";
 import { convertDateToDDMMYYYY, normalizeDate } from "../../utils/utils";
-import { loadFromAsyncStorage } from "../../storage/asyncStorage/asyncStorage";
+import { loadFromAsyncStorage, logAllAsyncStorage } from "../../storage/asyncStorage/asyncStorage";
 import { AsyncStorageConstants } from "../../storage/asyncStorage/asyncStorateConstant";
 import { setTheme } from "../../features/theme/themeSlice";
 import { ChatbotService } from "../../service/chatbotService";
@@ -35,7 +35,6 @@ import { DrawerParamList } from "../../app/DrawerNavigator";
 import { ChatInput } from "./components/ChatInput";
 import ClearChatDialog from "./components/ClearChatDialog";
 import TTSService from "../../service/ttsService";
-import { DiscordService } from "../../service/discordService";
 
 type ChatbotScreenNavigationProp = DrawerNavigationProp<DrawerParamList, "ChatbotScreen">;
 
@@ -239,10 +238,9 @@ export const ChatbotScreen = () => {
   const clearConversation = () => dispatch(clearChat({}));
 
   const handleDevClick = () => {
-    // const dbPath = `${FileSystem.documentDirectory}/SQLite/`;
-    // console.log(dbPath);
     // deleteAllTables();
     // dispatch(clearUserProgress());
+    logAllAsyncStorage();
   };
 
   return (

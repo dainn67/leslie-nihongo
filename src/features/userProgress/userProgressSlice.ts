@@ -20,12 +20,16 @@ const userProgressSlice = createSlice({
       setUserProgressToStorage(state.userProgress);
     },
     updateUserProgress: (state, action: PayloadAction<Partial<UserProgress>>) => {
-      state.userProgress = { ...state.userProgress, ...action.payload };
+      const { analytic, ...rest } = action.payload;
 
-      // Handle overtime progress analysis
-      if (action.payload.analytic) {
+      state.userProgress = { ...state.userProgress, ...rest };
+
+      if (analytic) {
         const now = normalizeDate(new Date());
-        state.userProgress.analytic = { ...state.userProgress.analytic, [now]: action.payload.analytic };
+        state.userProgress.analytic = {
+          ...state.userProgress.analytic,
+          [now]: analytic,
+        };
       }
 
       state.userProgress.lastUpdated = Date.now();
