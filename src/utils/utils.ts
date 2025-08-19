@@ -1,5 +1,22 @@
-export const convertDateToDDMMYYYY = (date: Date) => {
-  return `${date.getDate().toString().padStart(2, "0")}/${(date.getMonth() + 1).toString().padStart(2, "0")}/${date.getFullYear()}`;
+export const convertDateToDDMMYYYY = (input: Date | number | string): string => {
+  let date: Date;
+
+  if (input instanceof Date) {
+    date = input;
+  } else if (typeof input === "number") {
+    date = new Date(input);
+  } else if (typeof input === "string") {
+    const maybeNumber = Number(input);
+    date = isNaN(maybeNumber) ? new Date(input) : new Date(maybeNumber);
+  } else {
+    throw new Error("Invalid input type for date conversion");
+  }
+
+  return date.toLocaleDateString("en-GB", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 };
 
 export const normalizeDate = (date: Date) => {

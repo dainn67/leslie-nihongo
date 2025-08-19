@@ -11,6 +11,8 @@ import { updateConversationId, updateLastMessageData } from "../features/chatbot
 import { DiscordService, DiscordWebhookType } from "./discordService";
 import { ToastService } from "./toastService";
 import Constants from "expo-constants";
+import { UserProgress } from "../models/userProgress";
+import { UserProgressService } from "./userProgressSerivice";
 
 export const Delimiter = "--//--";
 
@@ -185,9 +187,7 @@ export class ChatbotService {
     message,
     messages,
     actionId,
-    level,
-    target,
-    examDate,
+    userProgress,
     analyzeChatGame,
     conversationSummary,
     conversationId,
@@ -200,12 +200,10 @@ export class ChatbotService {
     conversationHistory?: string;
     conversationSummary?: string;
     actionId?: string;
-    level?: string;
-    target?: string;
-    examDate?: number;
     analyzeChatGame?: boolean;
     conversationId?: string;
     question?: Question;
+    userProgress?: UserProgress;
     dispatch: AppDispatch;
   }) => {
     // Called at 2 places: Main chatbot and question chatbot assistant
@@ -221,12 +219,16 @@ export class ChatbotService {
     let hasError = false;
 
     const now = convertDateToDDMMYYYY(new Date());
+    const userLevel = userProgress?.level ?? "";
+    const userTarget = userProgress?.target ?? "";
+    const userExamDate = userProgress?.examDate ?? 0;
+    const userProgressString = userProgress ? UserProgressService.createUserProgressString(userProgress.analytic) : "";
 
     let examDateString = "";
-    if (examDate == 0) {
+    if (userExamDate == 0) {
       examDateString = "User hasn't decided exam date yet";
-    } else if (examDate) {
-      const formattedExamDate = convertDateToDDMMYYYY(new Date(examDate));
+    } else if (userExamDate) {
+      const formattedExamDate = convertDateToDDMMYYYY(userExamDate);
       examDateString = `Current date is ${now} (d/m/y format) and user JLPT exam date is ${formattedExamDate}`;
     }
 
@@ -242,8 +244,8 @@ export class ChatbotService {
       body: {
         query: message ?? "<init>",
         inputs: {
-          level: level,
-          target: target,
+          level: userLevel,
+          target: userTarget,
           action_id: actionId,
           conversation_history: conversationHistory,
           conversation_summary: conversationSummary,
@@ -251,6 +253,7 @@ export class ChatbotService {
           exam_date: examDateString,
           analyze_chat_game: analyzeChatGame ? 1 : 0,
           question_string: questionString,
+          user_progress_string: userProgressString,
         },
         conversation_id: conversationId,
         response_mode: "streaming",

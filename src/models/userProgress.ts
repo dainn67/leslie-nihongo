@@ -20,3 +20,10 @@ export const createUserProgress = (partial?: Partial<UserProgress>): UserProgres
     lastUpdated: partial?.lastUpdated ?? now,
   };
 };
+
+export const createTmpUserProgress = (userProgress: UserProgress, updates: Partial<UserProgress>): UserProgress => {
+  return {
+    ...userProgress,
+    ...updates,
+  };
+};

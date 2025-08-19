@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { createUserProgress, UserProgress } from "../../models/userProgress";
-import { setUserProgressToStorage } from "../../service/userProgressSerivice";
+import { UserProgressService } from "../../service/userProgressSerivice";
 import { normalizeDate } from "../../utils";
 
 interface UserProgressState {
@@ -17,7 +17,7 @@ const userProgressSlice = createSlice({
   reducers: {
     setUserProgress: (state, action: PayloadAction<UserProgress>) => {
       state.userProgress = { ...action.payload };
-      setUserProgressToStorage(state.userProgress);
+      UserProgressService.setUserProgressToStorage(state.userProgress);
     },
     updateUserProgress: (state, action: PayloadAction<Partial<UserProgress>>) => {
       const { analytic, ...rest } = action.payload;
@@ -33,11 +33,11 @@ const userProgressSlice = createSlice({
       }
 
       state.userProgress.lastUpdated = Date.now();
-      setUserProgressToStorage(state.userProgress);
+      UserProgressService.setUserProgressToStorage(state.userProgress);
     },
     clearUserProgress: (state) => {
       state.userProgress = initialState.userProgress;
-      setUserProgressToStorage(state.userProgress);
+      UserProgressService.setUserProgressToStorage(state.userProgress);
     },
   },
 });

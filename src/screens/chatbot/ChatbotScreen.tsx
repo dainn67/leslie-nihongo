@@ -24,7 +24,7 @@ import {
 } from "../../features/userProgress/userProgressSlice";
 import { createQuestionTable, deleteAllTables, updateTables } from "../../storage/database/tables";
 import { createChatMessage, MessageStatus } from "../../models/chatMessage";
-import { getUserProgressFromStorage } from "../../service/userProgressSerivice";
+import { UserProgressService } from "../../service/userProgressSerivice";
 import { MyDatePicker } from "../../components/datePicker/MyDatePicker";
 import { convertDateToDDMMYYYY, normalizeDate } from "../../utils/utils";
 import { loadFromAsyncStorage, logAllAsyncStorage } from "../../storage/asyncStorage/asyncStorage";
@@ -35,6 +35,7 @@ import { DrawerParamList } from "../../app/DrawerNavigator";
 import { ChatInput } from "./components/ChatInput";
 import ClearChatDialog from "./components/ClearChatDialog";
 import TTSService from "../../service/ttsService";
+import { createTmpUserProgress } from "../../models/userProgress";
 
 type ChatbotScreenNavigationProp = DrawerNavigationProp<DrawerParamList, "ChatbotScreen">;
 
@@ -62,7 +63,7 @@ export const ChatbotScreen = () => {
       createQuestionTable();
       updateTables();
       TTSService.init();
-      getUserProgressFromStorage().then((userProgress) => {
+      UserProgressService.getUserProgressFromStorage().then((userProgress) => {
         // Set user progress
         dispatch(setUserProgress(userProgress));
         setInitialized(true);
@@ -71,9 +72,7 @@ export const ChatbotScreen = () => {
         dispatch(addLoading({}));
         ChatbotService.sendStreamMessage({
           messages: messages,
-          level: userProgress.level,
-          target: userProgress.target,
-          examDate: userProgress.examDate,
+          userProgress: userProgress,
           conversationSummary,
           conversationId,
           dispatch,
@@ -88,9 +87,7 @@ export const ChatbotScreen = () => {
       dispatch(addLoading({}));
       ChatbotService.sendStreamMessage({
         messages: messages,
-        level: userProgress.level,
-        target: userProgress.target,
-        examDate: userProgress.examDate,
+        userProgress: userProgress,
         conversationSummary,
         conversationId,
         dispatch,
@@ -108,11 +105,9 @@ export const ChatbotScreen = () => {
     ChatbotService.sendStreamMessage({
       message: data,
       messages: messages,
-      level: userProgress.level,
-      target: userProgress.target,
-      examDate: userProgress.examDate,
       conversationSummary,
       conversationId,
+      userProgress: userProgress,
       dispatch,
     });
 
@@ -141,9 +136,7 @@ export const ChatbotScreen = () => {
         ChatbotService.sendStreamMessage({
           messages: messages,
           actionId: actionId,
-          level: userLevel,
-          target: userTarget,
-          examDate: 0,
+          userProgress: createTmpUserProgress(userProgress, { level: userLevel, target: userTarget, examDate: 0 }),
           conversationSummary,
           conversationId,
           dispatch,
@@ -151,7 +144,7 @@ export const ChatbotScreen = () => {
 
         return;
       } else if (actionId.startsWith(setLevelActionId)) {
-        userLevel = `N${actionId[1]}`;
+        userLevel = actionId[1] == '5' ? 'Beginner' : `N${actionId[1]}`;
         dispatch(updateUserProgress({ level: userLevel }));
       } else if (actionId.startsWith(setTargetActionId)) {
         userTarget = `N${actionId[1]}`;
@@ -168,9 +161,13 @@ export const ChatbotScreen = () => {
       message: title,
       messages: messages,
       actionId: actionId,
-      level: userLevel.length > 0 ? userLevel : userProgress.level,
-      target: userTarget.length > 0 ? userTarget : userProgress.target,
-      examDate: userProgress.examDate,
+      userProgress: createTmpUserProgress(
+        userProgress,
+        {
+          level: userLevel.length > 0 ? userLevel : userProgress.level,
+          target: userTarget.length > 0 ? userTarget : userProgress.target,
+        }
+      ),
       conversationSummary,
       conversationId,
       dispatch,
@@ -192,9 +189,7 @@ export const ChatbotScreen = () => {
 
     ChatbotService.sendStreamMessage({
       messages: messages,
-      level: userProgress.level,
-      target: userProgress.target,
-      examDate: selectedDate.getTime(),
+      userProgress: createTmpUserProgress(userProgress, {examDate: selectedDate.getTime()}),
       conversationSummary,
       conversationId,
       dispatch,
@@ -209,9 +204,7 @@ export const ChatbotScreen = () => {
       ChatbotService.sendStreamMessage({
         message: summary,
         messages: messages,
-        level: userProgress.level,
-        target: userProgress.target,
-        examDate: userProgress.examDate,
+        userProgress: userProgress,
         analyzeChatGame: true,
         conversationSummary,
         conversationId,
@@ -225,12 +218,12 @@ export const ChatbotScreen = () => {
         data: {
           level: userProgress.level,
           target: userProgress.target,
-          exam_date: userProgress.examDate ? convertDateToDDMMYYYY(new Date(userProgress.examDate)) : "",
+          exam_date: userProgress.examDate ? convertDateToDDMMYYYY(userProgress.examDate) : "",
           prev_analytic: userProgress.analytic[normalizeDate(new Date())],
           current_date: convertDateToDDMMYYYY(new Date()),
         },
       }).then((result) => {
-        dispatch(updateUserProgress({ analytic: result }));
+        dispatch(updateUserProgress({ analytic: result ? result.trim() : '' }));
       });
     }, 1000);
   };
@@ -240,7 +233,7 @@ export const ChatbotScreen = () => {
   const handleDevClick = () => {
     // deleteAllTables();
     // dispatch(clearUserProgress());
-    logAllAsyncStorage();
+    // logAllAsyncStorage();
   };
 
   return (
