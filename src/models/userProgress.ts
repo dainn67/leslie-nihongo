@@ -5,7 +5,7 @@ export type UserProgress = {
   startDate: number;
   examDate?: number;
   lastUpdated: number;
-  analytic: string;
+  analytic: { [key: string]: string };
 };
 
 export const createUserProgress = (partial?: Partial<UserProgress>): UserProgress => {
@@ -16,7 +16,7 @@ export const createUserProgress = (partial?: Partial<UserProgress>): UserProgres
     target: partial?.target ?? "",
     startDate: partial?.startDate ?? now,
     examDate: partial?.examDate,
-    analytic: partial?.analytic ?? "",
+    analytic: partial?.analytic ?? {},
     lastUpdated: partial?.lastUpdated ?? now,
   };
 };

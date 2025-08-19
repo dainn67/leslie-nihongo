@@ -452,6 +452,10 @@ export class ChatbotService {
   static sendMessage = async ({ message, type, data }: { message: string; type: 'extract_context' | 'analyze_progress'; data?: { [key: string]: any } }) => {
     const token = type === 'extract_context' ? DIFY_EXTRACT_CONTEXT_API_KEY : DIFY_ANALYZE_PROGRESS_API_KEY;
 
+    console.log("sendMessage", message, type, data);
+    console.log("token", token);
+    console.log("data", data);
+
     const result = await ApiClient.postData({
       url: ApiConfig.difyServerUrl,
       token: token,

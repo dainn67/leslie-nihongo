@@ -26,7 +26,7 @@ import { createQuestionTable, deleteAllTables, updateTables } from "../../storag
 import { createChatMessage, MessageStatus } from "../../models/chatMessage";
 import { getUserProgressFromStorage } from "../../service/userProgressSerivice";
 import { MyDatePicker } from "../../components/datePicker/MyDatePicker";
-import { convertDateToDDMMYYYY } from "../../utils/utils";
+import { convertDateToDDMMYYYY, normalizeDate } from "../../utils/utils";
 import { loadFromAsyncStorage } from "../../storage/asyncStorage/asyncStorage";
 import { AsyncStorageConstants } from "../../storage/asyncStorage/asyncStorateConstant";
 import { setTheme } from "../../features/theme/themeSlice";
@@ -226,8 +226,8 @@ export const ChatbotScreen = () => {
         data: {
           level: userProgress.level,
           target: userProgress.target,
-          exam_date: userProgress.examDate,
-          prev_analytic: userProgress.analytic,
+          exam_date: userProgress.examDate ? convertDateToDDMMYYYY(new Date(userProgress.examDate)) : "",
+          prev_analytic: userProgress.analytic[normalizeDate(new Date())],
           current_date: convertDateToDDMMYYYY(new Date()),
         },
       }).then((result) => {
