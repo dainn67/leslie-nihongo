@@ -14,7 +14,7 @@ import Constants from "expo-constants";
 
 export const Delimiter = "--//--";
 
-const { DIFY_CHAT_API_KEY, DIFY_ANALYZE_GAME_RESULT_API_KEY, DIFY_ASSISTANT_API_KEY } = Constants.expoConfig?.extra ?? {};
+const { DIFY_CHAT_API_KEY, DIFY_ANALYZE_GAME_RESULT_API_KEY, DIFY_ASSISTANT_API_KEY, DIFY_EXTRACT_CONTEXT_API_KEY, DIFY_ANALYZE_PROGRESS_API_KEY } = Constants.expoConfig?.extra ?? {};
 
 const user = "dainn";
 
@@ -449,7 +449,9 @@ export class ChatbotService {
     }, 200);
   }
 
-  static sendMessage = async ({ message, token, data }: { message: string; token: string; data?: { [key: string]: any } }) => {
+  static sendMessage = async ({ message, type, data }: { message: string; type: 'extract_context' | 'analyze_progress'; data?: { [key: string]: any } }) => {
+    const token = type === 'extract_context' ? DIFY_EXTRACT_CONTEXT_API_KEY : DIFY_ANALYZE_PROGRESS_API_KEY;
+
     const result = await ApiClient.postData({
       url: ApiConfig.difyServerUrl,
       token: token,

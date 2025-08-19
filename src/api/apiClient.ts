@@ -12,6 +12,7 @@ export class ApiClient {
       });
       return response.data;
     } catch (error) {
+      console.log("apiClient error:", error);
       console.log("apiClient error:", (error as any).response?.data);
       return null;
     }

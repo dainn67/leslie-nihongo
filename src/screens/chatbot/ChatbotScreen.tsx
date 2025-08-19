@@ -19,10 +19,8 @@ import {
 } from "../../features/chatbot/chatbotSlice";
 import {
   clearUserProgress,
-  setUserExamDate,
-  setUserLevel,
   setUserProgress,
-  setUserTarget,
+  updateUserProgress,
 } from "../../features/userProgress/userProgressSlice";
 import { createQuestionTable, deleteAllTables, updateTables } from "../../storage/database/tables";
 import { createChatMessage, MessageStatus } from "../../models/chatMessage";
@@ -136,7 +134,7 @@ export const ChatbotScreen = () => {
         setDatePickerVisible(true);
         return;
       } else if (actionId.startsWith(unknownExamDateActionId)) {
-        dispatch(setUserExamDate(0));
+        dispatch(updateUserProgress({ examDate: 0 }));
         const userMessage = createChatMessage({ fullText: title });
         dispatch(addMessage({ message: userMessage }));
         dispatch(addLoading({}));
@@ -155,10 +153,10 @@ export const ChatbotScreen = () => {
         return;
       } else if (actionId.startsWith(setLevelActionId)) {
         userLevel = `N${actionId[1]}`;
-        dispatch(setUserLevel(userLevel));
+        dispatch(updateUserProgress({ level: userLevel }));
       } else if (actionId.startsWith(setTargetActionId)) {
         userTarget = `N${actionId[1]}`;
-        dispatch(setUserTarget(userTarget));
+        dispatch(updateUserProgress({ target: userTarget }));
       }
     }
 
@@ -187,7 +185,7 @@ export const ChatbotScreen = () => {
 
     const dateString = convertDateToDDMMYYYY(selectedDate);
 
-    dispatch(setUserExamDate(selectedDate.getTime()));
+    dispatch(updateUserProgress({ examDate: selectedDate.getTime() }));
 
     const userMessage = createChatMessage({ fullText: dateString });
     dispatch(addMessage({ message: userMessage }));
@@ -208,8 +206,7 @@ export const ChatbotScreen = () => {
     setTimeout(() => {
       dispatch(addLoading({}));
 
-      // TODO: add extract progress
-
+      // Analyze chat game
       ChatbotService.sendStreamMessage({
         message: summary,
         messages: messages,
@@ -220,6 +217,21 @@ export const ChatbotScreen = () => {
         conversationSummary,
         conversationId,
         dispatch,
+      });
+
+      // Analyze overtime progress
+      ChatbotService.sendMessage({
+        message: summary,
+        type: 'analyze_progress',
+        data: {
+          level: userProgress.level,
+          target: userProgress.target,
+          exam_date: userProgress.examDate,
+          prev_analytic: userProgress.analytic,
+          current_date: convertDateToDDMMYYYY(new Date()),
+        },
+      }).then((result) => {
+        dispatch(updateUserProgress({ analytic: result }));
       });
     }, 1000);
   };

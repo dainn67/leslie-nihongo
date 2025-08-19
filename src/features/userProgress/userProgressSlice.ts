@@ -18,28 +18,9 @@ const userProgressSlice = createSlice({
       state.userProgress = { ...action.payload };
       setUserProgressToStorage(state.userProgress);
     },
-    setUserLevel: (state, action: PayloadAction<string>) => {
-      state.userProgress.level = action.payload;
+    updateUserProgress: (state, action: PayloadAction<Partial<UserProgress>>) => {
+      state.userProgress = { ...state.userProgress, ...action.payload };
       state.userProgress.lastUpdated = Date.now();
-
-      setUserProgressToStorage(state.userProgress);
-    },
-    setUserTarget: (state, action: PayloadAction<string>) => {
-      state.userProgress.target = action.payload;
-      state.userProgress.lastUpdated = Date.now();
-
-      setUserProgressToStorage(state.userProgress);
-    },
-    setUserStartDate: (state, action: PayloadAction<number>) => {
-      state.userProgress.startDate = action.payload;
-      state.userProgress.lastUpdated = Date.now();
-
-      setUserProgressToStorage(state.userProgress);
-    },
-    setUserExamDate: (state, action: PayloadAction<number>) => {
-      state.userProgress.examDate = action.payload;
-      state.userProgress.lastUpdated = Date.now();
-
       setUserProgressToStorage(state.userProgress);
     },
     clearUserProgress: (state) => {
@@ -49,6 +30,5 @@ const userProgressSlice = createSlice({
   },
 });
 
-export const { setUserProgress, setUserLevel, setUserTarget, setUserStartDate, setUserExamDate, clearUserProgress } =
-  userProgressSlice.actions;
+export const { setUserProgress, updateUserProgress, clearUserProgress } = userProgressSlice.actions;
 export default userProgressSlice.reducer;

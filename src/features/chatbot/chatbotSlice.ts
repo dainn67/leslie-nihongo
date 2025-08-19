@@ -4,9 +4,6 @@ import { Question } from "../../models/question";
 import { ApiConfig } from "../../constants/apiConfig";
 import { ChatbotService } from "../../service/chatbotService";
 import { DifyConfig } from "../../constants/difyConfig";
-import Constants from "expo-constants";
-
-const { DIFY_EXTRACT_CONTEXT_API_KEY } = Constants.expoConfig?.extra ?? {};
 
 const mainCID = DifyConfig.mainChatbotConversationId;
 
@@ -15,7 +12,7 @@ export const extractContext = createAsyncThunk(
   async ({ message, conversationSummary }: { message: string; conversationSummary: string }) => {
     const result = await ChatbotService.sendMessage({
       message,
-      token: DIFY_EXTRACT_CONTEXT_API_KEY,
+      type: 'extract_context',
       data: {
         conversation_summary: conversationSummary,
       },
