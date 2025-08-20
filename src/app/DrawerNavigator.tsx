@@ -1,18 +1,18 @@
-import React from "react";
-import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from "@react-navigation/drawer";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { View } from "react-native";
-import { ChatbotScreen } from "../screens/chatbot/ChatbotScreen";
-import { ThemeToggleButton } from "../components/buttons/ThemeToggleButton";
-import { useAppTheme } from "../theme";
-import { Ionicons } from "@expo/vector-icons";
-import { CustomText } from "../components/text/customText";
-import { QuestionsScreen } from "../screens/questions/questionScreen/QuestionsScreen";
-import { QuestionListScreen } from "../screens/questions/questinCategoryScreen/QuestionListScreen";
-import { Question, QuestionType } from "../models/question";
-import { QuestionGameScreen } from "../screens/questions/questionGameScreen/GameScreen";
-import { ResultScreen } from "../screens/questions/questionGameScreen/ResultScreen";
-import { FeedbackScreen } from "../screens/feedback/FeedbackScreen";
+import React from 'react';
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { View } from 'react-native';
+import { ChatbotScreen } from '../screens/chatbot/ChatbotScreen';
+import { ThemeToggleButton } from '../components/buttons/ThemeToggleButton';
+import { useAppTheme } from '../theme';
+import { Ionicons } from '@expo/vector-icons';
+import { CustomText } from '../components/text/customText';
+import { QuestionsScreen } from '../screens/questions/questionScreen/QuestionsScreen';
+import { QuestionListScreen } from '../screens/questions/questinCategoryScreen/QuestionListScreen';
+import { Question, QuestionType } from '../models/question';
+import { QuestionGameScreen } from '../screens/questions/questionGameScreen/GameScreen';
+import { ResultScreen } from '../screens/questions/questionGameScreen/ResultScreen';
+import { FeedbackScreen } from '../screens/feedback/FeedbackScreen';
 
 export type DrawerParamList = {
   ChatbotScreen: undefined;
@@ -40,11 +40,11 @@ export const DrawerNavigator = () => {
 
   return (
     <Drawer.Navigator
-      initialRouteName={"ChatbotScreen"} // Default screen
+      initialRouteName={'ChatbotScreen'} // Default screen
       screenOptions={{
         headerShown: false,
         drawerActiveTintColor: colors.primary,
-        drawerInactiveTintColor: colors.textSecondary,
+        drawerInactiveTintColor: colors.text,
         drawerStyle: {
           backgroundColor: colors.background,
           width: 280,
@@ -60,7 +60,7 @@ export const DrawerNavigator = () => {
       )}
     >
       <Drawer.Screen
-        name={"ChatbotScreen"}
+        name={'ChatbotScreen'}
         component={ChatbotScreen}
         options={{
           drawerLabel: ({ color }) => (
@@ -72,7 +72,7 @@ export const DrawerNavigator = () => {
         }}
       />
       <Drawer.Screen
-        name={"QuestionsScreen"}
+        name={'QuestionsScreen'}
         component={QuestionStackScreen}
         options={{
           drawerLabel: ({ color }) => (

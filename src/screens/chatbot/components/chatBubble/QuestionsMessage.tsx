@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { View, TouchableOpacity, StyleSheet } from "react-native";
-import { CustomText } from "../../../../components/text/customText";
-import { Question } from "../../../../models/question";
-import { QuestionView } from "./QuestionView";
-import { AnimatedProgressBar } from "../../../../components/AnimatedProgressBar";
-import { deleteQuestion, insertQuestions } from "../../../../storage/database/tables/questionTable";
-import { createResultSummary } from "../../../../service/questionService";
-import Tts from "react-native-tts";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import React, { useEffect, useState } from 'react';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { CustomText } from '../../../../components/text/customText';
+import { Question } from '../../../../models/question';
+import { QuestionView } from './QuestionView';
+import { AnimatedProgressBar } from '../../../../components/AnimatedProgressBar';
+import { deleteQuestion, insertQuestions } from '../../../../storage/database/tables/questionTable';
+import { createResultSummary } from '../../../../service/questionService';
+import Tts from 'react-native-tts';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface QuestionsMessageProps {
   questions: Question[];
@@ -24,7 +24,7 @@ export const QuestionsMessage = ({ questions, onAnalyze }: QuestionsMessageProps
   useEffect(() => {
     // Setup audio
     Tts.voices().then((voices) => {
-      const jpVoices = voices.filter((voice) => voice.language.includes("ja")).map((voice) => voice.name);
+      const jpVoices = voices.filter((voice) => voice.language.includes('ja')).map((voice) => voice.name);
 
       // 0: female, 3: male
       const selectedVoice = jpVoices[0];
@@ -62,15 +62,14 @@ export const QuestionsMessage = ({ questions, onAnalyze }: QuestionsMessageProps
     }
   };
 
-  const handleChangeQuestion = (direction: "next" | "prev") => {
-    const newIndex = direction === "next" ? currentQuestionIndex + 1 : currentQuestionIndex - 1;
+  const handleChangeQuestion = (direction: 'next' | 'prev') => {
+    const newIndex = direction === 'next' ? currentQuestionIndex + 1 : currentQuestionIndex - 1;
     setCurrentQuestionIndex(newIndex);
   };
 
   const handleReset = () => {
     setCurrentQuestionIndex(0);
     setMapAnswer({});
-    setMapBookmark({});
   };
 
   return (
@@ -81,7 +80,7 @@ export const QuestionsMessage = ({ questions, onAnalyze }: QuestionsMessageProps
           <AnimatedProgressBar progress={progress} height={7} />
         </View>
         <TouchableOpacity style={styles.resetButton} onPress={handleReset}>
-          <MaterialCommunityIcons name="rotate-left" size={20} color="#4A90E2" />
+          <MaterialCommunityIcons name="rotate-left" size={20} />
         </TouchableOpacity>
       </View>
 
@@ -99,7 +98,7 @@ export const QuestionsMessage = ({ questions, onAnalyze }: QuestionsMessageProps
       <View style={styles.navigationContainer}>
         <TouchableOpacity
           style={[styles.navButton, styles.prevButton, currentQuestionIndex === 0 && styles.disabledButton]}
-          onPress={() => handleChangeQuestion("prev")}
+          onPress={() => handleChangeQuestion('prev')}
           disabled={currentQuestionIndex === 0}
         >
           <CustomText
@@ -111,7 +110,7 @@ export const QuestionsMessage = ({ questions, onAnalyze }: QuestionsMessageProps
 
         <TouchableOpacity
           style={[styles.navButton, styles.nextButton, currentQuestionIndex === questions.length - 1 && styles.disabledButton]}
-          onPress={() => handleChangeQuestion("next")}
+          onPress={() => handleChangeQuestion('next')}
           disabled={currentQuestionIndex === questions.length - 1}
         >
           <CustomText
@@ -135,9 +134,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   progressContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    alignContent: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignContent: 'center',
     marginBottom: 8,
   },
   progressBarContainer: {
@@ -146,19 +145,19 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   resetButton: {
-    backgroundColor: "#F8F9FA",
+    backgroundColor: '#F8F9FA',
     padding: 4,
     borderRadius: 100,
     borderWidth: 1,
-    borderColor: "#E8E8E8",
+    borderColor: '#E8E8E8',
     marginRight: 4,
   },
   progressTextContainer: {
     minWidth: 50,
   },
   navigationContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   navButton: {
     flex: 1,
@@ -168,29 +167,29 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
   },
   prevButton: {
-    backgroundColor: "#F8F9FA",
+    backgroundColor: '#F8F9FA',
     borderWidth: 1,
-    borderColor: "#E8E8E8",
+    borderColor: '#E8E8E8',
   },
   nextButton: {
-    backgroundColor: "#4A90E2",
+    backgroundColor: '#4A90E2',
   },
   disabledButton: {
-    backgroundColor: "#F5F5F5",
-    borderColor: "#E0E0E0",
+    backgroundColor: '#F5F5F5',
+    borderColor: '#E0E0E0',
   },
   navButtonText: {
     fontSize: 14,
-    fontWeight: "600",
-    textAlign: "center",
+    fontWeight: '600',
+    textAlign: 'center',
   },
   navButtonTextPrev: {
-    color: "black",
+    color: 'black',
   },
   navButtonTextNext: {
-    color: "white",
+    color: 'white',
   },
   disabledButtonText: {
-    color: "#BDBDBD",
+    color: '#BDBDBD',
   },
 });

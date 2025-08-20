@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { TouchableOpacity, View, StyleSheet, ViewStyle, TextStyle, StyleProp, ActivityIndicator } from "react-native";
-import { CustomText } from "../text/customText";
+import React, { useState } from 'react';
+import { TouchableOpacity, View, StyleSheet, ViewStyle, TextStyle, StyleProp, ActivityIndicator } from 'react-native';
+import { CustomText } from '../text/customText';
+import { useAppTheme } from '../../theme';
 
 interface MainButtonProps {
   title: string;
@@ -18,18 +19,20 @@ const MainButton = ({ title, onPress, disabled = false, loading = false, style, 
   const handlePressIn = () => setIsPressed(true);
   const handlePressOut = () => setIsPressed(false);
 
-  const text = title.replaceAll("**", "").replace(/<[^>]*>/g, "");
+  const text = title.replaceAll('**', '').replace(/<[^>]*>/g, '');
 
   // Get passed in border radius
   const flattenedStyle = StyleSheet.flatten(style || {});
   const borderRadius = flattenedStyle?.borderRadius ?? 8;
+
+  const { colors } = useAppTheme();
 
   const containerStyles = [{ borderRadius }];
 
   const buttonStyles = [
     styles.button,
     {
-      backgroundColor: disabled ? "#E5E7EB" : "#F48FB1",
+      backgroundColor: disabled ? colors.secondary : colors.primary,
       opacity: isPressed ? 0.9 : 1,
       transform: isPressed ? [{ scale: 0.98 }] : [],
       borderRadius,
@@ -37,7 +40,7 @@ const MainButton = ({ title, onPress, disabled = false, loading = false, style, 
     style,
   ];
 
-  const labelStyles = [styles.text, { color: disabled ? "#9CA3AF" : "#4A4A4A" }, textStyle];
+  const textStyles = [styles.text, textStyle];
 
   return (
     <View style={containerStyles}>
@@ -49,7 +52,7 @@ const MainButton = ({ title, onPress, disabled = false, loading = false, style, 
         style={buttonStyles}
         activeOpacity={0.8}
       >
-        {loading ? <ActivityIndicator color="#4A4A4A" /> : <CustomText style={labelStyles}>{text}</CustomText>}
+        {loading ? <ActivityIndicator color="#4A4A4A" /> : <CustomText style={textStyles}>{text}</CustomText>}
       </TouchableOpacity>
     </View>
   );
@@ -57,15 +60,16 @@ const MainButton = ({ title, onPress, disabled = false, loading = false, style, 
 
 const styles = StyleSheet.create({
   button: {
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 12,
     minHeight: 44,
   },
   text: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
+    color: 'white',
   },
 });
 

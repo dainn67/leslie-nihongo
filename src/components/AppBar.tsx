@@ -36,7 +36,7 @@ export const AppBar: React.FC<AppBarProps> = ({ title, leftIcon, rightIcon, onLe
         )}
 
         <TouchableOpacity style={styles.titleContainer} disabled={!AppConfig.devMode && !onDevClick} onPress={onDevClick}>
-          <CustomText weight="Bold" style={[styles.title, { color: isDarkMode ? colors.text : "#4A4A4A" }]}>
+          <CustomText weight="Bold" style={[styles.title, { color: "white" }]}>
             {title}
           </CustomText>
         </TouchableOpacity>

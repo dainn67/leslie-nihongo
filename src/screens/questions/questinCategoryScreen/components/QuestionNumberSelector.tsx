@@ -1,7 +1,8 @@
-import React, { useMemo } from "react";
-import { Dimensions, Modal, StyleSheet, View, TouchableOpacity } from "react-native";
-import { useAppTheme } from "../../../../theme";
-import { CustomText } from "../../../../components/text/customText";
+import React, { useMemo } from 'react';
+import { Dimensions, Modal, StyleSheet, View, TouchableOpacity } from 'react-native';
+import { useAppTheme } from '../../../../theme';
+import { CustomText } from '../../../../components/text/customText';
+import MainButton from '../../../../components/buttons/MainButton';
 
 interface QuestionNumberSelectorProps {
   title?: string;
@@ -13,7 +14,7 @@ interface QuestionNumberSelectorProps {
 }
 
 export const QuestionNumberSelector = ({
-  title = "Chọn số lượng câu hỏi",
+  title = 'Chọn số lượng câu hỏi',
   totalQuestions = 30,
   selectedQuestion = 0,
   visible,
@@ -45,14 +46,14 @@ export const QuestionNumberSelector = ({
 
   return (
     <Modal transparent visible={visible} animationType="fade" onRequestClose={() => setVisible(false)}>
-      <View style={[styles.overlay, { backgroundColor: colors.overlay }]}>
-        <View style={[styles.dialog, { backgroundColor: colors.card, shadowColor: colors.cardShadow }]}>
+      <View style={[styles.overlay, { backgroundColor: `${colors.backgroundSecondary}CC` }]}>
+        <View style={[styles.dialog, { backgroundColor: colors.background }]}>
           {/* Header */}
           <View style={styles.header}>
             <CustomText weight="Bold" size={20} style={[styles.title, { color: colors.text }]}>
               {title}
             </CustomText>
-            <CustomText size={14} style={[styles.subtitle, { color: colors.textSecondary }]}>
+            <CustomText size={14} style={[styles.subtitle, { color: colors.text }]}>
               Chọn số lượng câu hỏi bạn muốn làm
             </CustomText>
           </View>
@@ -66,8 +67,8 @@ export const QuestionNumberSelector = ({
                   style={[
                     styles.optionButton,
                     {
-                      backgroundColor: selectedQuestion === option ? colors.primary : colors.backgroundSecondary,
-                      borderColor: selectedQuestion === option ? colors.primary : colors.border,
+                      backgroundColor: colors.backgroundSecondary,
+                      borderColor: colors.secondary,
                     },
                   ]}
                   onPress={() => handleSelectQuestion(option)}
@@ -85,7 +86,7 @@ export const QuestionNumberSelector = ({
               ))
             ) : (
               <View style={styles.fallbackContainer}>
-                <CustomText size={16} style={[styles.fallbackText, { color: colors.textSecondary }]}>
+                <CustomText size={16} style={[styles.fallbackText, { color: colors.text }]}>
                   Không có tùy chọn nào
                 </CustomText>
               </View>
@@ -94,15 +95,11 @@ export const QuestionNumberSelector = ({
 
           {/* Footer */}
           <View style={styles.footer}>
-            <TouchableOpacity
-              style={[styles.cancelButton, { borderColor: colors.border }]}
+            <MainButton
+              title={'Hủy'}
               onPress={() => setVisible(false)}
-              activeOpacity={0.7}
-            >
-              <CustomText weight="SemiBold" size={16} style={[styles.cancelText, { color: colors.text }]}>
-                Hủy
-              </CustomText>
-            </TouchableOpacity>
+              style={{ width: '100%', backgroundColor: colors.alert }}
+            />
           </View>
         </View>
       </View>
@@ -110,20 +107,20 @@ export const QuestionNumberSelector = ({
   );
 };
 
-const { width } = Dimensions.get("window");
+const { width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     paddingHorizontal: 24,
   },
   dialog: {
     width: width * 0.85,
-    backgroundColor: "#fff",
     borderRadius: 20,
     padding: 28,
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 10,
@@ -131,67 +128,66 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 20,
     elevation: 10,
-    maxHeight: "80%",
+    maxHeight: '80%',
   },
   header: {
-    alignItems: "center",
+    alignItems: 'center',
     marginBottom: 24,
   },
   title: {
     marginBottom: 8,
-    textAlign: "center",
+    textAlign: 'center',
   },
   subtitle: {
-    textAlign: "center",
+    textAlign: 'center',
     opacity: 0.8,
   },
   optionsContainer: {
     flex: 1,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    alignContent: "center",
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignContent: 'center',
     marginVertical: 10,
   },
   optionButton: {
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     borderRadius: 100,
     borderWidth: 1,
     width: 40,
     height: 40,
     marginHorizontal: 10,
-    position: "relative",
+    position: 'relative',
   },
   optionText: {
-    textAlign: "center",
+    textAlign: 'center',
   },
   checkIcon: {
     width: 12,
     height: 12,
     borderRadius: 6,
-    position: "absolute",
+    position: 'absolute',
     top: 8,
     right: 8,
   },
   footer: {
     marginTop: 24,
-    alignItems: "center",
+    alignItems: 'center',
   },
   cancelButton: {
     paddingVertical: 12,
     paddingHorizontal: 32,
     borderRadius: 8,
-    borderWidth: 1,
   },
   cancelText: {
-    textAlign: "center",
+    textAlign: 'center',
   },
   fallbackContainer: {
-    alignItems: "center",
+    alignItems: 'center',
     paddingVertical: 20,
   },
   fallbackText: {
-    textAlign: "center",
+    textAlign: 'center',
   },
 });

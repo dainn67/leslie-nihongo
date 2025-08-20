@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import { View, TouchableOpacity, StyleSheet } from "react-native";
-import { CustomText } from "../../../../components/text/customText";
-import { Question } from "../../../../models/question";
-import { IconButton } from "../../../../components/buttons";
-import { AppIcons } from "../../../../constants/appIcons";
-import { Answer } from "../../../../models/answer";
-import { useAppTheme } from "../../../../theme";
-import Tts from "react-native-tts";
-import { ToastService } from "../../../../service/toastService";
+import React, { useState } from 'react';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { CustomText } from '../../../../components/text/customText';
+import { Question } from '../../../../models/question';
+import { IconButton } from '../../../../components/buttons';
+import { AppIcons } from '../../../../constants/appIcons';
+import { Answer } from '../../../../models/answer';
+import { useAppTheme } from '../../../../theme';
+import Tts from 'react-native-tts';
+import { ToastService } from '../../../../service/toastService';
 
 interface QuestionViewProps {
   question: Question;
@@ -32,11 +32,11 @@ export const QuestionView = ({
   onBookmarkPress,
   onAudioPlay,
 }: QuestionViewProps) => {
-  const { colors, isDarkMode } = useAppTheme();
+  const { colors } = useAppTheme();
 
   const getAnswerLabel = (index: number) => {
-    const labels = ["A", "B", "C", "D"];
-    return (labels[index] || "A") + ".";
+    const labels = ['A', 'B', 'C', 'D'];
+    return (labels[index] || 'A') + '.';
   };
 
   const [playAudio, setPlayAudio] = useState(false);
@@ -48,29 +48,27 @@ export const QuestionView = ({
 
     Tts.stop();
     if (newState) {
-      Tts.addEventListener("tts-finish", () => setPlayAudio(false));
+      Tts.addEventListener('tts-finish', () => setPlayAudio(false));
       Tts.speak(question.audio);
     }
   };
 
   const handleBookmarkPress = (bookmarked: boolean) => {
-    if (bookmarked) ToastService.show({ message: "Đã lưu", type: "success" });
+    if (bookmarked) ToastService.show({ message: 'Đã lưu', type: 'success' });
     onBookmarkPress?.(bookmarked);
   };
 
   return (
-    <View style={[styles.questionCard, { backgroundColor: isDarkMode ? colors.backgroundSecondary : "white" }]}>
+    <View style={[styles.questionCard, { backgroundColor: colors.background }]}>
       <View style={styles.questionHeader}>
         {/* Question Index and Text */}
         <View style={styles.questionHeaderContent}>
           <View style={styles.questionIndex}>
-            <CustomText style={[styles.questionNumberText, { color: isDarkMode ? colors.textTertiary : "gray" }]}>
+            <CustomText style={[styles.questionNumberText, { color: colors.placeholder }]}>
               Câu hỏi {questionIndex + 1}/{totalQuestions}:
             </CustomText>
           </View>
-          <CustomText style={[styles.questionText, { color: isDarkMode ? colors.textSecondary : "#2C3E50" }]}>
-            {question.question}
-          </CustomText>
+          <CustomText style={[styles.questionText, { color: colors.text }]}>{question.question}</CustomText>
         </View>
 
         {/* Save icon button */}
@@ -92,7 +90,7 @@ export const QuestionView = ({
             onPress={() => onAnswerSelect?.(a.answerId)}
             style={[
               styles.answerCard,
-              { backgroundColor: isDarkMode ? colors.backgroundTertiary : "#F8F9FA" },
+              { backgroundColor: colors.backgroundSecondary },
               (selectedAnswer === a.answerId || showCorrectAnswer) && a.isCorrect && styles.correctAnswer,
               selectedAnswer === a.answerId && !a.isCorrect && styles.wrongAnswer,
               selectedAnswer !== undefined && selectedAnswer !== a.answerId && a.isCorrect && styles.correctAnswer,
@@ -103,7 +101,7 @@ export const QuestionView = ({
               <CustomText
                 style={[
                   styles.answerLabelText,
-                  { color: isDarkMode ? "white" : "#666" },
+                  { color: colors.placeholder },
                   selectedAnswer === a.answerId && !a.isCorrect && styles.wrongLabel,
                   (showCorrectAnswer || (selectedAnswer !== undefined && selectedAnswer !== a.answerId)) &&
                     a.isCorrect &&
@@ -115,7 +113,7 @@ export const QuestionView = ({
               <CustomText
                 style={[
                   styles.answerText,
-                  { color: isDarkMode ? "white" : "#2C3E50" },
+                  { color: colors.text },
                   ((showCorrectAnswer && a.isCorrect) ||
                     selectedAnswer === a.answerId ||
                     (selectedAnswer !== undefined && selectedAnswer != a.answerId && a.isCorrect)) &&
@@ -149,7 +147,7 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingBottom: 0,
     marginBottom: 16,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -159,8 +157,8 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   questionHeader: {
-    flexDirection: "row",
-    alignItems: "flex-start",
+    flexDirection: 'row',
+    alignItems: 'flex-start',
     marginBottom: 20,
   },
   questionHeaderContent: {
@@ -175,11 +173,11 @@ const styles = StyleSheet.create({
   },
   questionNumberText: {
     fontSize: 14,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   questionText: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
     flex: 1,
     lineHeight: 24,
   },
@@ -190,26 +188,26 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginBottom: 12,
     borderWidth: 1.5,
-    borderColor: "transparent",
-    overflow: "hidden",
+    borderColor: 'transparent',
+    overflow: 'hidden',
   },
   answerContent: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     padding: 8,
   },
   answerLabelText: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginLeft: 8,
     marginRight: 12,
     marginVertical: 4,
   },
   correctLabel: {
-    color: "#4CAF50",
+    color: '#4CAF50',
   },
   wrongLabel: {
-    color: "#F44336",
+    color: '#F44336',
   },
   answerText: {
     fontSize: 16,
@@ -217,29 +215,29 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   selectedAnswerText: {
-    color: "black",
-    fontWeight: "600",
+    color: 'black',
+    fontWeight: '600',
   },
   correctAnswer: {
-    backgroundColor: "#E8F5E8",
-    borderColor: "#4CAF50",
+    backgroundColor: '#E8F5E8',
+    borderColor: '#4CAF50',
   },
   wrongAnswer: {
-    backgroundColor: "#FFEBEE",
-    borderColor: "#F44336",
+    backgroundColor: '#FFEBEE',
+    borderColor: '#F44336',
   },
   explanationContainer: {
-    backgroundColor: "#F0F8FF",
+    backgroundColor: '#F0F8FF',
     borderRadius: 4,
     padding: 12,
     paddingVertical: 8,
     marginBottom: 16,
     borderLeftWidth: 4,
-    borderLeftColor: "#4A90E2",
+    borderLeftColor: '#4A90E2',
   },
   explanationHeader: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 8,
   },
   explanationIcon: {
@@ -248,12 +246,12 @@ const styles = StyleSheet.create({
   },
   explanationTitle: {
     fontSize: 16,
-    fontWeight: "bold",
-    color: "#2C3E50",
+    fontWeight: 'bold',
+    color: '#2C3E50',
   },
   explanationText: {
     fontSize: 14,
-    color: "#34495E",
+    color: '#34495E',
     lineHeight: 20,
   },
 });

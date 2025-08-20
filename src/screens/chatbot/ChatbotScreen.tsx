@@ -110,6 +110,7 @@ export const ChatbotScreen = () => {
       userProgress: userProgress,
       dispatch,
     });
+
   };
 
   const handleClickAction = async (title: string, actionId?: string) => {
