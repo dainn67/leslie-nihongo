@@ -76,7 +76,7 @@ const getStyle = (colors: any, isUser: boolean, componentHeight: number, isLastM
       paddingHorizontal: 16,
       ...(isUser
         ? {
-            backgroundColor: colors.secondary,
+            backgroundColor: colors.primary,
             paddingVertical: 12,
             alignItems: "flex-end",
             alignSelf: "flex-end",

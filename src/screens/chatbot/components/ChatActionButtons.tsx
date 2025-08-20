@@ -62,7 +62,7 @@ export const ChatActionButtons = ({ suggestedActions, onClickAction }: ChatActio
                 marginVertical: 4,
                 backgroundColor: colors.primary,
               }}
-              textStyle={{ color: isDarkMode ? "white" : "black" }}
+              textStyle={{ color: "white"}}
               onPress={() => handleClickAction(e.title, e.id)}
             />
           </Animated.View>
