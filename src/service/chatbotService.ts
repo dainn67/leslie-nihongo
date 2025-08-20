@@ -7,7 +7,7 @@ import { ChatMessage, MessageStatus, MessageType, Sender } from "../models/chatM
 import { ApiClient } from "../api/apiClient";
 import { createQuestionString, Question } from "../models/question";
 import { createQuestion } from "../models/question";
-import { updateConversationId, updateLastMessageData } from "../features/chatbot/chatbotSlice";
+import { updateConversationId, updateConversationSummary, updateLastMessageData } from "../features/chatbot/chatbotSlice";
 import { DiscordService, DiscordWebhookType } from "./discordService";
 import { ToastService } from "./toastService";
 import Constants from "expo-constants";
@@ -368,6 +368,16 @@ export class ChatbotService {
         }, 20);
       }
     }, 200);
+
+    // Extract the summary
+    if (message) {
+      ChatbotService.sendMessage({
+        message: message ?? "",
+        type: 'extract_context',
+      }).then((result) => {
+        dispatch(updateConversationSummary({ cid: cid, conversationSummary: result }));
+      });
+    }
   };
 
   static sendResultAnalytic({

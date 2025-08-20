@@ -110,13 +110,6 @@ export const ChatbotScreen = () => {
       userProgress: userProgress,
       dispatch,
     });
-
-    ChatbotService.sendMessage({
-      message: data,
-      type: 'extract_context',
-    }).then((result) => {
-      dispatch(updateConversationSummary({ conversationSummary: result }));
-    });
   };
 
   const handleClickAction = async (title: string, actionId?: string) => {
@@ -176,13 +169,6 @@ export const ChatbotScreen = () => {
       conversationSummary,
       conversationId: difyConversationId,
       dispatch,
-    });
-
-    ChatbotService.sendMessage({
-      message: title,
-      type: 'extract_context',
-    }).then((result) => {
-      dispatch(updateConversationSummary({ cid: difyConversationId, conversationSummary: result }));
     });
   };
 
