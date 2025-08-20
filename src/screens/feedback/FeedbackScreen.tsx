@@ -7,11 +7,8 @@ import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { DrawerParamList } from '../../app/DrawerNavigator';
 import { ToastService } from '../../service/toastService';
 import { useAppTheme } from '../../theme';
-import MainButton from '../../components/buttons/MainButton';
 import { DiscordService, DiscordWebhookType } from '../../service/discordService';
-import Constants from 'expo-constants';
-
-const { DISCORD_FEEDBACK_WEBHOOKS } = Constants.expoConfig?.extra ?? {};
+import MainButton from '../../components/buttons/MainButton';
 
 export const FeedbackScreen = () => {
   const categories = ['Nội dung', 'Trải nghiệm', 'Giao diện', 'Lỗi', 'Tính năng', 'Khác'];

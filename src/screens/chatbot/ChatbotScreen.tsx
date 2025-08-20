@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { View } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { AppBar } from "../../components/AppBar";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { ChatMessageList } from "./components/ChatMessageList";
-import { useNavigation } from "@react-navigation/native";
-import { DrawerNavigationProp } from "@react-navigation/drawer";
-import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
-import { AppConfig } from "../../constants/appConfig";
+import React, { useEffect, useState } from 'react';
+import { View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { AppBar } from '../../components/AppBar';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { ChatMessageList } from './components/ChatMessageList';
+import { useNavigation } from '@react-navigation/native';
+import { DrawerNavigationProp } from '@react-navigation/drawer';
+import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
+import { AppConfig } from '../../constants/appConfig';
 import {
   addLoading,
   addMessage,
@@ -15,29 +15,24 @@ import {
   getDifyConversationIdByCID,
   getConversationSummaryByCID,
   getMessagesByCID,
-  updateConversationSummary,
-} from "../../features/chatbot/chatbotSlice";
-import {
-  clearUserProgress,
-  setUserProgress,
-  updateUserProgress,
-} from "../../features/userProgress/userProgressSlice";
-import { createQuestionTable, deleteAllTables, updateTables } from "../../storage/database/tables";
-import { createChatMessage, MessageStatus } from "../../models/chatMessage";
-import { UserProgressService } from "../../service/userProgressSerivice";
-import { MyDatePicker } from "../../components/datePicker/MyDatePicker";
-import { convertDateToDDMMYYYY, normalizeDate } from "../../utils/utils";
-import { loadFromAsyncStorage, logAllAsyncStorage } from "../../storage/asyncStorage/asyncStorage";
-import { AsyncStorageConstants } from "../../storage/asyncStorage/asyncStorateConstant";
-import { setTheme } from "../../features/theme/themeSlice";
-import { ChatbotService } from "../../service/chatbotService";
-import { DrawerParamList } from "../../app/DrawerNavigator";
-import { ChatInput } from "./components/ChatInput";
-import ClearChatDialog from "./components/ClearChatDialog";
-import TTSService from "../../service/ttsService";
-import { createTmpUserProgress } from "../../models/userProgress";
+} from '../../features/chatbot/chatbotSlice';
+import { clearUserProgress, setUserProgress, updateUserProgress } from '../../features/userProgress/userProgressSlice';
+import { createQuestionTable, deleteAllTables, updateTables } from '../../storage/database/tables';
+import { createChatMessage, MessageStatus } from '../../models/chatMessage';
+import { UserProgressService } from '../../service/userProgressSerivice';
+import { MyDatePicker } from '../../components/datePicker/MyDatePicker';
+import { convertDateToDDMMYYYY, normalizeDate } from '../../utils/utils';
+import { loadFromAsyncStorage } from '../../storage/asyncStorage/asyncStorage';
+import { AsyncStorageConstants } from '../../storage/asyncStorage/asyncStorateConstant';
+import { setTheme } from '../../features/theme/themeSlice';
+import { ChatbotService } from '../../service/chatbotService';
+import { DrawerParamList } from '../../app/DrawerNavigator';
+import { ChatInput } from './components/ChatInput';
+import { createTmpUserProgress } from '../../models/userProgress';
+import ClearChatDialog from './components/ClearChatDialog';
+import TTSService from '../../service/ttsService';
 
-type ChatbotScreenNavigationProp = DrawerNavigationProp<DrawerParamList, "ChatbotScreen">;
+type ChatbotScreenNavigationProp = DrawerNavigationProp<DrawerParamList, 'ChatbotScreen'>;
 
 export const ChatbotScreen = () => {
   // Drawer
@@ -110,7 +105,6 @@ export const ChatbotScreen = () => {
       userProgress: userProgress,
       dispatch,
     });
-
   };
 
   const handleClickAction = async (title: string, actionId?: string) => {
@@ -118,10 +112,10 @@ export const ChatbotScreen = () => {
     let userTarget = userProgress.target;
 
     if (actionId) {
-      const setExamDateActionId = "ed1";
-      const unknownExamDateActionId = "ed2";
-      const setLevelActionId = "l";
-      const setTargetActionId = "t";
+      const setExamDateActionId = 'ed1';
+      const unknownExamDateActionId = 'ed2';
+      const setLevelActionId = 'l';
+      const setTargetActionId = 't';
 
       if (actionId.startsWith(setExamDateActionId)) {
         setDatePickerVisible(true);
@@ -160,13 +154,10 @@ export const ChatbotScreen = () => {
       message: title,
       messages: messages,
       actionId: actionId,
-      userProgress: createTmpUserProgress(
-        userProgress,
-        {
-          level: userLevel.length > 0 ? userLevel : userProgress.level,
-          target: userTarget.length > 0 ? userTarget : userProgress.target,
-        }
-      ),
+      userProgress: createTmpUserProgress(userProgress, {
+        level: userLevel.length > 0 ? userLevel : userProgress.level,
+        target: userTarget.length > 0 ? userTarget : userProgress.target,
+      }),
       conversationSummary,
       conversationId: difyConversationId,
       dispatch,
@@ -215,7 +206,7 @@ export const ChatbotScreen = () => {
         data: {
           level: userProgress.level,
           target: userProgress.target,
-          exam_date: userProgress.examDate ? convertDateToDDMMYYYY(userProgress.examDate) : "",
+          exam_date: userProgress.examDate ? convertDateToDDMMYYYY(userProgress.examDate) : '',
           prev_analytic: userProgress.analytic[normalizeDate(new Date())],
           current_date: convertDateToDDMMYYYY(new Date()),
         },
@@ -228,10 +219,8 @@ export const ChatbotScreen = () => {
   const clearConversation = () => dispatch(clearChat({}));
 
   const handleDevClick = () => {
-    // deleteAllTables();
-    // dispatch(clearUserProgress());
-    // logAllAsyncStorage();
-    console.log("conversationSummary:", conversationSummary);
+    deleteAllTables();
+    dispatch(clearUserProgress());
   };
 
   return (
