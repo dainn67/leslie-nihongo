@@ -1,34 +1,20 @@
 import { createSlice, PayloadAction, createSelector, createAsyncThunk } from "@reduxjs/toolkit";
 import { ChatMessage, createChatMessage, MessageStatus, MessageType, Sender, SuggestedAction } from "../../models/chatMessage";
 import { Question } from "../../models/question";
-import { ApiConfig } from "../../constants/apiConfig";
-import { ChatbotService } from "../../service/chatbotService";
 import { DifyConfig } from "../../constants/difyConfig";
 
 const mainCID = DifyConfig.mainChatbotConversationId;
 
-export const extractContext = createAsyncThunk(
-  ApiConfig.difyServerUrl,
-  async ({ message }: { message: string }) => {
-    const result = await ChatbotService.sendMessage({
-      message,
-      type: 'extract_context',
-    });
-
-    return result;
-  },
-);
-
 type ChatbotState = {
   messages: { [key: string]: ChatMessage[] };
-  conversationId: { [key: string]: string | undefined };
+  difyConversationId: { [key: string]: string | undefined };
   conversationSummary: { [key: string]: string | undefined };
   suggestedPropmpt: string[];
 };
 
 const initialState: ChatbotState = {
   messages: {},
-  conversationId: {},
+  difyConversationId: {},
   conversationSummary: {},
   suggestedPropmpt: [],
 };
@@ -46,9 +32,9 @@ export const getLatestMessageByCID = createSelector(
   },
 );
 
-export const getConversationIdByCID = createSelector(
+export const getDifyConversationIdByCID = createSelector(
   [(state: ChatbotState) => state, (state: ChatbotState, cid?: string) => cid],
-  (state, cid) => state.conversationId[cid ?? mainCID] || "",
+  (state, cid) => state.difyConversationId[cid ?? mainCID] || "",
 );
 
 export const getConversationSummaryByCID = createSelector(
@@ -76,7 +62,7 @@ const chatbotSlice = createSlice({
     },
     updateConversationId: (state, action: PayloadAction<{ cid?: string; conversationId: string }>) => {
       const cid = action.payload.cid ?? mainCID;
-      state.conversationId[cid] = action.payload.conversationId;
+      state.difyConversationId[cid] = action.payload.conversationId;
     },
     updateConversationSummary: (state, action: PayloadAction<{ cid?: string; conversationSummary: string }>) => {
       const cid = action.payload.cid ?? mainCID;
@@ -117,16 +103,9 @@ const chatbotSlice = createSlice({
     clearChat: (state, action: PayloadAction<{ cid?: string }>) => {
       const cid = action.payload.cid ?? mainCID;
       state.messages[cid] = [];
-      state.conversationId[cid] = undefined;
+      state.difyConversationId[cid] = undefined;
       state.conversationSummary[cid] = undefined;
     },
-  },
-  extraReducers: (builder) => {
-    builder.addCase(extractContext.fulfilled, (state, action: PayloadAction<{ cid: string; conversationSummary: string }>) => {
-      if (action.payload) {
-        state.conversationSummary[action.payload.cid] = action.payload.conversationSummary;
-      }
-    });
   },
 });
 

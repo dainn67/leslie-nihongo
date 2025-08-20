@@ -10,7 +10,7 @@ import {
   addLoading,
   addMessage,
   clearChat,
-  getConversationIdByCID,
+  getDifyConversationIdByCID,
   getConversationSummaryByCID,
   getLatestMessageByCID,
   getMessagesByCID,
@@ -33,7 +33,7 @@ export const ChatbotBottomSheet: React.FC<ChatbotBottomSheetProps> = ({ visible,
 
   const messages = useAppSelector((state) => getMessagesByCID(state.chatbot, questionId));
   const latestMessage = useAppSelector((state) => getLatestMessageByCID(state.chatbot, questionId));
-  const conversationId = useAppSelector((state) => getConversationIdByCID(state.chatbot, questionId));
+  const conversationId = useAppSelector((state) => getDifyConversationIdByCID(state.chatbot, questionId));
   const conversationSummary = useAppSelector((state) => getConversationSummaryByCID(state.chatbot, questionId));
 
   const isGenerating = latestMessage ? ![MessageStatus.DONE, MessageStatus.ERROR].includes(latestMessage.status) : false;

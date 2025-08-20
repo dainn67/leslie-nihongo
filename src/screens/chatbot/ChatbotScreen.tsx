@@ -12,10 +12,10 @@ import {
   addLoading,
   addMessage,
   clearChat,
-  extractContext,
-  getConversationIdByCID,
+  getDifyConversationIdByCID,
   getConversationSummaryByCID,
   getMessagesByCID,
+  updateConversationSummary,
 } from "../../features/chatbot/chatbotSlice";
 import {
   clearUserProgress,
@@ -48,7 +48,7 @@ export const ChatbotScreen = () => {
 
   const dispatch = useAppDispatch();
   const messages = useAppSelector((state) => getMessagesByCID(state.chatbot));
-  const conversationId = useAppSelector((state) => getConversationIdByCID(state.chatbot));
+  const difyConversationId = useAppSelector((state) => getDifyConversationIdByCID(state.chatbot));
   const conversationSummary = useAppSelector((state) => getConversationSummaryByCID(state.chatbot));
 
   const userProgress = useAppSelector((state) => state.userProgress.userProgress);
@@ -74,7 +74,7 @@ export const ChatbotScreen = () => {
           messages: messages,
           userProgress: userProgress,
           conversationSummary,
-          conversationId,
+          conversationId: difyConversationId,
           dispatch,
         });
       });
@@ -89,7 +89,7 @@ export const ChatbotScreen = () => {
         messages: messages,
         userProgress: userProgress,
         conversationSummary,
-        conversationId,
+        conversationId: difyConversationId,
         dispatch,
       });
     }
@@ -106,12 +106,17 @@ export const ChatbotScreen = () => {
       message: data,
       messages: messages,
       conversationSummary,
-      conversationId,
+      conversationId: difyConversationId,
       userProgress: userProgress,
       dispatch,
     });
 
-    dispatch(extractContext({ message }));
+    ChatbotService.sendMessage({
+      message: data,
+      type: 'extract_context',
+    }).then((result) => {
+      dispatch(updateConversationSummary({ conversationSummary: result }));
+    });
   };
 
   const handleClickAction = async (title: string, actionId?: string) => {
@@ -138,7 +143,7 @@ export const ChatbotScreen = () => {
           actionId: actionId,
           userProgress: createTmpUserProgress(userProgress, { level: userLevel, target: userTarget, examDate: 0 }),
           conversationSummary,
-          conversationId,
+          conversationId: difyConversationId,
           dispatch,
         });
 
@@ -169,11 +174,16 @@ export const ChatbotScreen = () => {
         }
       ),
       conversationSummary,
-      conversationId,
+      conversationId: difyConversationId,
       dispatch,
     });
 
-    dispatch(extractContext({ message: title }));
+    ChatbotService.sendMessage({
+      message: title,
+      type: 'extract_context',
+    }).then((result) => {
+      dispatch(updateConversationSummary({ cid: difyConversationId, conversationSummary: result }));
+    });
   };
 
   const handleSelectExamDate = (selectedDate: Date | undefined) => {
@@ -191,7 +201,7 @@ export const ChatbotScreen = () => {
       messages: messages,
       userProgress: createTmpUserProgress(userProgress, { examDate: selectedDate.getTime() }),
       conversationSummary,
-      conversationId,
+      conversationId: difyConversationId,
       dispatch,
     });
   };
@@ -207,7 +217,7 @@ export const ChatbotScreen = () => {
         userProgress: userProgress,
         analyzeChatGame: true,
         conversationSummary,
-        conversationId,
+        conversationId: difyConversationId,
         dispatch,
       });
 
@@ -234,6 +244,7 @@ export const ChatbotScreen = () => {
     // deleteAllTables();
     // dispatch(clearUserProgress());
     // logAllAsyncStorage();
+    console.log("conversationSummary:", conversationSummary);
   };
 
   return (
