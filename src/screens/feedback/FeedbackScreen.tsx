@@ -1,29 +1,29 @@
-import React, { useState } from "react";
-import { SafeAreaView, View, Text, Pressable, TextInput, ScrollView, StyleSheet } from "react-native";
-import { AppBar } from "../../components/AppBar";
-import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
-import { DrawerNavigationProp } from "@react-navigation/drawer";
-import { DrawerParamList } from "../../app/DrawerNavigator";
-import { ToastService } from "../../service/toastService";
-import { useAppTheme } from "../../theme";
-import MainButton from "../../components/buttons/MainButton";
-import { DiscordService, DiscordWebhookType } from "../../service/discordService";
-import Constants from "expo-constants";
+import React, { useState } from 'react';
+import { SafeAreaView, View, Text, Pressable, TextInput, ScrollView, StyleSheet } from 'react-native';
+import { AppBar } from '../../components/AppBar';
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import { DrawerNavigationProp } from '@react-navigation/drawer';
+import { DrawerParamList } from '../../app/DrawerNavigator';
+import { ToastService } from '../../service/toastService';
+import { useAppTheme } from '../../theme';
+import MainButton from '../../components/buttons/MainButton';
+import { DiscordService, DiscordWebhookType } from '../../service/discordService';
+import Constants from 'expo-constants';
 
 const { DISCORD_FEEDBACK_WEBHOOKS } = Constants.expoConfig?.extra ?? {};
 
 export const FeedbackScreen = () => {
-  const categories = ["Nội dung", "Trải nghiệm", "Giao diện", "Lỗi", "Tính năng", "Khác"];
+  const categories = ['Nội dung', 'Trải nghiệm', 'Giao diện', 'Lỗi', 'Tính năng', 'Khác'];
 
   const { colors } = useAppTheme();
 
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
 
   const canSubmit = selectedCategories.length > 0 && message.trim().length > 0;
 
-  const drawerNavigation = useNavigation<DrawerNavigationProp<DrawerParamList, "FeedbackScreen">>();
+  const drawerNavigation = useNavigation<DrawerNavigationProp<DrawerParamList, 'FeedbackScreen'>>();
 
   const toggleCategory = (c: string) =>
     setSelectedCategories((prev) => (prev.includes(c) ? prev.filter((x) => x !== c) : [...prev, c]));
@@ -41,13 +41,13 @@ export const FeedbackScreen = () => {
     };
 
     DiscordService.sendDiscordMessage({
-      message: `Categories: ${payload.categories.join(", ")}\nMessage: ${payload.message}`,
+      message: `Categories: ${payload.categories.join(', ')}\nMessage: ${payload.message}`,
       type: DiscordWebhookType.FEEDBACK,
     });
 
-    ToastService.show({ message: "Đã gửi thành công" });
+    ToastService.show({ message: 'Đã gửi thành công' });
     setSelectedCategories([]);
-    setMessage("");
+    setMessage('');
   };
 
   return (
@@ -81,13 +81,13 @@ export const FeedbackScreen = () => {
 
         {/* Message */}
         <View style={{ gap: 8 }}>
-          <Text style={{ color: colors.text, fontSize: 16, fontWeight: "600" }}>Nội dung</Text>
-          <View style={[styles.messageContainer, { borderColor: colors.border }]}>
+          <Text style={{ color: colors.text, fontSize: 16, fontWeight: '600' }}>Nội dung</Text>
+          <View style={[styles.messageContainer, { borderColor: colors.text }]}>
             <TextInput
               value={message}
               onChangeText={setMessage}
               placeholder="Nhập nội dung phản hồi của bạn..."
-              placeholderTextColor={colors.textTertiary}
+              placeholderTextColor={colors.placeholder}
               multiline
               style={[styles.messageText, { color: colors.text }]}
             />
@@ -100,7 +100,7 @@ export const FeedbackScreen = () => {
           onPress={handleSubmit}
           disabled={!canSubmit}
           style={{ marginTop: 20 }}
-          textStyle={{ color: canSubmit ? "white" : colors.textTertiary }}
+          textStyle={{ color: colors.textOnPrimary }}
         />
       </ScrollView>
     </SafeAreaView>
@@ -117,19 +117,19 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontWeight: "700",
-    textAlign: "center",
+    fontWeight: '700',
+    textAlign: 'center',
   },
   subtitle: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
   },
   categoryContainer: {
     gap: 8,
   },
   categoryList: {
-    flexDirection: "row",
-    flexWrap: "wrap",
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 8,
   },
   categoryItem: {
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
   categoryItemText: {
-    fontWeight: "500",
+    fontWeight: '500',
   },
   messageContainer: {
     borderWidth: 0.5,
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
   },
   messageText: {
     fontSize: 15,
-    textAlignVertical: "top",
+    textAlignVertical: 'top',
     minHeight: 120,
     padding: 12,
   },
