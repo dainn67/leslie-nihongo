@@ -24,16 +24,16 @@ export const ClearChatDialog = ({ title, message, cancelText, confirmText, visib
 
   return (
     <Modal transparent visible={visible} animationType="fade" onRequestClose={() => setVisible(false)}>
-      <View style={[styles.overlay, { backgroundColor: colors.overlay }]}>
-        <View style={[styles.dialog, { backgroundColor: colors.card, shadowColor: colors.cardShadow }]}>
+      <View style={[styles.overlay, { backgroundColor: `${colors.background}50` }]}>
+        <View style={[styles.dialog, { backgroundColor: colors.backgroundSecondary, shadowColor: colors.text }]}>
           <View style={styles.iconContainer}>
-            <Ionicons name="trash" size={32} color={colors.error} />
+            <Ionicons name="trash" size={32} color={colors.alert} />
           </View>
 
           <CustomText weight="Bold" style={[styles.title, { color: colors.text }]}>
             {title}
           </CustomText>
-          <CustomText weight="Regular" style={[styles.message, { color: colors.textSecondary }]}>
+          <CustomText weight="Regular" style={[styles.message, { color: colors.text }]}>
             {message}
           </CustomText>
 
@@ -43,13 +43,13 @@ export const ClearChatDialog = ({ title, message, cancelText, confirmText, visib
               onPress={() => setVisible(false)}
               activeOpacity={0.8}
             >
-              <CustomText weight="Regular" style={[styles.cancelText, { color: colors.textSecondary }]}>
+              <CustomText weight="Regular" style={[styles.cancelText, { color: colors.text }]}>
                 {cancelText}
               </CustomText>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[styles.button, styles.confirmButton, { backgroundColor: colors.error }]}
+              style={[styles.button, styles.confirmButton, { backgroundColor: colors.alert }]}
               onPress={handleConfirm}
               activeOpacity={0.8}
             >

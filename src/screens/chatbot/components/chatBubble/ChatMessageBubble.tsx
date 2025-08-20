@@ -1,12 +1,12 @@
-import React from "react";
-import { View, StyleSheet } from "react-native";
-import { useAppTheme } from "../../../../theme";
-import { WordComponent } from "../../../../components/streamingText/WordComponent";
-import { LoadingMessage } from "./LoadingMessage";
-import { ChatActionButtons } from "../ChatActionButtons";
-import { QuestionsMessage } from "./QuestionsMessage";
-import { ChatMessage, Sender, MessageType, MessageStatus } from "../../../../models/chatMessage";
-import { CustomText } from "../../../../components/text/customText";
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
+import { useAppTheme } from '../../../../theme';
+import { WordComponent } from '../../../../components/streamingText/WordComponent';
+import { LoadingMessage } from './LoadingMessage';
+import { ChatActionButtons } from '../ChatActionButtons';
+import { QuestionsMessage } from './QuestionsMessage';
+import { ChatMessage, Sender, MessageType, MessageStatus } from '../../../../models/chatMessage';
+import { CustomText } from '../../../../components/text/customText';
 
 interface ChatMessageBubbleProps {
   message: ChatMessage;
@@ -38,25 +38,18 @@ export const ChatMessageBubble = ({
 
   return (
     <View id={message.id} style={styles.container}>
-      <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
         {hasError && <CustomText>Vui lòng thử lại sau...</CustomText>}
 
         {!hasError && isLoading && <LoadingMessage isQuestion={isLoadingQuestion} />}
 
         {/* Streaming text */}
         {isStreamText &&
-          message.words.map((word, index) => (
-            <WordComponent
-              key={index}
-              fontSize={16}
-              word={word}
-              color={isUser ? colors.userChatMessageText : colors.botChatMessageText}
-            />
-          ))}
+          message.words.map((word, index) => <WordComponent key={index} fontSize={16} word={word} color={isUser ? colors.textOnPrimary : colors.text} />)}
 
         {/* Generated questions */}
         {isQuestions && (
-          <View style={{ flexDirection: "row", flexWrap: "wrap", flex: 1 }}>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', flex: 1 }}>
             <QuestionsMessage questions={message.questions} onAnalyze={onAnalyze} />
           </View>
         )}
@@ -78,13 +71,13 @@ const getStyle = (colors: any, isUser: boolean, componentHeight: number, isLastM
         ? {
             backgroundColor: colors.primary,
             paddingVertical: 12,
-            alignItems: "flex-end",
-            alignSelf: "flex-end",
+            alignItems: 'flex-end',
+            alignSelf: 'flex-end',
             marginLeft: 32,
             borderTopRightRadius: 6,
           }
         : {
-            alignItems: "flex-start",
+            alignItems: 'flex-start',
             paddingVertical: 12,
             borderTopLeftRadius: 6,
             marginRight: 0,

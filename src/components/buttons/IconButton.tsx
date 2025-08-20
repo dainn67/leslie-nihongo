@@ -1,6 +1,6 @@
-import React from "react";
-import { Image, ImageSourcePropType, StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
-import { useAppTheme } from "../../theme";
+import React from 'react';
+import { Image, ImageSourcePropType, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
+import { useAppTheme } from '../../theme';
 
 interface IconButtonProps {
   icon: ImageSourcePropType;
@@ -11,14 +11,11 @@ interface IconButtonProps {
 }
 
 export const IconButton = ({ icon, iconWidth, iconHeight, style, onPress }: IconButtonProps) => {
-  const { colors, isDarkMode } = useAppTheme();
+  const { colors } = useAppTheme();
   const styles = getStyles(iconWidth, iconHeight);
 
   return (
-    <TouchableOpacity
-      style={[styles.button, { backgroundColor: isDarkMode ? colors.backgroundTertiary : "rgba(248, 187, 208, 0.2)" }, style]}
-      onPress={onPress}
-    >
+    <TouchableOpacity style={[styles.button, { backgroundColor: colors.backgroundSecondary }, style]} onPress={onPress}>
       <Image source={icon} style={styles.icon} />
     </TouchableOpacity>
   );

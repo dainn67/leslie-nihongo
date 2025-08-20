@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from "react";
-import { View, StyleSheet, Animated, StyleProp, ViewStyle } from "react-native";
-import { useAppTheme } from "../theme";
+import React, { useEffect, useRef } from 'react';
+import { View, StyleSheet, Animated, StyleProp, ViewStyle } from 'react-native';
+import { useAppTheme } from '../theme';
 
 interface AnimatedProgressBarProps {
   progress: number; // 0-100
@@ -21,9 +21,9 @@ export const AnimatedProgressBar = ({
   duration = 500,
   style,
 }: AnimatedProgressBarProps) => {
-  const { colors, isDarkMode } = useAppTheme();
-  const bgColor = backgroundColor || (isDarkMode ? colors.backgroundTertiary : "#FCE4EC");
-  const fColor = fillColor || (isDarkMode ? colors.secondary : colors.secondary);
+  const { colors } = useAppTheme();
+  const bgColor = backgroundColor || colors.backgroundSecondary;
+  const fColor = fillColor || colors.secondary;
   const animatedWidth = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -53,7 +53,7 @@ export const AnimatedProgressBar = ({
             // Use interpolate to convert the value from 0-100 to percentage width
             width: animatedWidth.interpolate({
               inputRange: [0, 100],
-              outputRange: ["0%", "100%"],
+              outputRange: ['0%', '100%'],
             }),
             backgroundColor: fColor,
             borderRadius,
@@ -66,9 +66,9 @@ export const AnimatedProgressBar = ({
 
 const styles = StyleSheet.create({
   progressBar: {
-    overflow: "hidden",
+    overflow: 'hidden',
   },
   progressFill: {
-    height: "100%",
+    height: '100%',
   },
 });
