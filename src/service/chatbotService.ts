@@ -467,7 +467,7 @@ export class ChatbotService {
       },
     });
 
-    return result["answer"];
+    return result?.["answer"]?.trim() || "";
   };
 
   static createConversationHistory = (messages: ChatMessage[]) => {

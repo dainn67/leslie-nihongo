@@ -9,16 +9,13 @@ const mainCID = DifyConfig.mainChatbotConversationId;
 
 export const extractContext = createAsyncThunk(
   ApiConfig.difyServerUrl,
-  async ({ message, conversationSummary }: { message: string; conversationSummary: string }) => {
+  async ({ message }: { message: string }) => {
     const result = await ChatbotService.sendMessage({
       message,
       type: 'extract_context',
-      data: {
-        conversation_summary: conversationSummary,
-      },
     });
 
-    return result.trim();
+    return result;
   },
 );
 

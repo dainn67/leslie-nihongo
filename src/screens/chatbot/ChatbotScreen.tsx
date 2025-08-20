@@ -111,7 +111,7 @@ export const ChatbotScreen = () => {
       dispatch,
     });
 
-    dispatch(extractContext({ message, conversationSummary }));
+    dispatch(extractContext({ message }));
   };
 
   const handleClickAction = async (title: string, actionId?: string) => {
@@ -173,7 +173,7 @@ export const ChatbotScreen = () => {
       dispatch,
     });
 
-    dispatch(extractContext({ message: title, conversationSummary }));
+    dispatch(extractContext({ message: title }));
   };
 
   const handleSelectExamDate = (selectedDate: Date | undefined) => {
@@ -189,7 +189,7 @@ export const ChatbotScreen = () => {
 
     ChatbotService.sendStreamMessage({
       messages: messages,
-      userProgress: createTmpUserProgress(userProgress, {examDate: selectedDate.getTime()}),
+      userProgress: createTmpUserProgress(userProgress, { examDate: selectedDate.getTime() }),
       conversationSummary,
       conversationId,
       dispatch,
@@ -223,7 +223,7 @@ export const ChatbotScreen = () => {
           current_date: convertDateToDDMMYYYY(new Date()),
         },
       }).then((result) => {
-        dispatch(updateUserProgress({ analytic: result ? result.trim() : '' }));
+        dispatch(updateUserProgress({ analytic: result }));
       });
     }, 1000);
   };
