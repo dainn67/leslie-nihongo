@@ -1,5 +1,5 @@
 import Constants from "expo-constants";
-import { ApiClient } from "../api/apiClient";
+import { ApiClient } from "../../api/apiClient";
 
 const { DISCORD_ERROR_WEBHOOKS, DISCORD_FEEDBACK_WEBHOOKS } = Constants.expoConfig?.extra ?? {};
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'
+import { Ionicons } from '@expo/vector-icons';
 import { useAppTheme } from '../../theme';
 import { CustomText } from '../text/customText';
 import { useDialog } from '../../core/providers';
@@ -10,7 +10,9 @@ export const ResetProgressButton = () => {
   const dialog = useDialog();
 
   const handleToggle = () => {
-    dialog.show('Clear Progress ?');
+    dialog.showConfirm('Clear Progress ?', () => {
+      console.log('Clear Progress');
+    });
   };
 
   return (
