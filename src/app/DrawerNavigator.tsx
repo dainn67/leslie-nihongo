@@ -13,6 +13,9 @@ import { Question, QuestionType } from '../models/question';
 import { QuestionGameScreen } from '../screens/questions/questionGameScreen/GameScreen';
 import { ResultScreen } from '../screens/questions/questionGameScreen/ResultScreen';
 import { FeedbackScreen } from '../screens/feedback/FeedbackScreen';
+import MainButton from '../components/buttons/MainButton';
+import { useDialog } from '../core/providers';
+import { ResetProgressButton } from '../components/buttons/ResetProgressButton';
 
 export type DrawerParamList = {
   ChatbotScreen: undefined;
@@ -38,6 +41,8 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export const DrawerNavigator = () => {
   const { colors } = useAppTheme();
 
+  const dialog = useDialog();
+
   return (
     <Drawer.Navigator
       initialRouteName={'ChatbotScreen'} // Default screen
@@ -55,6 +60,7 @@ export const DrawerNavigator = () => {
           <DrawerContentScrollView {...props}>
             <DrawerItemList {...props} />
           </DrawerContentScrollView>
+          <ResetProgressButton />
           <ThemeToggleButton />
         </View>
       )}
