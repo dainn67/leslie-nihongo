@@ -1,12 +1,12 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { useAppTheme } from '../../../../theme';
-import { WordComponent } from '../../../../components/streamingText/WordComponent';
-import { LoadingMessage } from './LoadingMessage';
 import { ChatActionButtons } from '../ChatActionButtons';
-import { QuestionsMessage } from './QuestionsMessage';
-import { ChatMessage, Sender, MessageType, MessageStatus } from '../../../../models/chatMessage';
+import { WordComponent } from '../../../../components/streamingText/WordComponent';
 import { CustomText } from '../../../../components/text/customText';
+import { ChatMessage, Sender, MessageStatus, MessageType } from '../../../../models/chatMessage';
+import { LoadingMessage } from './LoadingMessage';
+import { QuestionsMessage } from './QuestionsMessage';
+import { useAppTheme } from '../../../../theme';
 
 interface ChatMessageBubbleProps {
   message: ChatMessage;
@@ -45,7 +45,9 @@ export const ChatMessageBubble = ({
 
         {/* Streaming text */}
         {isStreamText &&
-          message.words.map((word, index) => <WordComponent key={index} fontSize={16} word={word} color={isUser ? colors.textOnPrimary : colors.text} />)}
+          message.words.map((word, index) => (
+            <WordComponent key={index} fontSize={16} word={word} color={isUser ? colors.textOnPrimary : colors.text} />
+          ))}
 
         {/* Generated questions */}
         {isQuestions && (

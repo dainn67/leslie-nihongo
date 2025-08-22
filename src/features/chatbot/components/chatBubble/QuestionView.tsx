@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
+import Tts from 'react-native-tts';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { IconButton } from 'react-native-paper';
 import { CustomText } from '../../../../components/text/customText';
-import { Question } from '../../../../models/question';
-import { IconButton } from '../../../../components/buttons';
 import { AppIcons } from '../../../../constants/appIcons';
 import { Answer } from '../../../../models/answer';
+import { Question } from '../../../../models/question';
+import { ToastService } from '../../../../service/toastService';
 import { useAppTheme } from '../../../../theme';
-import { ToastService } from '../../../../core/service/toastService';
-import Tts from 'react-native-tts';
 
 interface QuestionViewProps {
   question: Question;

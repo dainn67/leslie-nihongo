@@ -1,8 +1,8 @@
-import React from "react";
-import { Modal, TouchableOpacity, View, StyleSheet, Dimensions } from "react-native";
-import { useAppTheme } from "../../../theme";
-import { Ionicons } from "@expo/vector-icons";
-import { CustomText } from "../../../components/text/customText";
+import React from 'react';
+import { Modal, TouchableOpacity, View, StyleSheet, Dimensions } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { useAppTheme } from '../../../theme';
+import { CustomText } from '../../../components/text/customText';
 
 interface ClearChatDialogProps {
   title: string;
@@ -14,7 +14,15 @@ interface ClearChatDialogProps {
   onClearConversation: () => void;
 }
 
-export const ClearChatDialog = ({ title, message, cancelText, confirmText, visible, setVisible, onClearConversation }: ClearChatDialogProps) => {
+export const ClearChatDialog = ({
+  title,
+  message,
+  cancelText,
+  confirmText,
+  visible,
+  setVisible,
+  onClearConversation,
+}: ClearChatDialogProps) => {
   const { colors } = useAppTheme();
 
   const handleConfirm = () => {
@@ -53,7 +61,7 @@ export const ClearChatDialog = ({ title, message, cancelText, confirmText, visib
               onPress={handleConfirm}
               activeOpacity={0.8}
             >
-              <CustomText weight="Regular" style={[styles.confirmText, { color: "white" }]}>
+              <CustomText weight="Regular" style={[styles.confirmText, { color: 'white' }]}>
                 {confirmText}
               </CustomText>
             </TouchableOpacity>
@@ -64,18 +72,18 @@ export const ClearChatDialog = ({ title, message, cancelText, confirmText, visib
   );
 };
 
-const { width } = Dimensions.get("window");
+const { width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     paddingHorizontal: 24,
   },
   dialog: {
     width: width * 0.85,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     borderRadius: 20,
     padding: 28,
     shadowOffset: {
@@ -90,36 +98,36 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 32,
-    backgroundColor: "rgba(239, 68, 68, 0.1)",
-    justifyContent: "center",
-    alignItems: "center",
-    alignSelf: "center",
+    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
     marginBottom: 20,
   },
   title: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 12,
-    textAlign: "center",
+    textAlign: 'center',
     letterSpacing: 0.5,
   },
   message: {
     fontSize: 16,
     lineHeight: 22,
     marginBottom: 28,
-    textAlign: "center",
+    textAlign: 'center',
     letterSpacing: 0.2,
   },
   buttonRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     gap: 16,
   },
   button: {
     flex: 1,
     paddingVertical: 14,
     borderRadius: 12,
-    alignItems: "center",
+    alignItems: 'center',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -130,18 +138,18 @@ const styles = StyleSheet.create({
   },
   cancelButton: {
     borderWidth: 1,
-    borderColor: "rgba(0, 0, 0, 0.1)",
+    borderColor: 'rgba(0, 0, 0, 0.1)',
   },
   confirmButton: {
-    shadowColor: "#ef4444",
+    shadowColor: '#ef4444',
   },
   cancelText: {
-    fontWeight: "600",
+    fontWeight: '600',
     fontSize: 16,
   },
   confirmText: {
-    color: "white",
-    fontWeight: "600",
+    color: 'white',
+    fontWeight: '600',
     fontSize: 16,
   },
 });

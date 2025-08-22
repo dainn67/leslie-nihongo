@@ -1,12 +1,12 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { ChatActionButtons } from '../ChatActionButtons';
 import { WordComponent } from '../../../../../components/streamingText/WordComponent';
 import { CustomText } from '../../../../../components/text/customText';
 import { ChatMessage, Sender, MessageStatus, MessageType } from '../../../../../models/chatMessage';
 import { LoadingMessage } from '../../../components/chatBubble/LoadingMessage';
 import { QuestionsMessage } from '../../../components/chatBubble/QuestionsMessage';
 import { useAppTheme } from '../../../../../theme';
+import { ChatActionButtons } from '../../../components/ChatActionButtons';
 
 interface ChatMessageBubbleProps {
   message: ChatMessage;

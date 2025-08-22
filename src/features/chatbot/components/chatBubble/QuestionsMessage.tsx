@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import { CustomText } from '../../../../components/text/customText';
-import { Question } from '../../../../models/question';
-import { QuestionView } from './QuestionView';
-import { AnimatedProgressBar } from '../../../../components/AnimatedProgressBar';
-import { deleteQuestion, insertQuestions } from '../../../../storage/database/tables/questionTable';
-import { createResultSummary } from '../../../../service/questionService';
 import Tts from 'react-native-tts';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { QuestionView } from './QuestionView';
+import { AnimatedProgressBar } from '../../../../components/AnimatedProgressBar';
+import { CustomText } from '../../../../components/text/customText';
+import { Question } from '../../../../models/question';
+import { createResultSummary } from '../../../../service/questionService';
+import { insertQuestions, deleteQuestion } from '../../../../storage/database/tables';
 
 interface QuestionsMessageProps {
   questions: Question[];
