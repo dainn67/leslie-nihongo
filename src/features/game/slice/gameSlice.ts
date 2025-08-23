@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Question } from '../../models/question';
-import { shuffleQuestionAnswers } from '../../core/service';
+import { Question } from '../../../models/question';
+import { shuffleQuestionAnswers } from '../../../core/service';
 
 type GameState = {
   currentQuestionIndex: number;

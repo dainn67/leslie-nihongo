@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import MainButton from '../../../components/buttons/MainButton';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { AppBar } from '../../../components/AppBar';
 import { Ionicons } from '@expo/vector-icons';
@@ -7,10 +8,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../app/DrawerNavigator';
 import { useAppTheme } from '../../../theme';
 import { CustomText } from '../../../components/text/customText';
-import { createResultSummary } from '../../../service/questionService';
-import { ChatbotService } from '../../../service/chatbotService';
-import MainButton from '../../../components/buttons/MainButton';
 import { WordComponent } from '../../../components/streamingText/WordComponent';
+import { createResultSummary, ChatbotService } from '../../../core/service';
 
 type ResultScreenRouteProp = RouteProp<RootStackParamList, 'ResultScreen'>;
 type ResultScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'ResultScreen'>;

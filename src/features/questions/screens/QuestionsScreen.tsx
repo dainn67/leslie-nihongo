@@ -12,9 +12,9 @@ import { useAppDispatch } from '../../../hooks/hooks';
 import { Dimensions, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useAppTheme } from '../../../theme';
 import { CustomText } from '../../../components/text/customText';
-import { QuestionNumberSelector } from '../questinCategoryScreen/components/QuestionNumberSelector';
 import MainButton from '../../../components/buttons/MainButton';
 import { ToastService } from '../../../core/service/toastService';
+import { QuestionNumberSelector } from '../components/QuestionNumberSelector';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'QuestionsScreen'>;
 

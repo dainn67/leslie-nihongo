@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import { Dimensions, Modal, StyleSheet, View, TouchableOpacity } from 'react-native';
-import { useAppTheme } from '../../../../theme';
-import { CustomText } from '../../../../components/text/customText';
-import MainButton from '../../../../components/buttons/MainButton';
+import { useAppTheme } from '../../../theme';
+import { CustomText } from '../../../components/text/customText';
+import MainButton from '../../../components/buttons/MainButton';
 
 interface QuestionNumberSelectorProps {
   title?: string;

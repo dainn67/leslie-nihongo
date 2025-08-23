@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Question } from "../../models/question";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Question } from '../../../models/question';
 
 type QuestionsState = {
   questions: Question[];
@@ -10,7 +10,7 @@ const initialState: QuestionsState = {
 };
 
 const questionSlice = createSlice({
-  name: "QuestionsState",
+  name: 'QuestionsState',
   initialState,
   reducers: {
     setQuestions: (state, action: PayloadAction<Question[]>) => {

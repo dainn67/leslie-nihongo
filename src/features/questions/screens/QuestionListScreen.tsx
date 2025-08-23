@@ -6,14 +6,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { RootStackParamList } from "../../../app/DrawerNavigator";
 import { RouteProp, useNavigation, useRoute, useFocusEffect } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { QuestionView } from "../../../screens/chatbot/components/chatBubble/QuestionView";
-import { QuestionNumberSelector } from "./components/QuestionNumberSelector";
-import { createReviseQuestionSet } from "../../../service/questionService";
+import { QuestionView } from "../../chatbot/components/chatBubble/QuestionView";
+import { QuestionNumberSelector } from "../components/QuestionNumberSelector";
 import { deleteQuestion, getQuestionsByType, insertQuestions } from "../../../storage/database/tables";
 import { SimpleTextInput } from "../../../components/input/SimpleTextInput";
 import { useAppTheme } from "../../../theme";
 import { CustomText } from "../../../components/text/customText";
 import MainButton from "../../../components/buttons/MainButton";
+import { createReviseQuestionSet } from "../../../core/service";
 
 type QuestionListScreenRouteProp = RouteProp<RootStackParamList, "QuestionListScreen">;
 type QuestionListScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "QuestionListScreen">;

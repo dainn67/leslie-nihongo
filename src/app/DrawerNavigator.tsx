@@ -6,16 +6,15 @@ import { ThemeToggleButton } from '../components/buttons/ThemeToggleButton';
 import { useAppTheme } from '../theme';
 import { Ionicons } from '@expo/vector-icons';
 import { CustomText } from '../components/text/customText';
-import { QuestionsScreen } from '../screens/questions/questionScreen/QuestionsScreen';
-import { QuestionListScreen } from '../screens/questions/questinCategoryScreen/QuestionListScreen';
 import { Question, QuestionType } from '../models/question';
-import { QuestionGameScreen } from '../screens/questions/questionGameScreen/GameScreen';
-import { ResultScreen } from '../screens/questions/questionGameScreen/ResultScreen';
-import { FeedbackScreen } from '../screens/feedback/FeedbackScreen';
-import MainButton from '../components/buttons/MainButton';
 import { useDialog } from '../core/providers';
 import { ResetProgressButton } from '../components/buttons/ResetProgressButton';
 import { ChatbotScreen } from '../features/chatbot/screens/ChatbotScreen';
+import { FeedbackScreen } from '../features/feedback/FeedbackScreen';
+import { QuestionGameScreen } from '../features/game/screens/GameScreen';
+import { ResultScreen } from '../features/game/screens/ResultScreen';
+import { QuestionListScreen } from '../features/questions/screens/QuestionListScreen';
+import { QuestionsScreen } from '../features/questions/screens/QuestionsScreen';
 
 export type DrawerParamList = {
   ChatbotScreen: undefined;

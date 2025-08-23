@@ -11,7 +11,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
 import { RootState } from '../../../app/store';
-import { setIndex, initGame, setSelectedAnswer, updateBookmark } from '../../game/gameSlice';
+import { setIndex, initGame, setSelectedAnswer, updateBookmark } from '../slice/gameSlice';
 import { CustomText } from '../../../components/text/customText';
 import { insertQuestions, deleteQuestion } from '../../../storage/database/tables';
 import { ChatbotBottomSheet } from '../../../components/bottomsheets/ChatbotBottomSheet';
