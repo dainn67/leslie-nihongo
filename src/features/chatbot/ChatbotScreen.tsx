@@ -8,17 +8,10 @@ import { useNavigation } from '@react-navigation/native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { AppConfig } from '../../constants/appConfig';
-import {
-  addLoading,
-  addMessage,
-  clearChat,
-  getDifyConversationIdByCID,
-  getConversationSummaryByCID,
-  getMessagesByCID,
-} from '../../features/chatbot/slice/chatbotSlice';
 import { clearUserProgress, setUserProgress, updateUserProgress } from '../../features/userProgress/userProgressSlice';
 import { createQuestionTable, deleteAllTables, updateTables } from '../../storage/database/tables';
 import { createChatMessage, MessageStatus } from '../../models/chatMessage';
+import { UserProgressService } from '../../service/userProgressSerivice';
 import { MyDatePicker } from '../../components/datePicker/MyDatePicker';
 import { convertDateToDDMMYYYY, normalizeDate } from '../../utils/utils';
 import { loadFromAsyncStorage } from '../../storage/asyncStorage/asyncStorage';
@@ -28,18 +21,23 @@ import { ChatbotService } from '../../service/chatbotService';
 import { DrawerParamList } from '../../app/DrawerNavigator';
 import { ChatInput } from './components/ChatInput';
 import { createTmpUserProgress } from '../../models/userProgress';
-import { UserProgressService } from '../../core/service/userProgressService';
-import ClearChatDialog from './components/ClearChatDialog';
-import TTSService from '../../core/service/ttsService';
+import TTSService from '../../service/ttsService';
+import {
+  getMessagesByCID,
+  getDifyConversationIdByCID,
+  getConversationSummaryByCID,
+  addLoading,
+  addMessage,
+  clearChat,
+} from './slice/chatbotSlice';
+import { useDialog } from '../../core/providers';
 
 type ChatbotScreenNavigationProp = DrawerNavigationProp<DrawerParamList, 'ChatbotScreen'>;
 
 export const ChatbotScreen = () => {
   // Drawer
   const navigation = useNavigation<ChatbotScreenNavigationProp>();
-
-  // Clear chat dialog
-  const [clearDialogVisible, setClearDialogVisible] = useState(false);
+  const dialog = useDialog();
 
   const dispatch = useAppDispatch();
   const messages = useAppSelector((state) => getMessagesByCID(state.chatbot));
@@ -216,8 +214,6 @@ export const ChatbotScreen = () => {
     }, 1000);
   };
 
-  const clearConversation = () => dispatch(clearChat({}));
-
   const handleDevClick = () => {
     deleteAllTables();
     dispatch(clearUserProgress());
@@ -232,21 +228,11 @@ export const ChatbotScreen = () => {
           leftIcon={<Ionicons name="menu" size={24} color="white" />}
           rightIcon={<Ionicons name="trash" size={24} color="white" />}
           onLeftPress={() => navigation.openDrawer()}
-          onRightPress={() => setClearDialogVisible(true)}
+          onRightPress={() => dialog.showConfirm('Xoá hội thoại?', () => dispatch(clearChat({})))}
           onDevClick={handleDevClick}
         />
         <ChatMessageList messages={messages} onClickAction={handleClickAction} onAnalyze={handleAnalyze} />
         <ChatInput disable={isGenerating} onSend={handleSend} />
-
-        <ClearChatDialog
-          title="Xoá hội thoại?"
-          message="Bạn có muốn xoá và tạo đoạn hội thoại mới?"
-          cancelText="Huỷ"
-          confirmText="Xác nhận"
-          visible={clearDialogVisible}
-          setVisible={setClearDialogVisible}
-          onClearConversation={clearConversation}
-        />
       </View>
 
       {/* Date picker to set exam date if not set */}

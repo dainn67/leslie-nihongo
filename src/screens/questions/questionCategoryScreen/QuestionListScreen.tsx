@@ -1,22 +1,22 @@
-import React, { useCallback, useRef, useState } from 'react';
-import MainButton from '../../../components/buttons/MainButton';
-import { View, StyleSheet, ScrollView, Animated, TextInput } from 'react-native';
-import { Question, QuestionType, QuestionTypeTitles } from '../../../models/question';
-import { AppBar } from '../../../components/AppBar';
-import { Ionicons } from '@expo/vector-icons';
-import { RootStackParamList } from '../../../app/DrawerNavigator';
-import { RouteProp, useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { QuestionNumberSelector } from './components/QuestionNumberSelector';
-import { createReviseQuestionSet } from '../../../service/questionService';
-import { deleteQuestion, getQuestionsByType, insertQuestions } from '../../../storage/database/tables';
-import { SimpleTextInput } from '../../../components/input/SimpleTextInput';
-import { useAppTheme } from '../../../theme';
-import { CustomText } from '../../../components/text/customText';
-import { QuestionView } from '../../../features/chatbot/components';
+import React, { useCallback, useRef, useState } from "react";
+import { View, StyleSheet, ScrollView, Animated, TextInput } from "react-native";
+import { Question, QuestionType, QuestionTypeTitles } from "../../../models/question";
+import { AppBar } from "../../../components/AppBar";
+import { Ionicons } from "@expo/vector-icons";
+import { RootStackParamList } from "../../../app/DrawerNavigator";
+import { RouteProp, useNavigation, useRoute, useFocusEffect } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { QuestionView } from "../../../screens/chatbot/components/chatBubble/QuestionView";
+import { QuestionNumberSelector } from "./components/QuestionNumberSelector";
+import { createReviseQuestionSet } from "../../../service/questionService";
+import { deleteQuestion, getQuestionsByType, insertQuestions } from "../../../storage/database/tables";
+import { SimpleTextInput } from "../../../components/input/SimpleTextInput";
+import { useAppTheme } from "../../../theme";
+import { CustomText } from "../../../components/text/customText";
+import MainButton from "../../../components/buttons/MainButton";
 
-type QuestionListScreenRouteProp = RouteProp<RootStackParamList, 'QuestionListScreen'>;
-type QuestionListScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'QuestionListScreen'>;
+type QuestionListScreenRouteProp = RouteProp<RootStackParamList, "QuestionListScreen">;
+type QuestionListScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "QuestionListScreen">;
 
 export const QuestionListScreen = () => {
   const navigation = useNavigation<QuestionListScreenNavigationProp>();
@@ -29,7 +29,7 @@ export const QuestionListScreen = () => {
   const [filteredQuestions, setFilteredQuestions] = useState<Question[]>([]);
 
   const [amountSelectorVisible, setAmountSelectorVisible] = useState(false);
-  const [searchWord, setSearchWord] = useState('');
+  const [searchWord, setSearchWord] = useState("");
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [searchAnimation] = useState(new Animated.Value(0));
 
@@ -49,7 +49,7 @@ export const QuestionListScreen = () => {
 
   const handleSelectQuestion = (amount: number) => {
     const selectedQuestions = createReviseQuestionSet(questions, amount);
-    navigation.navigate('QuestionGameScreen', { questions: selectedQuestions });
+    navigation.navigate("QuestionGameScreen", { questions: selectedQuestions });
   };
 
   const handleBookmarkPress = (isBookmarked: boolean, question: Question) => {
@@ -98,7 +98,7 @@ export const QuestionListScreen = () => {
     } else {
       const filteredQuestions = questions.filter((q) => {
         const questionText = q.question.toLowerCase();
-        const answerText = q.answers.map((a) => a.text.toLowerCase()).join('. ');
+        const answerText = q.answers.map((a) => a.text.toLowerCase()).join(". ");
         const explanationText = q.explanation.toLowerCase();
         return questionText.includes(searchText) || answerText.includes(searchText) || explanationText.includes(searchText);
       });
@@ -111,7 +111,7 @@ export const QuestionListScreen = () => {
       <AppBar
         title={QuestionTypeTitles[type]}
         leftIcon={<Ionicons name="arrow-back" size={24} color="white" />}
-        rightIcon={<Ionicons name={isSearchVisible ? 'search-circle-outline' : 'search'} size={24} color="white" />}
+        rightIcon={<Ionicons name={isSearchVisible ? "search-circle-outline" : "search"} size={24} color="white" />}
         onLeftPress={() => navigation.pop()}
         onRightPress={handleOpenSearch}
       />
@@ -141,7 +141,7 @@ export const QuestionListScreen = () => {
         <MainButton
           title="Ôn tập"
           style={styles.buttonContainer}
-          textStyle={{ color: 'white' }}
+          textStyle={{ color: "white" }}
           disabled={filteredQuestions.length === 0}
           onPress={() => setAmountSelectorVisible(true)}
         />
@@ -190,22 +190,22 @@ export const QuestionListScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: "white",
   },
   stackContainer: {
     flex: 1,
-    position: 'relative',
+    position: "relative",
   },
   searchContainer: {
-    position: 'absolute',
-    width: '100%',
+    position: "absolute",
+    width: "100%",
     paddingHorizontal: 24,
     paddingTop: 12,
   },
   emptyContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   questionListContainer: {
     flex: 1,
@@ -219,14 +219,14 @@ const styles = StyleSheet.create({
     margin: 16,
   },
   searchInputWrapper: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 8,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: '#dee2e6',
-    shadowColor: '#000',
+    borderColor: "#dee2e6",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.15,
     shadowRadius: 10,

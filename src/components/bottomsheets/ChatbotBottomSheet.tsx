@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { View, StyleSheet, Modal, TouchableWithoutFeedback, Dimensions, TouchableOpacity } from "react-native";
-import { AppConfig } from "../../constants/appConfig";
-import { CustomText } from "../text/customText";
-import { Ionicons } from "@expo/vector-icons";
-import { ChatMessageList } from "../../screens/chatbot/components/ChatMessageList";
-import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
-import { createChatMessage, MessageStatus } from "../../models/chatMessage";
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, Modal, TouchableWithoutFeedback, Dimensions, TouchableOpacity } from 'react-native';
+import { AppConfig } from '../../constants/appConfig';
+import { CustomText } from '../text/customText';
+import { Ionicons } from '@expo/vector-icons';
+import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
+import { createChatMessage, MessageStatus } from '../../models/chatMessage';
 import {
   addLoading,
   addMessage,
@@ -14,11 +13,12 @@ import {
   getConversationSummaryByCID,
   getLatestMessageByCID,
   getMessagesByCID,
-} from "../../features/chatbot/chatbotSlice";
-import { ChatbotService } from "../../service/chatbotService";
-import { Question } from "../../models/question";
-import { ChatInput } from "../../screens/chatbot/components/ChatInput";
-import ClearChatDialog from "../../screens/chatbot/components/ClearChatDialog";
+} from '../../features/chatbot/slice/chatbotSlice';
+import { ChatbotService } from '../../service/chatbotService';
+import { Question } from '../../models/question';
+import { ChatInput } from '../../features/chatbot/components/ChatInput';
+import { ChatMessageList } from '../../features/chatbot/components/ChatMessageList';
+import { useDialog } from '../../core/providers';
 
 interface ChatbotBottomSheetProps {
   visible: boolean;
@@ -26,7 +26,7 @@ interface ChatbotBottomSheetProps {
   onClose: () => void;
 }
 
-const { height: SCREEN_HEIGHT } = Dimensions.get("window");
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 export const ChatbotBottomSheet: React.FC<ChatbotBottomSheetProps> = ({ visible, question, onClose }) => {
   const questionId = question.questionId.toString();
@@ -39,15 +39,13 @@ export const ChatbotBottomSheet: React.FC<ChatbotBottomSheetProps> = ({ visible,
   const isGenerating = latestMessage ? ![MessageStatus.DONE, MessageStatus.ERROR].includes(latestMessage.status) : false;
 
   const dispatch = useAppDispatch();
-
-  // Clear chat dialog
-  const [clearDialogVisible, setClearDialogVisible] = useState(false);
+  const dialog = useDialog();
 
   useEffect(() => {
     if (visible && messages.length === 0) {
       dispatch(addLoading({ cid: questionId }));
       ChatbotService.sendStreamMessage({
-        message: "Give a hint",
+        message: 'Give a hint',
         messages,
         question,
         conversationId,
@@ -90,10 +88,6 @@ export const ChatbotBottomSheet: React.FC<ChatbotBottomSheetProps> = ({ visible,
     });
   };
 
-  const onClearChat = () => {
-    dispatch(clearChat({ cid: questionId }));
-  };
-
   return (
     <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
       <TouchableWithoutFeedback onPress={onClose}>
@@ -112,7 +106,13 @@ export const ChatbotBottomSheet: React.FC<ChatbotBottomSheetProps> = ({ visible,
                   <CustomText style={styles.headerText}>Trợ lý {AppConfig.name}</CustomText>
                 </View>
                 <View style={styles.closeButton}>
-                  <TouchableOpacity onPress={() => setClearDialogVisible(true)}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      dialog.showConfirm('Bạn có muốn xoá hội thoại?', () => {
+                        dispatch(clearChat({ cid: questionId }));
+                      })
+                    }
+                  >
                     <Ionicons name="trash" size={24} color="black" />
                   </TouchableOpacity>
                 </View>
@@ -124,16 +124,6 @@ export const ChatbotBottomSheet: React.FC<ChatbotBottomSheetProps> = ({ visible,
               <ChatInput disable={isGenerating} onSend={handleSend} />
             </View>
           </TouchableWithoutFeedback>
-
-          <ClearChatDialog
-            title="Xoá hội thoại?"
-            message="Bạn có muốn xoá và tạo đoạn hội thoại mới?"
-            cancelText="Huỷ"
-            confirmText="Xác nhận"
-            visible={clearDialogVisible}
-            setVisible={setClearDialogVisible}
-            onClearConversation={onClearChat}
-          />
         </View>
       </TouchableWithoutFeedback>
     </Modal>
@@ -143,36 +133,36 @@ export const ChatbotBottomSheet: React.FC<ChatbotBottomSheetProps> = ({ visible,
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    justifyContent: "flex-end",
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
   },
   bottomSheet: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
     height: SCREEN_HEIGHT * 0.9,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
   header: {
-    flexDirection: "row",
+    flexDirection: 'row',
     borderBottomWidth: 0.5,
   },
   closeButton: {
-    justifyContent: "center",
+    justifyContent: 'center',
     paddingHorizontal: 16,
     paddingVertical: 16,
   },
   clearButton: {
-    justifyContent: "center",
+    justifyContent: 'center',
     paddingHorizontal: 16,
     paddingVertical: 16,
   },
   titleContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   headerText: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
 });

@@ -5,7 +5,6 @@ import { RootStackParamList } from '../../../app/DrawerNavigator';
 import { useAppTheme } from '../../../theme';
 import { AppBar } from '../../../components/AppBar';
 import { Ionicons } from '@expo/vector-icons';
-import { QuestionView } from '../../chatbot/components/chatBubble/QuestionView';
 import { AnimatedProgressBar } from '../../../components/AnimatedProgressBar';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -15,6 +14,7 @@ import { setIndex, initGame, setSelectedAnswer, updateBookmark } from '../../../
 import { CustomText } from '../../../components/text/customText';
 import { insertQuestions, deleteQuestion } from '../../../storage/database/tables';
 import { ChatbotBottomSheet } from '../../../components/bottomsheets/ChatbotBottomSheet';
+import { QuestionView } from '../../../features/chatbot/components';
 
 type QuestionGameScreenRouteProp = RouteProp<RootStackParamList, 'QuestionGameScreen'>;
 type QuestionGameScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'QuestionGameScreen'>;

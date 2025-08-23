@@ -1,7 +1,5 @@
-import React, { ReactNode, useContext, useState } from 'react';
-import { createContext } from 'react';
-import { ConfirmDialog } from '../../screens/chatbot/components/ConfirmDialog';
-import { AlertDialog } from '../../screens/chatbot/components/AlertDialog';
+import React, { ReactNode, useContext, useState, createContext } from 'react';
+import { ConfirmDialog, AlertDialog } from '../../features/common/dialogs';
 
 export enum DialogType {
   CONFIRM = 'confirm',
@@ -35,10 +33,10 @@ export const DialogProvider = ({ children }: { children: ReactNode }) => {
   const [buttonText, setButtonText] = useState('Đóng');
 
   const showConfirm = (
-    message: string, 
-    onConfirm: () => void, 
-    onCancel?: () => void, 
-    confirmTextParam?: string, 
+    message: string,
+    onConfirm: () => void,
+    onCancel?: () => void,
+    confirmTextParam?: string,
     cancelTextParam?: string
   ) => {
     setConfirmMessage(message);
@@ -97,12 +95,7 @@ export const DialogProvider = ({ children }: { children: ReactNode }) => {
       />
 
       {/* Alert Dialog */}
-      <AlertDialog
-        message={alertMessage}
-        buttonText={buttonText}
-        visible={alertVisible}
-        onClose={handleAlertClose}
-      />
+      <AlertDialog message={alertMessage} buttonText={buttonText} visible={alertVisible} onClose={handleAlertClose} />
     </DialogContext.Provider>
   );
 };

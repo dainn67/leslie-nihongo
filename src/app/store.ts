@@ -1,9 +1,9 @@
-import { configureStore } from "@reduxjs/toolkit";
-import chatbotReducer from "../features/chatbot/chatbotSlice";
-import themeReducer from "../features/theme/themeSlice";
-import userProgressReducer from "../features/userProgress/userProgressSlice";
-import questionReducer from "../features/questions/questionSlice";
-import gameReducer from "../features/game/gameSlice";
+import { configureStore } from '@reduxjs/toolkit';
+import chatbotReducer from '../features/chatbot/slice/chatbotSlice';
+import themeReducer from '../features/theme/themeSlice';
+import userProgressReducer from '../features/userProgress/userProgressSlice';
+import questionReducer from '../features/questions/questionSlice';
+import gameReducer from '../features/game/gameSlice';
 
 export const store = configureStore({
   reducer: {

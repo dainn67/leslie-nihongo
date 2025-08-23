@@ -2,7 +2,6 @@ import React from 'react';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { View } from 'react-native';
-import { ChatbotScreen } from '../screens/chatbot/ChatbotScreen';
 import { ThemeToggleButton } from '../components/buttons/ThemeToggleButton';
 import { useAppTheme } from '../theme';
 import { Ionicons } from '@expo/vector-icons';
@@ -16,6 +15,7 @@ import { FeedbackScreen } from '../screens/feedback/FeedbackScreen';
 import MainButton from '../components/buttons/MainButton';
 import { useDialog } from '../core/providers';
 import { ResetProgressButton } from '../components/buttons/ResetProgressButton';
+import { ChatbotScreen } from '../features/chatbot/ChatbotScreen';
 
 export type DrawerParamList = {
   ChatbotScreen: undefined;
