@@ -1,7 +1,7 @@
 export default {
   expo: {
     owner: "dainn283",
-    name: "Leslie AI",
+    name: "AIkaze",
     slug: "leslieai",
     icon: "./assets/images/leslie-logo.png",
     splash: {

@@ -6,8 +6,9 @@ import { Question } from '../../../../models/question';
 import { QuestionView } from './QuestionView';
 import { AnimatedProgressBar } from '../../../../components/AnimatedProgressBar';
 import { deleteQuestion, insertQuestions } from '../../../../storage/database/tables/questionTable';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { createResultSummary } from '../../../../core/service';
+import { IconButton } from 'react-native-paper';
+import { AppIcons } from '../../../../constants/appIcons';
 
 interface QuestionsMessageProps {
   questions: Question[];
@@ -79,9 +80,7 @@ export const QuestionsMessage = ({ questions, onAnalyze }: QuestionsMessageProps
         <View style={styles.progressBarContainer}>
           <AnimatedProgressBar progress={progress} height={7} />
         </View>
-        <TouchableOpacity style={styles.resetButton} onPress={handleReset}>
-          <MaterialCommunityIcons name="rotate-left" size={20} />
-        </TouchableOpacity>
+        <IconButton icon={AppIcons.reset} onPress={handleReset} />
       </View>
 
       <QuestionView
