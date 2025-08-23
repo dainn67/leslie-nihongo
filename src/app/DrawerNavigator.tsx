@@ -15,7 +15,7 @@ import { FeedbackScreen } from '../screens/feedback/FeedbackScreen';
 import MainButton from '../components/buttons/MainButton';
 import { useDialog } from '../core/providers';
 import { ResetProgressButton } from '../components/buttons/ResetProgressButton';
-import { ChatbotScreen } from '../features/chatbot/ChatbotScreen';
+import { ChatbotScreen } from '../features/chatbot/screens/ChatbotScreen';
 
 export type DrawerParamList = {
   ChatbotScreen: undefined;

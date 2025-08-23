@@ -1,27 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { AppBar } from '../../components/AppBar';
+import { AppBar } from '../../../components/AppBar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { ChatMessageList } from './components/ChatMessageList';
 import { useNavigation } from '@react-navigation/native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
-import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
-import { AppConfig } from '../../constants/appConfig';
-import { clearUserProgress, setUserProgress, updateUserProgress } from '../../features/userProgress/userProgressSlice';
-import { createQuestionTable, deleteAllTables, updateTables } from '../../storage/database/tables';
-import { createChatMessage, MessageStatus } from '../../models/chatMessage';
-import { UserProgressService } from '../../service/userProgressSerivice';
-import { MyDatePicker } from '../../components/datePicker/MyDatePicker';
-import { convertDateToDDMMYYYY, normalizeDate } from '../../utils/utils';
-import { loadFromAsyncStorage } from '../../storage/asyncStorage/asyncStorage';
-import { AsyncStorageConstants } from '../../storage/asyncStorage/asyncStorateConstant';
-import { setTheme } from '../../features/theme/themeSlice';
-import { ChatbotService } from '../../service/chatbotService';
-import { DrawerParamList } from '../../app/DrawerNavigator';
-import { ChatInput } from './components/ChatInput';
-import { createTmpUserProgress } from '../../models/userProgress';
-import TTSService from '../../service/ttsService';
+import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
+import { AppConfig } from '../../../constants/appConfig';
+import { clearUserProgress, setUserProgress, updateUserProgress } from '../../userProgress/userProgressSlice';
+import { createQuestionTable, deleteAllTables, updateTables } from '../../../storage/database/tables';
+import { createChatMessage, MessageStatus } from '../../../models/chatMessage';
+import { UserProgressService } from '../../../service/userProgressSerivice';
+import { MyDatePicker } from '../../../components/datePicker/MyDatePicker';
+import { convertDateToDDMMYYYY, normalizeDate } from '../../../utils/utils';
+import { loadFromAsyncStorage } from '../../../storage/asyncStorage/asyncStorage';
+import { AsyncStorageConstants } from '../../../storage/asyncStorage/asyncStorateConstant';
+import { setTheme } from '../../theme/themeSlice';
+import { ChatbotService } from '../../../service/chatbotService';
+import { DrawerParamList } from '../../../app/DrawerNavigator';
+import { createTmpUserProgress } from '../../../models/userProgress';
+import TTSService from '../../../service/ttsService';
 import {
   getMessagesByCID,
   getDifyConversationIdByCID,
@@ -29,8 +27,9 @@ import {
   addLoading,
   addMessage,
   clearChat,
-} from './slice/chatbotSlice';
-import { useDialog } from '../../core/providers';
+} from '../slice/chatbotSlice';
+import { useDialog } from '../../../core/providers';
+import { ChatMessageList, ChatInput } from '../components';
 
 type ChatbotScreenNavigationProp = DrawerNavigationProp<DrawerParamList, 'ChatbotScreen'>;
 
