@@ -3,9 +3,9 @@ export default {
     owner: "dainn283",
     name: "Leslie AI",
     slug: "leslieai",
-    icon: "./assets/images/torii-logo.png",
+    icon: "./assets/images/leslie-logo.png",
     splash: {
-      image: "./assets/images/torii-logo.png",
+      image: "./assets/images/leslie-logo.png",
       resizeMode: "contain",
       backgroundColor: "#000000",
     },

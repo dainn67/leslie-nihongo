@@ -1,4 +1,4 @@
-package com.torii.app
+package com.leslie.app
 
 import android.app.Application
 import android.content.res.Configuration

@@ -1,5 +1,5 @@
 export const AppConfig = {
   devMode: __DEV__,
-  name: "Torii",
+  name: "AIkaze",
   fontFamily: "Inter-Regular",
 };
