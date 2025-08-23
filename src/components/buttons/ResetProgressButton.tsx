@@ -4,14 +4,21 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAppTheme } from '../../theme';
 import { CustomText } from '../text/customText';
 import { useDialog } from '../../core/providers';
+import { useAppDispatch } from '../../hooks/hooks';
+import { clearUserProgress } from '../../features/userProgress/userProgressSlice';
+import { clearAllTables } from '../../storage/database/tables';
+import { clearChat } from '../../features/chatbot/slice/chatbotSlice';
 
 export const ResetProgressButton = () => {
   const { colors } = useAppTheme();
+  const dispatch = useAppDispatch();
   const dialog = useDialog();
 
   const handleToggle = () => {
-    dialog.showConfirm('Clear Progress ?', () => {
-      console.log('Clear Progress');
+    dialog.showConfirm('Xoá hết tiến trình của bạn ?', () => {
+      clearAllTables();
+      dispatch(clearUserProgress());
+      dispatch(clearChat({}));
     });
   };
 

@@ -1,6 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Question } from "../../models/question";
-import { shuffleQuestionAnswers } from "../../service/questionService";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Question } from '../../models/question';
+import { shuffleQuestionAnswers } from '../../core/service';
 
 type GameState = {
   currentQuestionIndex: number;
@@ -17,7 +17,7 @@ const initialState: GameState = {
 };
 
 const gameSlice = createSlice({
-  name: "gameState",
+  name: 'gameState',
   initialState,
   reducers: {
     initGame: (state, action: PayloadAction<Question[]>) => {

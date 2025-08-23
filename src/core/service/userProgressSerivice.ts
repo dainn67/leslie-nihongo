@@ -1,7 +1,7 @@
-import { UserProgress, createUserProgress } from "../../models/userProgress";
-import { loadFromAsyncStorage, saveToAsyncStorage } from "../../storage/asyncStorage/asyncStorage";
-import { AsyncStorageConstants } from "../../storage/asyncStorage/asyncStorateConstant";
-import { convertDateToDDMMYYYY } from "../../utils";
+import { UserProgress, createUserProgress } from '../../models/userProgress';
+import { loadFromAsyncStorage, saveToAsyncStorage } from '../../storage/asyncStorage/asyncStorage';
+import { AsyncStorageConstants } from '../../storage/asyncStorage/asyncStorateConstant';
+import { convertDateToDDMMYYYY } from '../../utils';
 
 export class UserProgressService {
   static getUserProgressFromStorage = async (): Promise<UserProgress> => {
@@ -14,7 +14,7 @@ export class UserProgressService {
   };
 
   static createUserProgressString = (analytic: { [key: string]: string }) => {
-    let progress = "";
+    let progress = '';
     Object.entries(analytic).forEach(([key, value]) => {
       progress += `${convertDateToDDMMYYYY(key)}: ${value}\n`;
     });

@@ -15,7 +15,7 @@ import { useAppTheme } from '../../../theme';
 import { CustomText } from '../../../components/text/customText';
 import { QuestionNumberSelector } from '../questinCategoryScreen/components/QuestionNumberSelector';
 import MainButton from '../../../components/buttons/MainButton';
-import { ToastService } from '../../../service/toastService';
+import { ToastService } from '../../../core/service';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'QuestionsScreen'>;
 

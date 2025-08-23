@@ -14,7 +14,7 @@ import {
   getLatestMessageByCID,
   getMessagesByCID,
 } from '../../features/chatbot/slice/chatbotSlice';
-import { ChatbotService } from '../../service/chatbotService';
+import { ChatbotService } from '../../core/service';
 import { Question } from '../../models/question';
 import { ChatInput } from '../../features/chatbot/components/ChatInput';
 import { ChatMessageList } from '../../features/chatbot/components/ChatMessageList';

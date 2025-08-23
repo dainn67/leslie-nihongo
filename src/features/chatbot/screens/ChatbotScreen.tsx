@@ -10,16 +10,13 @@ import { AppConfig } from '../../../constants/appConfig';
 import { clearUserProgress, setUserProgress, updateUserProgress } from '../../userProgress/userProgressSlice';
 import { createQuestionTable, deleteAllTables, updateTables } from '../../../storage/database/tables';
 import { createChatMessage, MessageStatus } from '../../../models/chatMessage';
-import { UserProgressService } from '../../../service/userProgressSerivice';
 import { MyDatePicker } from '../../../components/datePicker/MyDatePicker';
 import { convertDateToDDMMYYYY, normalizeDate } from '../../../utils/utils';
 import { loadFromAsyncStorage } from '../../../storage/asyncStorage/asyncStorage';
 import { AsyncStorageConstants } from '../../../storage/asyncStorage/asyncStorateConstant';
 import { setTheme } from '../../theme/themeSlice';
-import { ChatbotService } from '../../../service/chatbotService';
 import { DrawerParamList } from '../../../app/DrawerNavigator';
 import { createTmpUserProgress } from '../../../models/userProgress';
-import TTSService from '../../../service/ttsService';
 import {
   getMessagesByCID,
   getDifyConversationIdByCID,
@@ -30,6 +27,8 @@ import {
 } from '../slice/chatbotSlice';
 import { useDialog } from '../../../core/providers';
 import { ChatMessageList, ChatInput } from '../components';
+import { ChatbotService, UserProgressService } from '../../../core/service';
+import TTSService from '../../../core/service/ttsService';
 
 type ChatbotScreenNavigationProp = DrawerNavigationProp<DrawerParamList, 'ChatbotScreen'>;
 
@@ -213,6 +212,10 @@ export const ChatbotScreen = () => {
     }, 1000);
   };
 
+  const handleClearChat = () => {
+    dialog.showConfirm('Xoá hội thoại?', () => dispatch(clearChat({})));
+  };
+
   const handleDevClick = () => {
     deleteAllTables();
     dispatch(clearUserProgress());
@@ -227,7 +230,7 @@ export const ChatbotScreen = () => {
           leftIcon={<Ionicons name="menu" size={24} color="white" />}
           rightIcon={<Ionicons name="trash" size={24} color="white" />}
           onLeftPress={() => navigation.openDrawer()}
-          onRightPress={() => dialog.showConfirm('Xoá hội thoại?', () => dispatch(clearChat({})))}
+          onRightPress={handleClearChat}
           onDevClick={handleDevClick}
         />
         <ChatMessageList messages={messages} onClickAction={handleClickAction} onAnalyze={handleAnalyze} />

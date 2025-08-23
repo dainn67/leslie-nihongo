@@ -8,7 +8,7 @@ import { RootStackParamList } from '../../../app/DrawerNavigator';
 import { RouteProp, useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { QuestionNumberSelector } from './components/QuestionNumberSelector';
-import { createReviseQuestionSet } from '../../../service/questionService';
+import { createReviseQuestionSet } from '../../../core/service';
 import { deleteQuestion, getQuestionsByType, insertQuestions } from '../../../storage/database/tables';
 import { SimpleTextInput } from '../../../components/input/SimpleTextInput';
 import { useAppTheme } from '../../../theme';

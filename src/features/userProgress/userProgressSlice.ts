@@ -1,7 +1,7 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { createUserProgress, UserProgress } from "../../models/userProgress";
-import { UserProgressService } from "../../service/userProgressSerivice";
-import { normalizeDate } from "../../utils";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createUserProgress, UserProgress } from '../../models/userProgress';
+import { UserProgressService } from '../../core/service';
+import { normalizeDate } from '../../utils';
 
 interface UserProgressState {
   userProgress: UserProgress;
@@ -12,7 +12,7 @@ const initialState: UserProgressState = {
 };
 
 const userProgressSlice = createSlice({
-  name: "userProgress",
+  name: 'userProgress',
   initialState,
   reducers: {
     setUserProgress: (state, action: PayloadAction<UserProgress>) => {
