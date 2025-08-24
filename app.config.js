@@ -3,22 +3,24 @@ export default {
     owner: 'dainn283',
     name: 'AIkaze',
     slug: 'leslieai',
-    icon: './assets/images/leslie-logo.png',
-    splash: {
-      image: './assets/images/leslie-logo.png',
-      resizeMode: 'contain',
-      backgroundColor: '#000000',
-    },
+    icon: './assets/images/app-logo.png',
+    version: '1.0.0',
     android: {
       package: 'com.leslie.app',
+      versionCode: 2,
       adaptiveIcon: {
-        foregroundImage: './assets/images/leslie-logo.png',
+        foregroundImage: './assets/images/app-logo.png',
         backgroundColor: '#ffffff',
       },
     },
     ios: {
-      icon: './assets/images/leslie-logo.png',
+      icon: './assets/images/app-logo.png',
       bundleIdentifier: 'com.leslie.app',
+    },
+    splash: {
+      image: './assets/images/app-logo.png',
+      resizeMode: 'contain',
+      backgroundColor: '#000000',
     },
     plugins: ['expo-sqlite'],
     extra: {
