@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "test-rn-app",
-    "slug": "test-rn-app",
+    "name": "AIkaze",
+    "slug": "leslieai",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/leslie-logo.png",
@@ -13,19 +13,18 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
+      "icon": "./assets/images/leslie-logo.png",
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/images/leslie-logo.png",
         "backgroundColor": "#ffffff"
       }
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      "expo-font"
-    ]
+    "plugins": ["expo-font"]
   }
 }

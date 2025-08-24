@@ -1,21 +1,26 @@
 export default {
   expo: {
-    owner: "dainn283",
-    name: "AIkaze",
-    slug: "leslieai",
-    icon: "./assets/images/leslie-logo.png",
+    owner: 'dainn283',
+    name: 'AIkaze',
+    slug: 'leslieai',
+    icon: './assets/images/leslie-logo.png',
     splash: {
-      image: "./assets/images/leslie-logo.png",
-      resizeMode: "contain",
-      backgroundColor: "#000000",
+      image: './assets/images/leslie-logo.png',
+      resizeMode: 'contain',
+      backgroundColor: '#000000',
     },
     android: {
-      package: "com.leslie.app",
+      package: 'com.leslie.app',
+      adaptiveIcon: {
+        foregroundImage: './assets/images/leslie-logo.png',
+        backgroundColor: '#ffffff',
+      },
     },
     ios: {
-      bundleIdentifier: "com.leslie.app",
+      icon: './assets/images/leslie-logo.png',
+      bundleIdentifier: 'com.leslie.app',
     },
-    plugins: ["expo-sqlite"],
+    plugins: ['expo-sqlite'],
     extra: {
       DIFY_CHAT_API_KEY: process.env.DIFY_CHAT_API_KEY,
       DIFY_ASSISTANT_API_KEY: process.env.DIFY_ASSISTANT_API_KEY,
@@ -25,7 +30,7 @@ export default {
       DISCORD_ERROR_WEBHOOKS: process.env.DISCORD_ERROR_WEBHOOKS,
       DISCORD_FEEDBACK_WEBHOOKS: process.env.DISCORD_FEEDBACK_WEBHOOKS,
       eas: {
-        projectId: "1999df9a-b268-4992-933a-54bf931d0952",
+        projectId: '1999df9a-b268-4992-933a-54bf931d0952',
       },
     },
   },
