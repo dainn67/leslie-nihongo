@@ -7,7 +7,7 @@ export default {
     version: '1.0.0',
     android: {
       package: 'com.leslie.app',
-      versionCode: 2,
+      versionCode: 5,
       adaptiveIcon: {
         foregroundImage: './assets/images/app-logo.png',
         backgroundColor: '#ffffff',
