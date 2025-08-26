@@ -163,7 +163,7 @@ export const ChatbotScreen = () => {
   const handleSelectExamDate = (selectedDate: Date | undefined) => {
     if (!selectedDate) return;
 
-    const dateString = convertDateToDDMMYYYY(selectedDate, 'vi-VN');
+    const dateString = convertDateToDDMMYYYY(selectedDate, 'vi');
 
     dispatch(updateUserProgress({ examDate: selectedDate.getTime() }));
 

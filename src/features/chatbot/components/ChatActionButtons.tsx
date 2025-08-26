@@ -1,8 +1,8 @@
-import React, { useEffect, useRef } from "react";
-import { Animated, View } from "react-native";
-import { useAppTheme } from "../../../theme";
-import { SuggestedAction } from "../../../models/chatMessage";
-import MainButton from "../../../components/buttons/MainButton";
+import React, { useEffect, useRef } from 'react';
+import { Animated, View } from 'react-native';
+import { useAppTheme } from '../../../theme';
+import { SuggestedAction } from '../../../models/chatMessage';
+import MainButton from '../../../components/buttons/MainButton';
 
 interface ChatActionButtonsProps {
   suggestedActions: SuggestedAction[];
@@ -47,7 +47,7 @@ export const ChatActionButtons = ({ suggestedActions, onClickAction }: ChatActio
   };
 
   return (
-    <View style={{ flexDirection: "column" }}>
+    <View style={{ flexDirection: 'column' }}>
       {suggestedActions.map((e, i) => {
         return (
           <Animated.View style={{ opacity: fadeInAnim[i], transform: [{ scale: scaleAnim[i] }] }} key={i}>
@@ -59,7 +59,11 @@ export const ChatActionButtons = ({ suggestedActions, onClickAction }: ChatActio
                 paddingVertical: 8,
                 paddingHorizontal: 12,
                 marginVertical: 4,
+                borderWidth: 1,
+                borderColor: colors.primary,
+                backgroundColor: colors.background,
               }}
+              textStyle={{ color: colors.text }}
               onPress={() => handleClickAction(e.title, e.id)}
             />
           </Animated.View>

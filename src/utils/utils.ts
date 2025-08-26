@@ -1,5 +1,6 @@
-export const convertDateToDDMMYYYY = (input: Date | number | string, locale: string = 'en-GB'): string => {
+export const convertDateToDDMMYYYY = (input: Date | number | string, language: 'en' | 'vi' = 'en'): string => {
   let date: Date;
+  const locale = language == 'en' ? 'en-GB' : 'vi-VN';
 
   if (input instanceof Date) {
     date = input;
