@@ -233,7 +233,7 @@ export class ChatbotService {
       examDateString = "User hasn't decided exam date yet";
     } else if (userExamDate) {
       const formattedExamDate = convertDateToDDMMYYYY(userExamDate);
-      examDateString = `Current date is ${now} (d/m/y format) and user JLPT exam date is ${formattedExamDate}`;
+      examDateString = `Now is ${now} and user JLPT exam date is ${formattedExamDate}`;
     }
 
     const conversationHistory = ChatbotService.createConversationHistory(messages);
