@@ -1,5 +1,6 @@
 import React, { ReactNode, useContext, useState, createContext } from 'react';
 import { ConfirmDialog, AlertDialog } from '../../features/common/dialogs';
+import { MyDatePicker } from '../../components/datePicker/MyDatePicker';
 
 export enum DialogType {
   CONFIRM = 'confirm',
@@ -9,6 +10,7 @@ export enum DialogType {
 type DialogContextType = {
   showConfirm: (message: string, onConfirm: () => void, onCancel?: () => void, confirmText?: string, cancelText?: string) => void;
   showAlert: (message: string, onClose?: () => void, buttonText?: string) => void;
+  showDatePicker: (date: Date, onSelect: (date: Date) => void) => void;
   hide: () => void;
 };
 
@@ -22,12 +24,19 @@ export const useDialog = () => {
 
 export const DialogProvider = ({ children }: { children: ReactNode }) => {
   const [confirmVisible, setConfirmVisible] = useState(false);
-  const [alertVisible, setAlertVisible] = useState(false);
   const [confirmMessage, setConfirmMessage] = useState('');
+
+  const [alertVisible, setAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
+
+  const [datePickerVisible, setDatePickerVisible] = useState(false);
+  const [date, setDate] = useState<Date | undefined>(undefined);
+
   const [confirmCallback, setConfirmCallback] = useState<(() => void) | null>(null);
   const [cancelCallback, setCancelCallback] = useState<(() => void) | null>(null);
   const [closeCallback, setCloseCallback] = useState<(() => void) | null>(null);
+  const [dateCallback, setDateCallback] = useState<(date: Date | undefined) => void>(() => {});
+
   const [confirmText, setConfirmText] = useState('Xác nhận');
   const [cancelText, setCancelText] = useState('Hủy');
   const [buttonText, setButtonText] = useState('Đóng');
@@ -52,6 +61,11 @@ export const DialogProvider = ({ children }: { children: ReactNode }) => {
     setCloseCallback(() => onClose || (() => {}));
     setButtonText(buttonTextParam || 'Đóng');
     setAlertVisible(true);
+  };
+
+  const showDatePicker = (date: Date, onSelect: (date: Date) => void) => {
+    setDatePickerVisible(true);
+    setDate(date);
   };
 
   const hide = () => {
@@ -81,7 +95,7 @@ export const DialogProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <DialogContext.Provider value={{ showConfirm, showAlert, hide }}>
+    <DialogContext.Provider value={{ showConfirm, showAlert, showDatePicker, hide }}>
       {children}
 
       {/* Confirm Dialog */}
@@ -96,6 +110,14 @@ export const DialogProvider = ({ children }: { children: ReactNode }) => {
 
       {/* Alert Dialog */}
       <AlertDialog message={alertMessage} buttonText={buttonText} visible={alertVisible} onClose={handleAlertClose} />
+
+      {/* Exam Date picker */}
+      <MyDatePicker
+        visible={datePickerVisible}
+        setVisible={setDatePickerVisible}
+        date={date ?? new Date()}
+        handleChange={dateCallback}
+      />
     </DialogContext.Provider>
   );
 };

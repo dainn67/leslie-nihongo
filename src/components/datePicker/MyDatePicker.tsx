@@ -1,9 +1,7 @@
-import React, { useState } from "react";
-import { View, StyleSheet } from "react-native";
-import { Dialog } from "react-native-paper";
-import { useAppTheme } from "../../theme";
-import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
-import MainButton from "../buttons/MainButton";
+import React from 'react';
+import { Modal } from 'react-native';
+import { useAppTheme } from '../../theme';
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 
 interface MyDatePickerProps {
   visible: boolean;
@@ -15,25 +13,17 @@ interface MyDatePickerProps {
   handleChange: (selectedDate: Date | undefined) => void;
 }
 
-export const MyDatePicker = ({
-  visible,
-  date,
-  title = "Chọn ngày thi",
-  confirmText = "Xác nhận",
-  cancelText = "Hủy",
-  setVisible,
-  handleChange,
-}: MyDatePickerProps) => {
+export const MyDatePicker = ({ visible, date, setVisible, handleChange }: MyDatePickerProps) => {
   const { colors } = useAppTheme();
-  const [tempDate, setTempDate] = useState(date);
 
   const handleDateChange = (event: DateTimePickerEvent, selectedDate: Date | undefined) => {
-    if (selectedDate) setTempDate(selectedDate);
-  };
-
-  const handleConfirm = () => {
-    handleChange(tempDate);
-    setVisible(false);
+    if (event.type === 'dismissed') {
+      setVisible(false);
+      return;
+    } else if (event.type === 'set') {
+      handleChange(selectedDate);
+      setVisible(false);
+    }
   };
 
   const handleCancel = () => {
@@ -41,75 +31,15 @@ export const MyDatePicker = ({
   };
 
   return (
-    <Dialog visible={visible} onDismiss={handleCancel} style={[styles.dialog, { backgroundColor: colors.card }]}>
-      <Dialog.Title style={[styles.title, { color: colors.text }]}>{title}</Dialog.Title>
-
-      <Dialog.Content style={styles.content}>
-        <View style={styles.pickerContainer}>
-          <DateTimePicker
-            value={tempDate}
-            mode="date"
-            display="spinner"
-            onChange={handleDateChange}
-            style={[styles.picker, { backgroundColor: colors.background }]}
-            textColor={colors.text}
-          />
-        </View>
-      </Dialog.Content>
-
-      <Dialog.Actions style={styles.actions}>
-        <MainButton
-          title={cancelText}
-          onPress={handleCancel}
-          style={{
-            paddingHorizontal: 30,
-            paddingVertical: 10,
-          }}
-        />
-        <MainButton
-          title={confirmText}
-          onPress={handleConfirm}
-          style={{
-            paddingHorizontal: 30,
-            paddingVertical: 10,
-            borderRadius: 100,
-            backgroundColor: colors.primary,
-          }}
-          textStyle={{
-            color: "white",
-          }}
-        />
-      </Dialog.Actions>
-    </Dialog>
+    <Modal visible={visible} onRequestClose={handleCancel} transparent animationType="fade" statusBarTranslucent>
+      <DateTimePicker
+        value={date}
+        mode="date"
+        display="spinner"
+        onChange={handleDateChange}
+        style={{ width: '100%', height: 200, backgroundColor: colors.background }}
+        textColor={colors.text}
+      />
+    </Modal>
   );
 };
-
-const styles = StyleSheet.create({
-  dialog: {
-    borderRadius: 16,
-    margin: 20,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "600",
-    textAlign: "center",
-    paddingVertical: 8,
-  },
-  content: {
-    paddingHorizontal: 8,
-  },
-  pickerContainer: {
-    alignItems: "center",
-    paddingVertical: 8,
-  },
-  picker: {
-    width: "100%",
-    height: 200,
-  },
-  actions: {
-    paddingHorizontal: 16,
-    paddingBottom: 16,
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-});
