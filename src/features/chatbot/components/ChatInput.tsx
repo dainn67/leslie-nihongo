@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
-import { StyleSheet, TouchableOpacity, View, KeyboardAvoidingView, Platform } from 'react-native';
+import { StyleSheet, TouchableOpacity, View, KeyboardAvoidingView, Platform, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { TextInput as GestureTextInput } from 'react-native-gesture-handler';
 import { useAppTheme } from '../../../theme';
 import { AppConfig } from '../../../constants/appConfig';
 
@@ -37,7 +36,7 @@ export const ChatInput = ({ disable, placeHolderText, onSend }: ChatInputProps) 
             <View style={styles.iconContainer}>
               <Ionicons name="chatbubble-outline" size={18} color={colors.textOnPrimary} />
             </View>
-            <GestureTextInput
+            <TextInput
               style={[styles.textInput, disable && styles.textInputDisabled]}
               placeholder={(placeHolderText ?? disable) ? 'Đang suy nghĩ ...' : 'Nhập câu hỏi'}
               placeholderTextColor={colors.placeholder}
@@ -47,7 +46,6 @@ export const ChatInput = ({ disable, placeHolderText, onSend }: ChatInputProps) 
               multiline
               maxLength={500}
               editable={!disable}
-              selectTextOnFocus={!disable}
             />
             {message.length > 0 && !disable && (
               <TouchableOpacity style={styles.clearButton} onPress={() => setMessage('')} activeOpacity={0.7}>
@@ -106,7 +104,7 @@ const getStyles = (message: string, colors: any) =>
     textInput: {
       flex: 1,
       fontSize: 16,
-      color: colors.placeholder,
+      color: colors.text,
       paddingHorizontal: 12,
       paddingVertical: 8,
       maxHeight: 100,
