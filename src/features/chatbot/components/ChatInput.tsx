@@ -19,7 +19,7 @@ export const ChatInput = ({ disable, placeHolderText, onSend }: ChatInputProps) 
 
   const handleSend = () => {
     if (message.trim() && !disable) {
-      onSend(message);
+      onSend(message.trim());
       setMessage('');
     }
   };
