@@ -23,7 +23,7 @@ export const ProgressBar = ({
 }: ProgressBarProps) => {
   const { colors } = useAppTheme();
   const bgColor = backgroundColor || colors.backgroundSecondary;
-  const fColor = fillColor || colors.secondary;
+  const fColor = fillColor || colors.primary;
   const animatedWidth = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {

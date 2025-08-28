@@ -1,3 +1,4 @@
 export * from "./MainButton";
 export * from "./IconButton";
-export * from "./ResetProgressButton";
+export * from "./drawer/ResetProgressButton";
+export * from "./drawer/ThemeToggleButton";

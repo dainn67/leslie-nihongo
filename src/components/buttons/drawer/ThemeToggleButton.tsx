@@ -2,10 +2,10 @@ import React from "react";
 import { TouchableOpacity, StyleSheet } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
-import { RootState } from "../../app/store";
-import { toggleTheme } from "../../features/theme/themeSlice";
-import { useAppTheme } from "../../theme";
-import { CustomText } from "../text/customText";
+import { RootState } from "../../../app/store";
+import { toggleTheme } from "../../../features/theme/themeSlice";
+import { useAppTheme } from "../../../theme";
+import { CustomText } from "../../text/customText";
 
 export const ThemeToggleButton = () => {
   const dispatch = useDispatch();

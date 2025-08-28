@@ -1,0 +1,52 @@
+import React from "react";
+import { TouchableOpacity, StyleSheet } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { useAppTheme } from "../../../theme";
+import { CustomText } from "../../text/customText";
+import { useDialog } from "../../../core/providers";
+import { useAppDispatch } from "../../../hooks/hooks";
+import { clearUserProgress } from "../../../features/userProgress/userProgressSlice";
+import { clearAllTables } from "../../../storage/database/tables";
+import { clearChat } from "../../../features/chatbot/slice/chatbotSlice";
+
+export const ResetProgressButton = () => {
+  const { colors } = useAppTheme();
+  const dispatch = useAppDispatch();
+  const dialog = useDialog();
+
+  const handleToggle = () => {
+    dialog.showConfirm("Xoá hết tiến trình của bạn ?", () => {
+      clearAllTables();
+      dispatch(clearUserProgress());
+      dispatch(clearChat({}));
+    });
+  };
+
+  return (
+    <TouchableOpacity style={styles.button} onPress={handleToggle}>
+      <Ionicons name={"trash"} size={24} color={colors.primary} style={styles.icon} />
+      <CustomText style={[styles.label, { color: colors.text }]}>Xoá Dữ Liệu</CustomText>
+    </TouchableOpacity>
+  );
+};
+
+const styles = StyleSheet.create({
+  button: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    marginHorizontal: 16,
+    marginVertical: 8,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "grey",
+  },
+  icon: {
+    marginRight: 12,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: "500",
+  },
+});

@@ -1,20 +1,18 @@
-import React from 'react';
-import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { View } from 'react-native';
-import { ThemeToggleButton } from '../components/buttons/ThemeToggleButton';
-import { useAppTheme } from '../theme';
-import { Ionicons } from '@expo/vector-icons';
-import { CustomText } from '../components/text/customText';
-import { Question, QuestionType } from '../models/question';
-import { useDialog } from '../core/providers';
-import { ResetProgressButton } from '../components/buttons/ResetProgressButton';
-import { ChatbotScreen } from '../features/chatbot/screens/ChatbotScreen';
-import { FeedbackScreen } from '../features/feedback/FeedbackScreen';
-import { QuestionGameScreen } from '../features/game/screens/GameScreen';
-import { ResultScreen } from '../features/game/screens/ResultScreen';
-import { QuestionListScreen } from '../features/questions/screens/QuestionListScreen';
-import { QuestionsScreen } from '../features/questions/screens/QuestionsScreen';
+import React from "react";
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from "@react-navigation/drawer";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { View } from "react-native";
+import { useAppTheme } from "../theme";
+import { Ionicons } from "@expo/vector-icons";
+import { CustomText } from "../components/text/customText";
+import { Question, QuestionType } from "../models/question";
+import { ResetProgressButton, ThemeToggleButton } from "../components/buttons";
+import { ChatbotScreen } from "../features/chatbot/screens/ChatbotScreen";
+import { FeedbackScreen } from "../features/feedback/FeedbackScreen";
+import { QuestionGameScreen } from "../features/game/screens/GameScreen";
+import { ResultScreen } from "../features/game/screens/ResultScreen";
+import { QuestionListScreen } from "../features/questions/screens/QuestionListScreen";
+import { QuestionsScreen } from "../features/questions/screens/QuestionsScreen";
 
 export type DrawerParamList = {
   ChatbotScreen: undefined;
@@ -40,11 +38,9 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export const DrawerNavigator = () => {
   const { colors } = useAppTheme();
 
-  const dialog = useDialog();
-
   return (
     <Drawer.Navigator
-      initialRouteName={'ChatbotScreen'} // Default screen
+      initialRouteName={"ChatbotScreen"} // Default screen
       screenOptions={{
         headerShown: false,
         drawerActiveTintColor: colors.primary,
@@ -56,16 +52,19 @@ export const DrawerNavigator = () => {
       }}
       drawerContent={(props) => (
         <View style={{ flex: 1, marginBottom: 30 }}>
+          {/* Screens */}
           <DrawerContentScrollView {...props}>
             <DrawerItemList {...props} />
           </DrawerContentScrollView>
+
+          {/* Actions */}
           <ResetProgressButton />
           <ThemeToggleButton />
         </View>
       )}
     >
       <Drawer.Screen
-        name={'ChatbotScreen'}
+        name={"ChatbotScreen"}
         component={ChatbotScreen}
         options={{
           drawerLabel: ({ color }) => (
@@ -77,7 +76,7 @@ export const DrawerNavigator = () => {
         }}
       />
       <Drawer.Screen
-        name={'QuestionsScreen'}
+        name={"QuestionsScreen"}
         component={QuestionStackScreen}
         options={{
           drawerLabel: ({ color }) => (
