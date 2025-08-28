@@ -1,8 +1,8 @@
-import React from "react";
-import { View, StyleSheet, TouchableOpacity, SafeAreaView } from "react-native";
-import { useAppTheme } from "../theme";
-import { CustomText } from "./text/customText";
-import { AppConfig } from "../constants/appConfig";
+import React from 'react';
+import { View, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
+import { useAppTheme } from '../theme';
+import { CustomText } from './text/customText';
+import { AppConfig } from '../constants/appConfig';
 
 interface AppBarProps {
   title: string;
@@ -14,56 +14,46 @@ interface AppBarProps {
 }
 
 export const AppBar: React.FC<AppBarProps> = ({ title, leftIcon, rightIcon, onLeftPress, onRightPress, onDevClick }) => {
-  const { colors, isDarkMode } = useAppTheme();
+  const { colors } = useAppTheme();
 
   return (
-    <SafeAreaView style={{ backgroundColor: colors.primary }}>
-      <View style={[styles.container, { backgroundColor: colors.primary }]}>
-        {leftIcon ? (
-          <TouchableOpacity
-            style={[
-              styles.iconContainer,
-              styles.iconButton,
-              { backgroundColor: isDarkMode ? "rgba(255, 255, 255, 0.15)" : "rgba(255, 255, 255, 0.3)" },
-            ]}
-            onPress={onLeftPress}
-            activeOpacity={0.7}
-          >
-            {leftIcon}
-          </TouchableOpacity>
-        ) : (
-          <View style={styles.iconContainer} />
-        )}
-
-        <TouchableOpacity style={styles.titleContainer} disabled={!AppConfig.devMode && !onDevClick} onPress={onDevClick}>
-          <CustomText weight="Bold" style={[styles.title, { color: "white" }]}>
-            {title}
-          </CustomText>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.primary }]}>
+      {leftIcon ? (
+        <TouchableOpacity
+          style={[styles.iconContainer, styles.iconButton, { backgroundColor: 'rgba(255, 255, 255, 0.2)' }]}
+          onPress={onLeftPress}
+          activeOpacity={0.7}
+        >
+          {leftIcon}
         </TouchableOpacity>
+      ) : (
+        <View style={styles.iconContainer} />
+      )}
 
-        {rightIcon ? (
-          <TouchableOpacity
-            style={[
-              styles.iconContainer,
-              styles.iconButton,
-              { backgroundColor: isDarkMode ? "rgba(255, 255, 255, 0.15)" : "rgba(255, 255, 255, 0.3)" },
-            ]}
-            onPress={onRightPress}
-            activeOpacity={0.7}
-          >
-            {rightIcon}
-          </TouchableOpacity>
-        ) : (
-          <View style={styles.iconContainer} />
-        )}
-      </View>
+      <TouchableOpacity style={styles.titleContainer} disabled={!AppConfig.devMode && !onDevClick} onPress={onDevClick}>
+        <CustomText weight="Bold" style={[styles.title, { color: 'white' }]}>
+          {title}
+        </CustomText>
+      </TouchableOpacity>
+
+      {rightIcon ? (
+        <TouchableOpacity
+          style={[styles.iconContainer, styles.iconButton, { backgroundColor: 'rgba(255, 255, 255, 0.2)' }]}
+          onPress={onRightPress}
+          activeOpacity={0.7}
+        >
+          {rightIcon}
+        </TouchableOpacity>
+      ) : (
+        <View style={styles.iconContainer} />
+      )}
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   gradient: {
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -73,42 +63,42 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   container: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "transparent",
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
     paddingHorizontal: 20,
     paddingVertical: 12,
   },
   iconContainer: {
     width: 44,
     height: 44,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   iconButton: {
     borderRadius: 22,
-    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
   },
   titleContainer: {
     flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   iconWrapper: {
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
     marginRight: 8,
   },
   title: {
     fontSize: 22,
-    color: "#FFFFFF",
-    fontWeight: "bold",
-    textAlign: "center",
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+    textAlign: 'center',
     letterSpacing: 0.5,
   },
 });
