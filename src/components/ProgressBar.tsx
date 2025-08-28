@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { View, StyleSheet, Animated, StyleProp, ViewStyle } from 'react-native';
 import { useAppTheme } from '../theme';
 
-interface AnimatedProgressBarProps {
+interface ProgressBarProps {
   progress: number; // 0-100
   height?: number;
   backgroundColor?: string;
@@ -12,7 +12,7 @@ interface AnimatedProgressBarProps {
   style?: StyleProp<ViewStyle>;
 }
 
-export const AnimatedProgressBar = ({
+export const ProgressBar = ({
   progress,
   height = 6,
   backgroundColor,
@@ -20,7 +20,7 @@ export const AnimatedProgressBar = ({
   borderRadius = 3,
   duration = 500,
   style,
-}: AnimatedProgressBarProps) => {
+}: ProgressBarProps) => {
   const { colors } = useAppTheme();
   const bgColor = backgroundColor || colors.backgroundSecondary;
   const fColor = fillColor || colors.secondary;

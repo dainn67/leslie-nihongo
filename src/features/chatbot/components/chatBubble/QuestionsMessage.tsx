@@ -4,7 +4,7 @@ import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { CustomText } from '../../../../components/text/customText';
 import { Question } from '../../../../models/question';
 import { QuestionView } from './QuestionView';
-import { AnimatedProgressBar } from '../../../../components/AnimatedProgressBar';
+import { ProgressBar } from '../../../../components/ProgressBar';
 import { deleteQuestion, insertQuestions } from '../../../../storage/database/tables/questionTable';
 import { createResultSummary } from '../../../../core/service';
 import { IconButton } from 'react-native-paper';
@@ -78,7 +78,7 @@ export const QuestionsMessage = ({ questions, onAnalyze }: QuestionsMessageProps
       {/* Progress Bar and Reset Button */}
       <View style={styles.progressContainer}>
         <View style={styles.progressBarContainer}>
-          <AnimatedProgressBar progress={progress} height={7} />
+          <ProgressBar progress={progress} height={7} />
         </View>
         <IconButton icon={AppIcons.reset} onPress={handleReset} />
       </View>

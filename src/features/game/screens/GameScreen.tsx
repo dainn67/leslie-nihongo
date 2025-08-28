@@ -6,7 +6,7 @@ import { useAppTheme } from '../../../theme';
 import { AppBar } from '../../../components/AppBar';
 import { Ionicons } from '@expo/vector-icons';
 import { QuestionView } from '../../chatbot/components/chatBubble/QuestionView';
-import { AnimatedProgressBar } from '../../../components/AnimatedProgressBar';
+import { ProgressBar } from '../../../components/ProgressBar';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
@@ -117,7 +117,7 @@ export const QuestionGameScreen = () => {
         onDevClick={handleDevClick}
       />
       <View style={style.progressBar}>
-        <AnimatedProgressBar progress={progress} />
+        <ProgressBar progress={progress} />
       </View>
       <ScrollView style={style.questionContainer}>
         <QuestionView
