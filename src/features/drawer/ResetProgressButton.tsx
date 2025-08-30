@@ -1,13 +1,13 @@
 import React from "react";
 import { TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useAppTheme } from "../../../theme";
-import { CustomText } from "../../text/customText";
-import { useDialog } from "../../../core/providers";
-import { useAppDispatch } from "../../../hooks/hooks";
-import { clearUserProgress } from "../../../features/userProgress/userProgressSlice";
-import { clearAllTables } from "../../../storage/database/tables";
-import { clearChat } from "../../../features/chatbot/slice/chatbotSlice";
+import { useAppTheme } from "../../theme";
+import { CustomText } from "../../components/text/customText";
+import { useDialog } from "../../core/providers";
+import { useAppDispatch } from "../../hooks/hooks";
+import { clearUserProgress } from "../userProgress/userProgressSlice";
+import { clearAllTables } from "../../storage/database/tables";
+import { clearChat } from "../chatbot/slice/chatbotSlice";
 
 export const ResetProgressButton = () => {
   const { colors } = useAppTheme();
